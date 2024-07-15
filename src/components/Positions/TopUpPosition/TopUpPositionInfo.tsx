@@ -5,9 +5,11 @@ import { formatPercentage, formatNumber } from "utils/format";
 import useTopUpPositionContext from "context/topUpPosition";
 
 import BasePopover from "components/Base/Popover/BasePopover";
-import { AppListItem } from "components/AppComponents/AppList/AppList";
-import { ListTitleWrapper } from "components/Positions/OpenPosition/OpenPositionInfo";
-import { Summary } from "components/AppComponents/AppBox/AppBox";
+import {
+  InfoListItem,
+  ListTitleWrapper,
+} from "components/Positions/OpenPosition/OpenPositionInfo";
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
 import {
   BaseDialogFormInfoWrapper,
   BaseFormInfoList,
@@ -31,10 +33,10 @@ const TopUpPositionInfo = () => {
 
   return (
     <BaseDialogFormInfoWrapper>
-      <Summary>Summary</Summary>
+      <BaseSummary>Summary</BaseSummary>
       <Divider />
       <BaseFormInfoList>
-        <AppListItem
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -46,8 +48,8 @@ const TopUpPositionInfo = () => {
           }
         >
           <ListItemText primary="FXD Borrowed" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -60,8 +62,8 @@ const TopUpPositionInfo = () => {
           }
         >
           <ListItemText primary="Collateral Locked" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems={"flex-start"}
           secondaryAction={`${formatNumber(overCollateral)} %`}
         >
@@ -85,8 +87,8 @@ const TopUpPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(
             BigNumber(safetyBuffer).multipliedBy(100).toNumber()
@@ -124,8 +126,8 @@ const TopUpPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`$${formatPercentage(
             BigNumber(liquidationPrice).toNumber()
@@ -152,9 +154,9 @@ const TopUpPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
+        </InfoListItem>
         <ListDivider />
-        <AppListItem alignItems="flex-start" secondaryAction={`2%`}>
+        <InfoListItem alignItems="flex-start" secondaryAction={`2%`}>
           <ListItemText
             primary={
               <ListTitleWrapper>
@@ -173,7 +175,7 @@ const TopUpPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
+        </InfoListItem>
       </BaseFormInfoList>
     </BaseDialogFormInfoWrapper>
   );

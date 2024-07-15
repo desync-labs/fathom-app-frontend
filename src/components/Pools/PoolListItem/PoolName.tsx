@@ -13,6 +13,10 @@ export const PoolNameWrapper = styled(Typography)`
   text-align: left;
   line-height: 20px;
   font-weight: 600;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+  }
 `;
 
 const PoolName: FC<PoolNameProps> = ({ children }) => {

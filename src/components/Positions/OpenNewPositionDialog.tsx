@@ -3,15 +3,13 @@ import {
   Box,
   CircularProgress,
   DialogContent,
-  Divider,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 
 import useOpenPositionContext from "context/openPosition";
 import useConnector from "context/connector";
 
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import OpenPositionInfo from "components/Positions/OpenPosition/OpenPositionInfo";
 import OpenPositionForm from "components/Positions/OpenPosition/OpenPositionForm";
 import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
@@ -28,17 +26,6 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
-
-export const DividerMobile = styled(Divider)`
-  width: 100%;
-  height: 1px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-`;
-
-export const DividerDefault = styled(Divider)`
-  margin: 10px 0 0 0;
-`;
 
 const OpenNewPositionDialog: FC = () => {
   const {
@@ -59,9 +46,9 @@ const OpenNewPositionDialog: FC = () => {
 
   return (
     <BaseDialogWrapper onClose={onClose} maxWidth="sm" open={true} fullWidth>
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Open Position
-      </AppDialogTitle>
+      </BaseDialogTitle>
       <DialogContent>
         <OpenPositionForm />
         <OpenPositionInfo />

@@ -39,7 +39,8 @@ const PositionsTitle = styled(TitleSecondary)`
   font-size: 20px;
   margin-bottom: 12px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 25px;
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 `;
 

@@ -9,7 +9,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import { IOpenPosition } from "fathom-sdk";
 
 import useRepayPositionContext from "context/repayPosition";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import RepayPositionInfo from "components/Positions/RepayPosition/RepayPositionInfo";
 import RepayPositionForm from "components/Positions/RepayPosition/RepayPositionForm";
 import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
@@ -47,9 +47,9 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
 
   return (
     <BaseDialogWrapper onClose={onClose} maxWidth="sm" open={true} fullWidth>
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Repay Position
-      </AppDialogTitle>
+      </BaseDialogTitle>
       <DialogContent>
         <RepayPositionForm
           topUpPosition={topUpPosition}

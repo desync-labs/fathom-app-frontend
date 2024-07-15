@@ -20,6 +20,21 @@ const PositionStatItem = styled(Grid)`
   }
 `;
 
+const PositionStatWrapper = styled(Box)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    &.mobileRow {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      height: auto !important;
+      border-radius: 8px;
+      padding: 16px;
+    }
+  }
+`;
+
 const PositionStatItemTitle = styled(Box)`
   display: flex;
   flex-direction: row;
@@ -37,7 +52,6 @@ const PositionStatItemTitle = styled(Box)`
     font-size: 12px;
     line-height: 16px;
     letter-spacing: 0.48px;
-    text-transform: capitalize;
     margin-bottom: 0;
   }
 `;
@@ -62,6 +76,7 @@ interface PageStatsItemProps {
   xs?: number;
   sm?: number;
   md?: number;
+  isMobileRow?: boolean;
   testId?: string;
 }
 
@@ -72,6 +87,7 @@ const BasePageStatsItem: FC<PageStatsItemProps> = ({
   xs = 12,
   sm = 12,
   md = 4,
+  isMobileRow = false,
   testId = "",
 }) => {
   return (
@@ -82,7 +98,7 @@ const BasePageStatsItem: FC<PageStatsItemProps> = ({
       md={md}
       className={"page-stats-item"}
     >
-      <Box>
+      <PositionStatWrapper className={isMobileRow ? "mobileRow" : ""}>
         <PositionStatItemTitle data-testid={testId}>
           {title}
           {helpText && (
@@ -96,7 +112,7 @@ const BasePageStatsItem: FC<PageStatsItemProps> = ({
           )}
         </PositionStatItemTitle>
         <PositionStatItemValue>{value}</PositionStatItemValue>
-      </Box>
+      </PositionStatWrapper>
     </PositionStatItem>
   );
 };

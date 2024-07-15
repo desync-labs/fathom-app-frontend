@@ -25,7 +25,8 @@ export const BaseDialogFormInfoWrapper = styled(Box)`
   margin-top: 20px;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 24px 16px;
+    padding: 20px 16px;
+    margin-top: 8px;
   }
 `;
 

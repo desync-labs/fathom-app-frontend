@@ -29,6 +29,7 @@ const ProtocolStats = () => {
         xs={12}
         sm={12}
         md={4}
+        isMobileRow={true}
       />
       <BasePageStatsItem
         title={"TVL"}
@@ -45,6 +46,7 @@ const ProtocolStats = () => {
         xs={12}
         sm={12}
         md={4}
+        isMobileRow={true}
       />
       <BasePageStatsItem
         title={"FXD Price"}
@@ -62,6 +64,7 @@ const ProtocolStats = () => {
         xs={12}
         sm={12}
         md={4}
+        isMobileRow={true}
       />
     </BasePageStatsWrapper>
   );

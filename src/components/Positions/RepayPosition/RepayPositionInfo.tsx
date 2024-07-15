@@ -5,9 +5,11 @@ import useClosePositionContext from "context/repayPosition";
 import { formatNumber, formatNumberPrice } from "utils/format";
 
 import BasePopover from "components/Base/Popover/BasePopover";
-import { Summary } from "components/AppComponents/AppBox/AppBox";
-import { AppListItem } from "components/AppComponents/AppList/AppList";
-import { ListTitleWrapper } from "components/Positions/OpenPosition/OpenPositionInfo";
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
+import {
+  InfoListItem,
+  ListTitleWrapper,
+} from "components/Positions/OpenPosition/OpenPositionInfo";
 import {
   BaseDialogFormInfoWrapper,
   BaseFormInfoList,
@@ -26,10 +28,10 @@ const RepayPositionInfo = () => {
 
   return (
     <BaseDialogFormInfoWrapper>
-      <Summary>Summary</Summary>
+      <BaseSummary>Summary</BaseSummary>
       <Divider />
       <BaseFormInfoList>
-        <AppListItem
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -51,8 +53,8 @@ const RepayPositionInfo = () => {
           }
         >
           <ListItemText primary="FXD Borrowed" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -71,8 +73,8 @@ const RepayPositionInfo = () => {
           }
         >
           <ListItemText primary="Collateral Locked" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems={"flex-start"}
           secondaryAction={`${formatNumber(overCollateral)} %`}
         >
@@ -96,8 +98,8 @@ const RepayPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`1 ${pool?.poolName} = ${formatNumberPrice(
             liquidationPrice
@@ -124,7 +126,7 @@ const RepayPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
+        </InfoListItem>
       </BaseFormInfoList>
     </BaseDialogFormInfoWrapper>
   );

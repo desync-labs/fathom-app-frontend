@@ -6,18 +6,19 @@ import {
   TableHead,
   Box,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import { ICollateralPool } from "fathom-sdk";
+
+import { OpenPositionProvider } from "context/openPosition";
+import useSharedContext from "context/shared";
+import usePoolsList from "hooks/Pools/usePoolsList";
 import PoolsListItem from "components/Pools/PoolsListItem";
 import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
-import { styled } from "@mui/material/styles";
 import {
   NoResults,
   TitleSecondary,
 } from "components/AppComponents/AppBox/AppBox";
-import usePoolsList from "hooks/Pools/usePoolsList";
 import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
-import { OpenPositionProvider } from "context/openPosition";
-import useSharedContext from "context/shared";
 import {
   BaseTableCell,
   BaseTableContainer,
@@ -36,7 +37,8 @@ const PoolsTitle = styled(TitleSecondary)`
   font-size: 20px;
   margin-bottom: 12px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 25px;
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 `;
 

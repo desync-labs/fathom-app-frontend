@@ -12,7 +12,7 @@ import useTopUpPositionContext from "context/topUpPosition";
 import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
@@ -52,9 +52,9 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
 
   return (
     <BaseDialogWrapper onClose={onClose} maxWidth="sm" open={true} fullWidth>
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Top Up Position
-      </AppDialogTitle>
+      </BaseDialogTitle>
       <DialogContent>
         <TopUpPositionForm
           topUpPosition={topUpPosition}

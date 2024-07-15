@@ -17,6 +17,8 @@ export const BaseDialogWrapper = styled(
     background: "#132340",
     [theme.breakpoints.down("sm")]: {
       height: "fit-content",
+      width: "calc(100% - 32px)",
+      margin: "32px 16px",
     },
   },
   "& .MuiDialogActions-root": {

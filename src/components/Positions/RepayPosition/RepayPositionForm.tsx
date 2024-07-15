@@ -4,6 +4,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 
 import usePricesContext from "context/prices";
+import useSharedContext from "context/shared";
 import useRepayPositionContext from "context/repayPosition";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber, formatPercentage } from "utils/format";
@@ -48,6 +49,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
     priceOfCollateral,
   } = useRepayPositionContext();
   const { fxdPrice } = usePricesContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <BaseDialogFormWrapper>
@@ -82,7 +84,7 @@ const RepayPositionForm: FC<ClosePositionDialogPropsType> = ({
         >
           Total debt:
         </Box>
-        <Box sx={{ fontWeight: 600, fontSize: "14px" }}>
+        <Box sx={{ fontWeight: 600, fontSize: isMobile ? "12px" : "14px" }}>
           {formatPercentage(Number(debtValue))} FXD
         </Box>
       </Stack>

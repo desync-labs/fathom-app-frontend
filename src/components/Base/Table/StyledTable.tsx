@@ -55,4 +55,8 @@ export const BaseTablePaginationWrapper = styled(Box)`
   justify-content: center;
   border-top: 1px solid #4f658c4d;
   padding: 14px 0;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    border-top: none;
+  }
 `;

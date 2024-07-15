@@ -5,9 +5,9 @@ import { styled } from "@mui/material/styles";
 import useOpenPositionContext from "context/openPosition";
 import { formatNumber, formatPercentage } from "utils/format";
 
-import { AppListItem } from "components/AppComponents/AppList/AppList";
-import { Summary } from "components/AppComponents/AppBox/AppBox";
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
 import BasePopover from "components/Base/Popover/BasePopover";
+import { BaseListItem } from "components/Base/List/StyledList";
 import {
   BaseDialogFormInfoWrapper,
   BaseFormInfoList,
@@ -15,6 +15,27 @@ import {
 
 const ListDivider = styled(Divider)`
   margin: 0 0 8px 0;
+`;
+
+export const InfoListItem = styled(BaseListItem)`
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    & .MuiListItemText-root {
+      margin-top: 2px;
+      margin-bottom: 2px;
+
+      & span {
+        font-size: 11px;
+      }
+    }
+
+    & .MuiListItemSecondaryAction-root {
+      font-size: 11px;
+
+      & span {
+        font-size: 11px;
+      }
+    }
+  }
 `;
 
 export const ListTitleWrapper = styled("div")`
@@ -37,10 +58,10 @@ const OpenPositionInfo = () => {
 
   return (
     <BaseDialogFormInfoWrapper>
-      <Summary>Summary</Summary>
+      <BaseSummary>Summary</BaseSummary>
       <Divider />
       <BaseFormInfoList>
-        <AppListItem
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatNumber(Number(collateralToBeLocked))} ${
             pool.poolName
@@ -62,8 +83,8 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatNumber(
             Number(collateralAvailableToWithdraw)
@@ -101,8 +122,8 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(Number(fxdToBeBorrowed))} FXD`}
         >
@@ -122,16 +143,16 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(
             Number(fxdAvailableToBorrow)
           )} FXD`}
         >
           <ListItemText primary="Safety Buffer (FXD)" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems={"flex-start"}
           secondaryAction={`${formatNumber(Number(overCollateral))} %`}
         >
@@ -155,16 +176,16 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(
             BigNumber(safetyBuffer).multipliedBy(100).toNumber()
           )} %`}
         >
           <ListItemText primary="Safety Buffer (%)" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`$${formatPercentage(Number(liquidationPrice))}`}
         >
@@ -189,9 +210,9 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
+        </InfoListItem>
         <ListDivider />
-        <AppListItem alignItems="flex-start" secondaryAction={`2%`}>
+        <InfoListItem alignItems="flex-start" secondaryAction={`2%`}>
           <ListItemText
             primary={
               <ListTitleWrapper>
@@ -210,7 +231,7 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
+        </InfoListItem>
       </BaseFormInfoList>
     </BaseDialogFormInfoWrapper>
   );
