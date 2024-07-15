@@ -37,6 +37,10 @@ const PositionListItem: FC<PositionListItemProps> = ({
   position,
   setTopUpPosition,
 }) => {
+  console.log({
+    safetyBufferInPercent: position.safetyBufferInPercent,
+  });
+
   return (
     <BaseTableItemRow key={position.id}>
       <TableCell component="td" scope="row">
@@ -66,9 +70,9 @@ const PositionListItem: FC<PositionListItemProps> = ({
       </TableCell>
       <TableCell
         sx={{
-          color: BigNumber(position.safetyBufferInPercent).isLessThan(
-            DANGER_SAFETY_BUFFER
-          )
+          color: BigNumber(position.safetyBufferInPercent)
+            .decimalPlaces(3, BigNumber.ROUND_UP)
+            .isLessThan(DANGER_SAFETY_BUFFER)
             ? "#F04242 !important"
             : "#fff",
         }}
