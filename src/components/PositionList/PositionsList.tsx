@@ -194,30 +194,39 @@ const PositionsList: FC<PositionsListProps> = ({
           </>
         )}
       </>
-      {closePosition && (
-        <ClosePositionProvider position={closePosition} onClose={onClose}>
-          <ClosePositionDialog
-            topUpPosition={topUpPosition}
-            closePosition={closePosition}
-            setTopUpPosition={setTopUpPosition}
-            setClosePosition={setClosePosition}
-          />
-        </ClosePositionProvider>
-      )}
-      {topUpPosition && (
-        <TopUpPositionProvider
-          position={topUpPosition}
-          pool={topUpPositionPool}
+      {closePosition || topUpPosition ? (
+        <BaseDialogWrapper
           onClose={onClose}
+          maxWidth="sm"
+          open={true}
+          fullWidth
         >
-          <TopUpPositionDialog
-            topUpPosition={topUpPosition}
-            closePosition={closePosition}
-            setTopUpPosition={setTopUpPosition}
-            setClosePosition={setClosePosition}
-          />
-        </TopUpPositionProvider>
-      )}
+          {closePosition && (
+            <ClosePositionProvider position={closePosition} onClose={onClose}>
+              <ClosePositionDialog
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
+            </ClosePositionProvider>
+          )}
+          {topUpPosition && (
+            <TopUpPositionProvider
+              position={topUpPosition}
+              pool={topUpPositionPool}
+              onClose={onClose}
+            >
+              <TopUpPositionDialog
+                topUpPosition={topUpPosition}
+                closePosition={closePosition}
+                setTopUpPosition={setTopUpPosition}
+                setClosePosition={setClosePosition}
+              />
+            </TopUpPositionProvider>
+          )}
+        </BaseDialogWrapper>
+      ) : null}
     </Box>
   );
 };
