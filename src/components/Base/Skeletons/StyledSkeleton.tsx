@@ -24,8 +24,6 @@ export const StatsValueSkeleton: FC<StatsValueSkeletonProps> = ({
   animation = "wave",
   marginTop = "0",
 }) => {
-  console.log({ bgcolor: "#2536564a", marginTop });
-
   return (
     <Skeleton
       variant={variant}
