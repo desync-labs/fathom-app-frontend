@@ -144,14 +144,14 @@ export const CancelButton = styled(IconButton)`
 export const OpenPositionButton = styled(MuiButton)`
   border-radius: 8px;
   background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
-  padding: 8px 12px 8px 12px;
   height: 32px;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 16px;
-  font-weight: bold;
+  font-weight: 600;
   color: #00332f;
-  border: 1px solid #b3fff9;
+  border: 1px solid transparent;
   margin-right: 25px;
+  padding: 8px 16px;
   &:hover {
     background: transparent;
     color: #b3fff9;
@@ -168,16 +168,17 @@ export const ManagePositionButton = styled(MuiButton)`
   border: 0.7px solid #43FFF1;
   border-radius: 8px;
   background: transparent;
-  padding: 8px 12px;
   color: #43FFF1;
-  font-size: 13px;
+  font-size: 15px;
+  font-weight: 600;
   line-height: 16px;
   height: 32px;
-  min-width: 118px;
+  min-width: 128px;
+  padding: 8px 16px;
   &:hover {
     background: transparent;
     color: #B3FFF9;
-    border: 1px solid #B3FFF9;
+    border: 0.7px solid #B3FFF9;
     svg {
       color: #B3FFF9;
     },

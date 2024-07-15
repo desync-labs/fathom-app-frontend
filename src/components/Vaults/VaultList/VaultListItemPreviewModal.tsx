@@ -1,12 +1,6 @@
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import { FC, memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  CircularProgress,
-  Dialog,
-  ListItemText,
-  styled,
-} from "@mui/material";
+import { Box, CircularProgress, ListItemText, styled } from "@mui/material";
 import KeyboardArrowRightRoundedIcon from "@mui/icons-material/KeyboardArrowRightRounded";
 import BigNumber from "bignumber.js";
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -24,73 +18,20 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
-import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
-import {
-  AppListItem,
-  AppListVault,
-} from "components/AppComponents/AppList/AppList";
+import { BasePreviewModalPaper } from "components/Base/Paper/StyledPaper";
+import { AppListItem } from "components/AppComponents/AppList/AppList";
 import {
   VaultListItemImageWrapper,
   VaultTagLabel,
   VaultTitle,
 } from "components/Vaults/VaultList/VaultListItemMobile";
 import { VaultStacked } from "components/Vaults/VaultList/VaultListItem";
-import CloseIcon from "@mui/icons-material/Close";
+import BaseDialogFullScreen from "components/Base/Dialog/FullScreenDialog";
+import { BaseListPreviewModal } from "components/Base/List/StyledList";
 
+import CloseIcon from "@mui/icons-material/Close";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
-
-const FullScreenDialog = styled(Dialog, {
-  shouldForwardProp: (prop) => prop !== "offset",
-})<{ offset?: number }>`
-  top: ${({ offset = 116 }) => `${offset}px`};
-  height: ${({ offset = 116 }) => `calc(100% - ${offset}px)`};
-  z-index: 100;
-
-  & .MuiDialog-paper {
-    margin: 0;
-    width: 100%;
-    border-radius: 0;
-  }
-  & .MuiBackdrop-root {
-    top: ${({ offset = 116 }) => `${offset}px`};
-  },
-`;
-
-const VaultListItemPreviewModalContainer = styled("div")`
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, #000c24 63.06%, #131f35 126.46%);
-  padding: 0 16px 24px;
-`;
-
-const AppListVaultPreview = styled(AppListVault)`
-  padding: 0;
-  & li {
-    border-bottom: 1px solid #3d5580;
-    padding: 16px !important;
-
-    &.MuiListItemText-root {
-      margin-top: 2px;
-      margin-bottom: 2px;
-    }
-    span {
-      color: #8ea4cc;
-      font-size: 12px;
-      font-weight: 700;
-    }
-    & div:last-of-type {
-      color: #fff;
-      font-size: 11px;
-      font-weight: 500;
-    }
-
-    &:last-of-type {
-      border: none;
-    }
-  }
-`;
 
 const VaultBreadcrumbsCloseModal = styled("div")`
   color: #6d86b2;
@@ -165,10 +106,10 @@ interface VaultListItemPreviewModalProps {
   isWithdrawLoading: boolean;
 }
 
-const BreadcrumbsWrapperContainer = styled(Box)`
+const BreadcrumbsContainer = styled(Box)`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
@@ -185,7 +126,6 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
   activeTfPeriod,
   isWithdrawLoading,
 }) => {
-  const [modalOffset, setModalOffset] = useState<number>(0);
   const navigate = useNavigate();
   const { fxdPrice } = usePricesContext();
   const { token, shutdown, balanceTokens, depositLimit } = vault;
@@ -196,206 +136,183 @@ const VaultListItemPreviewModal: FC<VaultListItemPreviewModalProps> = ({
     navigate(`/vaults/${vault.id}`);
   }, [vault.id]);
 
-  useEffect(() => {
-    if (isOpenPreviewModal) {
-      let scroll =
-        116 - (document.documentElement.scrollTop || document.body.scrollTop);
-      scroll = scroll < 0 ? 0 : scroll;
-      setModalOffset(scroll);
-    }
-  }, [isOpenPreviewModal, setModalOffset]);
-
   return (
-    <FullScreenDialog
-      offset={modalOffset}
-      fullScreen={true}
-      open={isOpenPreviewModal}
+    <BaseDialogFullScreen
+      isOpen={isOpenPreviewModal}
       onClose={handleClosePreview}
     >
-      <VaultListItemPreviewModalContainer>
-        <BreadcrumbsWrapperContainer>
-          <PseudoBreadcrumbs
-            vaultName={vault.name}
-            handleCloseModal={handleClosePreview}
-          />
-          <CloseIcon sx={{ color: "#fff" }} onClick={handleClosePreview} />
-        </BreadcrumbsWrapperContainer>
-        <AppFlexBox>
-          <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
-            <VaultListItemImageWrapper>
-              <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
-            </VaultListItemImageWrapper>
-            <VaultTitle>{vault.name}</VaultTitle>
-          </AppFlexBox>
-          {vaultPosition?.balancePosition &&
-          BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
-          !shutdown ? (
-            <VaultTagLabel>Earning</VaultTagLabel>
-          ) : shutdown ? (
-            <VaultTagLabel>Finished</VaultTagLabel>
-          ) : (
-            <VaultTagLabel>Live</VaultTagLabel>
-          )}
+      <BreadcrumbsContainer>
+        <PseudoBreadcrumbs
+          vaultName={vault.name}
+          handleCloseModal={handleClosePreview}
+        />
+        <CloseIcon sx={{ color: "#fff" }} onClick={handleClosePreview} />
+      </BreadcrumbsContainer>
+      <AppFlexBox>
+        <AppFlexBox sx={{ justifyContent: "flex-start", gap: "4px" }}>
+          <VaultListItemImageWrapper>
+            <img src={getTokenLogoURL(token.symbol)} alt={token.name} />
+          </VaultListItemImageWrapper>
+          <VaultTitle>{vault.name}</VaultTitle>
         </AppFlexBox>
-        <VaultPaper sx={{ padding: "0 !important", marginTop: "10px" }}>
-          <AppListVaultPreview>
-            <AppListItem
-              secondaryAction={
-                <>
-                  {balanceEarned &&
-                  BigNumber(balanceEarned).isGreaterThan(0) ? (
-                    "$" +
-                    formatNumber(
-                      BigNumber(balanceEarned)
-                        .multipliedBy(fxdPrice)
+        {vaultPosition?.balancePosition &&
+        BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) &&
+        !shutdown ? (
+          <VaultTagLabel>Earning</VaultTagLabel>
+        ) : shutdown ? (
+          <VaultTagLabel>Finished</VaultTagLabel>
+        ) : (
+          <VaultTagLabel>Live</VaultTagLabel>
+        )}
+      </AppFlexBox>
+      <BasePreviewModalPaper sx={{ marginTop: "10px" }}>
+        <BaseListPreviewModal>
+          <AppListItem
+            secondaryAction={
+              <>
+                {balanceEarned && BigNumber(balanceEarned).isGreaterThan(0) ? (
+                  "$" +
+                  formatNumber(
+                    BigNumber(balanceEarned)
+                      .multipliedBy(fxdPrice)
+                      .dividedBy(10 ** 18)
+                      .toNumber()
+                  )
+                ) : balanceEarned === -1 ? (
+                  <CircularProgress size={20} />
+                ) : (
+                  0
+                )}
+              </>
+            }
+          >
+            <ListItemText primary={"Earned"} />
+          </AppListItem>
+          <AppListItem secondaryAction={<>{formattedApr}%</>}>
+            <ListItemText primary={"APY"} />
+          </AppListItem>
+          <AppListItem
+            secondaryAction={
+              <>
+                {formatCurrency(
+                  BigNumber(fxdPrice)
+                    .dividedBy(10 ** 18)
+                    .multipliedBy(BigNumber(balanceTokens).dividedBy(10 ** 18))
+                    .toNumber()
+                )}
+              </>
+            }
+          >
+            <ListItemText primary={"TVL"} />
+          </AppListItem>
+          <AppListItem
+            secondaryAction={
+              <>
+                {isTfVaultType
+                  ? formatNumber(
+                      BigNumber(tfVaultDepositLimit)
                         .dividedBy(10 ** 18)
                         .toNumber()
                     )
-                  ) : balanceEarned === -1 ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    0
-                  )}
-                </>
-              }
-            >
-              <ListItemText primary={"Earned"} />
-            </AppListItem>
-            <AppListItem secondaryAction={<>{formattedApr}%</>}>
-              <ListItemText primary={"APY"} />
-            </AppListItem>
-            <AppListItem
-              secondaryAction={
-                <>
-                  {formatCurrency(
-                    BigNumber(fxdPrice)
-                      .dividedBy(10 ** 18)
-                      .multipliedBy(
-                        BigNumber(balanceTokens).dividedBy(10 ** 18)
+                  : formatNumber(
+                      Math.max(
+                        BigNumber(depositLimit)
+                          .minus(BigNumber(balanceTokens))
+                          .dividedBy(10 ** 18)
+                          .toNumber(),
+                        0
                       )
-                      .toNumber()
+                    )}{" "}
+                {token.symbol}
+              </>
+            }
+          >
+            <ListItemText primary={"Available"} />
+          </AppListItem>
+          <AppListItem
+            secondaryAction={
+              <VaultStacked>
+                <LockedIconWrapper>
+                  {vaultPosition?.balancePosition &&
+                  BigNumber(vaultPosition?.balancePosition).isGreaterThan(0) ? (
+                    <img
+                      src={LockAquaSrc}
+                      alt={"locked-active"}
+                      width={10}
+                      height={10}
+                    />
+                  ) : (
+                    <img src={LockSrc} alt={"locked"} width={10} height={10} />
                   )}
-                </>
-              }
-            >
-              <ListItemText primary={"TVL"} />
-            </AppListItem>
-            <AppListItem
-              secondaryAction={
-                <>
-                  {isTfVaultType
+                </LockedIconWrapper>
+                <Box className={"value"}>
+                  {vaultPosition
                     ? formatNumber(
-                        BigNumber(tfVaultDepositLimit)
+                        BigNumber(vaultPosition.balancePosition)
                           .dividedBy(10 ** 18)
                           .toNumber()
                       )
-                    : formatNumber(
-                        Math.max(
-                          BigNumber(depositLimit)
-                            .minus(BigNumber(balanceTokens))
-                            .dividedBy(10 ** 18)
-                            .toNumber(),
-                          0
-                        )
-                      )}{" "}
-                  {token.symbol}
-                </>
-              }
+                    : 0}
+                  {" " + token.symbol}
+                </Box>
+              </VaultStacked>
+            }
+          >
+            <ListItemText primary={"Staked"} />
+          </AppListItem>
+        </BaseListPreviewModal>
+      </BasePreviewModalPaper>
+      <ButtonsWrapper>
+        <ButtonSecondary onClick={redirectToVaultDetail}>
+          Detail
+        </ButtonSecondary>
+        {(!vaultPosition ||
+          !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
+          !shutdown &&
+          activeTfPeriod !== 2 && (
+            <ButtonPrimary
+              onClick={() => setNewVaultDeposit(true)}
+              sx={{ height: "36px", minWidth: "100px" }}
             >
-              <ListItemText primary={"Available"} />
-            </AppListItem>
-            <AppListItem
-              secondaryAction={
-                <VaultStacked>
-                  <LockedIconWrapper>
-                    {vaultPosition?.balancePosition &&
-                    BigNumber(vaultPosition?.balancePosition).isGreaterThan(
-                      0
-                    ) ? (
-                      <img
-                        src={LockAquaSrc}
-                        alt={"locked-active"}
-                        width={10}
-                        height={10}
-                      />
-                    ) : (
-                      <img
-                        src={LockSrc}
-                        alt={"locked"}
-                        width={10}
-                        height={10}
-                      />
-                    )}
-                  </LockedIconWrapper>
-                  <Box className={"value"}>
-                    {vaultPosition
-                      ? formatNumber(
-                          BigNumber(vaultPosition.balancePosition)
-                            .dividedBy(10 ** 18)
-                            .toNumber()
-                        )
-                      : 0}
-                    {" " + token.symbol}
-                  </Box>
-                </VaultStacked>
-              }
+              Deposit
+            </ButtonPrimary>
+          )}
+        {vaultPosition &&
+          BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+          !shutdown &&
+          activeTfPeriod !== 2 && (
+            <ButtonPrimary
+              onClick={() => setManageVault(true)}
+              sx={{ height: "36px", minWidth: "100px" }}
             >
-              <ListItemText primary={"Staked"} />
-            </AppListItem>
-          </AppListVaultPreview>
-        </VaultPaper>
-        <ButtonsWrapper>
-          <ButtonSecondary onClick={redirectToVaultDetail}>
-            Detail
-          </ButtonSecondary>
-          {(!vaultPosition ||
-            !BigNumber(vaultPosition.balanceShares).isGreaterThan(0)) &&
-            !shutdown &&
-            activeTfPeriod !== 2 && (
-              <ButtonPrimary
-                onClick={() => setNewVaultDeposit(true)}
-                sx={{ height: "36px", minWidth: "100px" }}
-              >
-                Deposit
-              </ButtonPrimary>
-            )}
-          {vaultPosition &&
-            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-            !shutdown &&
-            activeTfPeriod !== 2 && (
-              <ButtonPrimary
-                onClick={() => setManageVault(true)}
-                sx={{ height: "36px", minWidth: "100px" }}
-              >
-                Manage
-              </ButtonPrimary>
-            )}
-          {vaultPosition &&
-            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-            shutdown &&
-            activeTfPeriod !== 2 && (
-              <ButtonPrimary
-                onClick={() => setManageVault(true)}
-                sx={{ height: "36px", minWidth: "100px" }}
-              >
-                Withdraw
-              </ButtonPrimary>
-            )}
-          {vaultPosition &&
-            BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
-            isTfVaultType &&
-            activeTfPeriod === 2 && (
-              <ButtonPrimary
-                onClick={handleWithdrawAll}
-                disabled={isWithdrawLoading}
-                sx={{ height: "36px", minWidth: "100px" }}
-              >
-                Withdraw all
-              </ButtonPrimary>
-            )}
-        </ButtonsWrapper>
-      </VaultListItemPreviewModalContainer>
-    </FullScreenDialog>
+              Manage
+            </ButtonPrimary>
+          )}
+        {vaultPosition &&
+          BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+          shutdown &&
+          activeTfPeriod !== 2 && (
+            <ButtonPrimary
+              onClick={() => setManageVault(true)}
+              sx={{ height: "36px", minWidth: "100px" }}
+            >
+              Withdraw
+            </ButtonPrimary>
+          )}
+        {vaultPosition &&
+          BigNumber(vaultPosition.balanceShares).isGreaterThan(0) &&
+          isTfVaultType &&
+          activeTfPeriod === 2 && (
+            <ButtonPrimary
+              onClick={handleWithdrawAll}
+              disabled={isWithdrawLoading}
+              sx={{ height: "36px", minWidth: "100px" }}
+            >
+              Withdraw all
+            </ButtonPrimary>
+          )}
+      </ButtonsWrapper>
+    </BaseDialogFullScreen>
   );
 };
 

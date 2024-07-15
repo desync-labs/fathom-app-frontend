@@ -1,20 +1,22 @@
 import { memo, Dispatch, FC, SetStateAction } from "react";
+import BigNumber from "bignumber.js";
 import { Box, TableCell, Stack } from "@mui/material";
-import { TVL } from "components/AppComponents/AppBox/AppBox";
-import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
-import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
-import { IOpenPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
-import TokenLogo from "components/Common/TokenLogo";
-import { getTokenLogoURL } from "utils/tokenLogo";
+import { IOpenPosition } from "fathom-sdk";
 
+import { getTokenLogoURL } from "utils/tokenLogo";
 import {
   formatCurrency,
   formatNumber,
   formatNumberPrice,
   formatPercentage,
 } from "utils/format";
+import { DANGER_SAFETY_BUFFER } from "utils/Constants";
+import TokenLogo from "components/Common/TokenLogo";
+import { TVL } from "components/AppComponents/AppBox/AppBox";
+import { ManagePositionButton } from "components/AppComponents/AppButton/AppButton";
 import PoolName from "components/Pools/PoolListItem/PoolName";
+import { BaseTableItemRow } from "components/Base/Table/StyledTable";
 
 export type PositionListItemProps = {
   position: IOpenPosition;
@@ -36,19 +38,12 @@ const PositionListItem: FC<PositionListItemProps> = ({
   setTopUpPosition,
 }) => {
   return (
-    <AppTableRow
-      className={"border single"}
-      key={position.id}
-      sx={{
-        "&:last-child td, &:last-child th": { border: 0 },
-        td: { paddingLeft: "10px", textAlign: "left" },
-      }}
-    >
+    <BaseTableItemRow key={position.id}>
       <TableCell component="td" scope="row">
         {position.positionId}
       </TableCell>
       <TableCell>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" alignItems="center" spacing={2}>
           <TokenLogo
             src={getTokenLogoURL(
               position?.collateralPoolName?.toUpperCase() === "XDC"
@@ -63,13 +58,21 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </Box>
         </Stack>
       </TableCell>
-      <TableCell>$ {formatPercentage(position.liquidationPrice)}</TableCell>
+      <TableCell>${formatPercentage(position.liquidationPrice)}</TableCell>
       <TableCell>{formatNumber(position.debtValue)} FXD</TableCell>
       <TableCell>
         {formatNumberPrice(position.lockedCollateral)}{" "}
         {position.collateralPoolName}
       </TableCell>
-      <TableCell>
+      <TableCell
+        sx={{
+          color: BigNumber(position.safetyBufferInPercent)
+            .decimalPlaces(3, BigNumber.ROUND_UP)
+            .isLessThan(DANGER_SAFETY_BUFFER)
+            ? "#F04242 !important"
+            : "#fff",
+        }}
+      >
         {formatNumber(position.safetyBufferInPercent * 100)}%
       </TableCell>
       <TableCell>
@@ -82,7 +85,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
           </ManagePositionButton>
         </ButtonsWrapper>
       </TableCell>
-    </AppTableRow>
+    </BaseTableItemRow>
   );
 };
 

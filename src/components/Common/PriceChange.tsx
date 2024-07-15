@@ -17,11 +17,11 @@ const PriceChangedBox = styled(Box)`
   display: flex;
   align-items: center;
   &.decrease {
-    color: #dd3c3c;
+    color: #dd3c3c !important;
   }
 
   &.increase {
-    color: #4dcc33;
+    color: #4dcc33 !important;
   }
 `;
 

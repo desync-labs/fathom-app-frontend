@@ -52,6 +52,7 @@ export type UseTopUpPositionContextReturnType = {
   availableFathomInPool: number;
   errorAtLeastOneField: boolean;
   validateMaxBorrowAmount: () => boolean | string;
+  priceOfCollateral: string;
 };
 
 export const TopUpPositionContext =

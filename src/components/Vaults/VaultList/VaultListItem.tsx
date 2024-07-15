@@ -10,27 +10,13 @@ import useVaultListItem from "hooks/Vaults/useVaultListItem";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber } from "utils/format";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import VaultListItemDepositModal from "components/Vaults/VaultList/VaultListItemDepositModal";
 import VaultListItemManageModal from "components/Vaults/VaultList/VaultListItemManageModal";
 
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
-
-export const VaultItemTableRow = styled(AppTableRow)`
-  background: transparent;
-
-  &:last-child {
-    td {
-      border-bottom: none;
-    }
-  }
-  & td {
-    border-bottom: 1px solid #4f658c4d;
-    padding: 16px 8px;
-  }
-`;
+import { BaseTableItemRow } from "../../Base/Table/StyledTable";
 
 export const VaultTitle = styled("div")`
   display: flex;
@@ -167,7 +153,7 @@ const VaultListItem: FC<VaultListItemProps> = ({
 
   return (
     <>
-      <VaultItemTableRow data-testid={`vaultRow-${vaultTestId}`}>
+      <BaseTableItemRow data-testid={`vaultRow-${vaultTestId}`}>
         <TableCell
           colSpan={2}
           sx={{ width: "20%", cursor: "pointer" }}
@@ -347,7 +333,7 @@ const VaultListItem: FC<VaultListItemProps> = ({
               )}
           </AppFlexBox>
         </TableCell>
-      </VaultItemTableRow>
+      </BaseTableItemRow>
       {useMemo(() => {
         return (
           newVaultDeposit && (

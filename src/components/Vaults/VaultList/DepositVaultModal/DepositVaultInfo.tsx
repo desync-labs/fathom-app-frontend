@@ -1,27 +1,15 @@
 import { FC, memo } from "react";
 import BigNumber from "bignumber.js";
-import { Box, Divider, ListItemText, styled } from "@mui/material";
+import { Box, Divider, ListItemText } from "@mui/material";
 import { IVault } from "fathom-sdk";
 import { formatNumber, formatPercentage } from "utils/format";
 import { useApr } from "hooks/Vaults/useApr";
-import {
-  AppListItem,
-  AppListVault,
-} from "components/AppComponents/AppList/AppList";
+import { AppListItem } from "components/AppComponents/AppList/AppList";
 import { Summary } from "components/AppComponents/AppBox/AppBox";
-
-const DepositVaultFormInfoWrapper = styled(Box)`
-  position: relative;
-  width: 100%;
-  border-radius: 12px;
-  background: #1e2f4c;
-  padding: 24px;
-  margin-top: 20px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 24px 16px;
-  }
-`;
+import {
+  BaseDialogFormInfoWrapper,
+  BaseFormInfoList,
+} from "components/Base/Form/StyledForm";
 
 type VaultDepositInfoProps = {
   vaultItemData: IVault;
@@ -40,10 +28,10 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
   const formattedApr = useApr(vaultItemData);
 
   return (
-    <DepositVaultFormInfoWrapper>
+    <BaseDialogFormInfoWrapper>
       <Summary>Summary</Summary>
       <Divider />
-      <AppListVault>
+      <BaseFormInfoList>
         <AppListItem
           alignItems="flex-start"
           secondaryAction={
@@ -113,8 +101,8 @@ const DepositVaultInfo: FC<VaultDepositInfoProps> = ({
         >
           <ListItemText primary="Estimated APY" />
         </AppListItem>
-      </AppListVault>
-    </DepositVaultFormInfoWrapper>
+      </BaseFormInfoList>
+    </BaseDialogFormInfoWrapper>
   );
 };
 

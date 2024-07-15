@@ -3,6 +3,7 @@ import { MenuItem, Box, Select } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { SortType } from "hooks/Vaults/useVaultList";
+import useSharedContext from "context/shared";
 import {
   AppFormInputLogo,
   AppTextField,
@@ -69,8 +70,14 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
   setSearch,
   setSortBy,
 }) => {
+  const { isMobile } = useSharedContext();
   return (
-    <AppFlexBox sx={{ justifyContent: "flex-start", marginBottom: "16px" }}>
+    <AppFlexBox
+      sx={{
+        justifyContent: "flex-start",
+        marginBottom: isMobile ? "0" : "-24px",
+      }}
+    >
       <SearchFieldWrapper>
         <SearchTextField
           id="outlined-helperText"

@@ -1,48 +1,38 @@
-import { Dispatch, FC, useMemo, memo } from "react";
-import {
-  Box,
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  Pagination,
-} from "@mui/material";
-import { IOpenPosition } from "fathom-sdk";
-import ClosePositionDialog from "components/Positions/RepayPositionDialog";
-import {
-  AppTableHeaderRow,
-  AppTableCellWithPopover,
-} from "components/AppComponents/AppTable/AppTable";
-import {
-  TitleSecondary,
-  NoResults,
-  CircleWrapper,
-} from "components/AppComponents/AppBox/AppBox";
-import PositionListItem from "components/PositionList/PositionListItem";
-import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
-import useOpenPositionList from "hooks/Positions/useOpenPositionList";
+import { Dispatch, FC, memo, useState, useEffect, useMemo } from "react";
+import { Box, Table, TableBody, TableHead, Pagination } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { COUNT_PER_PAGE } from "utils/Constants";
+import { IOpenPosition } from "fathom-sdk";
 
+import useSharedContext from "context/shared";
+import { COUNT_PER_PAGE } from "utils/Constants";
+import useOpenPositionList from "hooks/Positions/useOpenPositionList";
 import { ClosePositionProvider } from "context/repayPosition";
 import { TopUpPositionProvider } from "context/topUpPosition";
+
+import ClosePositionDialog from "components/Positions/RepayPositionDialog";
+import PositionListItem from "components/PositionList/PositionListItem";
+import PositionListItemMobile from "components/PositionList/PositionListItemMobile";
 import TopUpPositionDialog from "components/Positions/TopUpPositionDialog";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import useSharedContext from "context/shared";
+import BasePopover from "components/Base/Popover/BasePopover";
+import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
+import {
+  BaseTableCell,
+  BaseTableCellPopover,
+  BaseTableContainer,
+  BaseTableHeaderRow,
+  BaseTablePaginationWrapper,
+} from "components/Base/Table/StyledTable";
+import { NoResults } from "components/Base/Typography/StyledTypography";
+import { PositionsListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
-const FlexBox = styled(Box)`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const PaginationWrapper = styled(Box)`
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+const PositionsTitle = styled(TitleSecondary)`
+  font-size: 20px;
+  margin-bottom: 12px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
 `;
 
 type PositionsListProps = {
@@ -73,149 +63,143 @@ const PositionsList: FC<PositionsListProps> = ({
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
   const { isMobile } = useSharedContext();
 
-  const listLoading = useMemo(
-    () => loadingPositions || loading,
-    [loadingPositions, loading]
-  );
+  const [listLoading, setListLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setListLoading(loadingPositions || loading);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [setListLoading, loadingPositions, loading]);
+
+  const pageCount = useMemo(() => {
+    return Math.ceil(positionsItemsCount / COUNT_PER_PAGE);
+  }, [positionsItemsCount]);
 
   return (
-    <>
-      <FlexBox>
-        <TitleSecondary variant={"h2"}>Your Positions</TitleSecondary>
-      </FlexBox>
-      {useMemo(
-        () => (
+    <Box>
+      <PositionsTitle variant={"h2"}>Your Positions</PositionsTitle>
+
+      <>
+        {(positions.length === 0 || listLoading) && (
           <>
-            {(positions.length === 0 || listLoading) && (
+            {loading ? (
+              <PositionsListSkeleton />
+            ) : (
               <NoResults mt={isMobile ? 2 : 3}>
-                {loading ? (
-                  <CircleWrapper>
-                    <CircularProgress size={30} />
-                  </CircleWrapper>
-                ) : (
-                  "You have not opened any position."
-                )}
+                You have not opened any position.
               </NoResults>
             )}
+          </>
+        )}
 
-            {!!positions.length && !listLoading && !isMobile && (
-              <>
-                <TableContainer>
-                  <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead>
-                      <AppTableHeaderRow
-                        sx={{
-                          th: { textAlign: "left", paddingLeft: "10px" },
-                        }}
-                      >
-                        <TableCell>Id</TableCell>
-                        <TableCell>Asset</TableCell>
-                        <AppTableCellWithPopover>
-                          Liquidation price
-                          <AppPopover
-                            id={"liquidation-price"}
-                            text={
-                              "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
-                            }
-                          />
-                        </AppTableCellWithPopover>
-                        <TableCell>Borrowed</TableCell>
-                        <TableCell>Collateral</TableCell>
-                        <AppTableCellWithPopover>
-                          Safety buffer
-                          <AppPopover
-                            id={"safety-buffer"}
-                            text={
-                              <>
-                                Safety Buffer represents the extra collateral
-                                value above your borrowed amount. This is
-                                maintained to protect against market volatility
-                                and prevent the automatic liquidation of your
-                                assets. The larger your safety buffer, the lower
-                                your risk of reaching the liquidation price.{" "}
-                                <br />
-                                <br />
-                                Safety buffer is calculated from LTV. When you
-                                multiply your collateral value with LTV - you
-                                will get how much you can borrow maximum with a
-                                0% safety buffer. For example, if your
-                                collateral value is $100, with 25% LTV, you can
-                                maximum borrow 75 FXD, which gives you 0% Safety
-                                Buffer, and your position becomes very risky for
-                                liquidation.
-                                <br />
-                                <br />
-                                We recommend at least 50% Safety Buffer. Using
-                                the example above, the recommended amount to
-                                borrow is 75 FXD * 50% = 37.5 FXD.
-                              </>
-                            }
-                          />
-                        </AppTableCellWithPopover>
-                        <TableCell></TableCell>
-                      </AppTableHeaderRow>
-                    </TableHead>
-                    <TableBody>
-                      {positions.map((position: IOpenPosition) => (
-                        <PositionListItem
-                          key={position.id}
-                          position={position}
-                          setClosePosition={setClosePosition}
-                          setTopUpPosition={setTopUpPosition}
-                        />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <PaginationWrapper>
-                  <Pagination
-                    count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
-                    page={positionCurrentPage}
-                    onChange={handlePageChange}
-                  />
-                </PaginationWrapper>
-              </>
-            )}
-            {!!positions.length && !listLoading && isMobile && (
-              <>
+        {!!positions.length && !listLoading && !isMobile && (
+          <BaseTableContainer>
+            <Table aria-label="positions table">
+              <TableHead>
+                <BaseTableHeaderRow>
+                  <BaseTableCell>Id</BaseTableCell>
+                  <BaseTableCell>Asset</BaseTableCell>
+                  <BaseTableCell>
+                    <BaseTableCellPopover>
+                      Liquidation price
+                      <BasePopover
+                        id={"liquidation-price"}
+                        text={
+                          "Liquidation Price is the price of the collateral token when your collateral will be automatically sold to partially or fully repay the loan if your collateral value drops. It's a safety mechanism to ensure that loans are always sufficiently collateralized. Monitoring this price helps prevent the unwanted liquidation of your assets."
+                        }
+                      />
+                    </BaseTableCellPopover>
+                  </BaseTableCell>
+                  <BaseTableCell>Borrowed</BaseTableCell>
+                  <BaseTableCell>Collateral</BaseTableCell>
+                  <BaseTableCell>
+                    <BaseTableCellPopover>
+                      Safety buffer
+                      <BasePopover
+                        id={"safety-buffer"}
+                        text={
+                          <>
+                            Safety Buffer represents the extra collateral value
+                            above your borrowed amount. This is maintained to
+                            protect against market volatility and prevent the
+                            automatic liquidation of your assets. The larger
+                            your safety buffer, the lower your risk of reaching
+                            the liquidation price. <br />
+                            <br />
+                            Safety buffer is calculated from LTV. When you
+                            multiply your collateral value with LTV - you will
+                            get how much you can borrow maximum with a 0% safety
+                            buffer. For example, if your collateral value is
+                            $100, with 25% LTV, you can maximum borrow 75 FXD,
+                            which gives you 0% Safety Buffer, and your position
+                            becomes very risky for liquidation.
+                            <br />
+                            <br />
+                            We recommend at least 50% Safety Buffer. Using the
+                            example above, the recommended amount to borrow is
+                            75 FXD * 50% = 37.5 FXD.
+                          </>
+                        }
+                      />
+                    </BaseTableCellPopover>
+                  </BaseTableCell>
+                  <BaseTableCell></BaseTableCell>
+                </BaseTableHeaderRow>
+              </TableHead>
+              <TableBody>
                 {positions.map((position: IOpenPosition) => (
-                  <PositionListItemMobile
+                  <PositionListItem
                     key={position.id}
                     position={position}
                     setClosePosition={setClosePosition}
                     setTopUpPosition={setTopUpPosition}
                   />
                 ))}
-                <PaginationWrapper>
-                  <Pagination
-                    count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
-                    page={positionCurrentPage}
-                    onChange={handlePageChange}
-                  />
-                </PaginationWrapper>
-              </>
+              </TableBody>
+            </Table>
+            {pageCount > 1 && (
+              <BaseTablePaginationWrapper>
+                <Pagination
+                  count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
+                  page={positionCurrentPage}
+                  onChange={handlePageChange}
+                />
+              </BaseTablePaginationWrapper>
+            )}
+          </BaseTableContainer>
+        )}
+        {!!positions.length && !listLoading && isMobile && (
+          <>
+            {positions.map((position: IOpenPosition) => (
+              <PositionListItemMobile
+                key={position.id}
+                position={position}
+                setClosePosition={setClosePosition}
+                setTopUpPosition={setTopUpPosition}
+              />
+            ))}
+            {pageCount > 1 && (
+              <BaseTablePaginationWrapper>
+                <Pagination
+                  count={Math.ceil(positionsItemsCount / COUNT_PER_PAGE)}
+                  page={positionCurrentPage}
+                  onChange={handlePageChange}
+                />
+              </BaseTablePaginationWrapper>
             )}
           </>
-        ),
-        [
-          loading,
-          positions,
-          handlePageChange,
-          positionCurrentPage,
-          positionsItemsCount,
-          isMobile,
-          setClosePosition,
-          setTopUpPosition,
-        ]
-      )}
+        )}
+      </>
       {closePosition || topUpPosition ? (
-        <AppDialog
+        <BaseDialogWrapper
           onClose={onClose}
-          aria-labelledby="customized-dialog-title"
+          maxWidth="sm"
           open={true}
           fullWidth
-          maxWidth="md"
-          color="primary"
         >
           {closePosition && (
             <ClosePositionProvider position={closePosition} onClose={onClose}>
@@ -241,9 +225,9 @@ const PositionsList: FC<PositionsListProps> = ({
               />
             </TopUpPositionProvider>
           )}
-        </AppDialog>
+        </BaseDialogWrapper>
       ) : null}
-    </>
+    </Box>
   );
 };
 

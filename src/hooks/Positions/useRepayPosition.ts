@@ -71,6 +71,8 @@ const useRepayPosition = (
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [priceOfCollateral, setPriceOfCollateral] = useState<string>("0");
+
   const pool = useMemo(
     () =>
       poolsData?.find(
@@ -129,6 +131,7 @@ const useRepayPosition = (
           .multipliedBy(100)
           .toNumber();
 
+        setPriceOfCollateral(priceOfCollateralFromDex.toString());
         setLiquidationPrice(liquidationPrice);
         setLtv(ltv);
         setOverCollateral(overCollateral);
@@ -481,6 +484,7 @@ const useRepayPosition = (
     approveBtn,
     approvalPending,
     approve,
+    priceOfCollateral,
   };
 };
 

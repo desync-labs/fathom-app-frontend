@@ -7,7 +7,7 @@ import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
 import DepositVaultInfo from "components/Vaults/VaultDetail/VaultDetailForm/DepositVaultInfo";
-import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import { FC, memo } from "react";
 
 const VaultFormWrapper = styled(AppFlexBox)`

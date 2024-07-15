@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Box, StepContent, StepLabel, styled } from "@mui/material";
-import { CustomSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import {
   AppStep,

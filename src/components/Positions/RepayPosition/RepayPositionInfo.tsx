@@ -1,12 +1,19 @@
-import { Box, Grid, ListItemText } from "@mui/material";
+import { Box, Divider, ListItemText } from "@mui/material";
 import BigNumber from "bignumber.js";
 
 import useClosePositionContext from "context/repayPosition";
-import { AppList, AppListItem } from "components/AppComponents/AppList/AppList";
-
 import { formatNumber, formatNumberPrice } from "utils/format";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import { ListTitleWrapper } from "components/Positions/OpenPosition/OpenPositionInfo";
+
+import BasePopover from "components/Base/Popover/BasePopover";
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
+import {
+  InfoListItem,
+  ListTitleWrapper,
+} from "components/Positions/OpenPosition/OpenPositionInfo";
+import {
+  BaseDialogFormInfoWrapper,
+  BaseFormInfoList,
+} from "components/Base/Form/StyledForm";
 
 const RepayPositionInfo = () => {
   const {
@@ -20,9 +27,11 @@ const RepayPositionInfo = () => {
   } = useClosePositionContext();
 
   return (
-    <Grid item xs={12} sm={6}>
-      <AppList sx={{ width: "100%" }}>
-        <AppListItem
+    <BaseDialogFormInfoWrapper>
+      <BaseSummary>Summary</BaseSummary>
+      <Divider />
+      <BaseFormInfoList>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -44,8 +53,8 @@ const RepayPositionInfo = () => {
           }
         >
           <ListItemText primary="FXD Borrowed" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={
             <>
@@ -64,8 +73,8 @@ const RepayPositionInfo = () => {
           }
         >
           <ListItemText primary="Collateral Locked" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems={"flex-start"}
           secondaryAction={`${formatNumber(overCollateral)} %`}
         >
@@ -73,7 +82,7 @@ const RepayPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Collateralization Ratio
-                <AppPopover
+                <BasePopover
                   id={"collateralization-ratio"}
                   text={
                     <>
@@ -89,8 +98,8 @@ const RepayPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`1 ${pool?.poolName} = ${formatNumberPrice(
             liquidationPrice
@@ -100,7 +109,7 @@ const RepayPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Liquidation Price of {pool?.poolName}
-                <AppPopover
+                <BasePopover
                   id={"liquidation-price"}
                   text={
                     <>
@@ -117,9 +126,9 @@ const RepayPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-      </AppList>
-    </Grid>
+        </InfoListItem>
+      </BaseFormInfoList>
+    </BaseDialogFormInfoWrapper>
   );
 };
 

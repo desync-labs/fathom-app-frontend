@@ -1,11 +1,11 @@
 import { memo, useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Box, Button, ButtonGroup, styled, Typography } from "@mui/material";
 import { IVaultStrategy } from "fathom-sdk";
 import useVaultContext from "context/vault";
 import { strategyTitle } from "utils/Vaults/getStrategyTitleAndDescription";
 import VaultStrategyItem from "components/Vaults/VaultDetail/VaultStrategyItem";
-import { VaultStrategiesSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
-import { useLocation } from "react-router-dom";
+import { VaultStrategiesSkeleton } from "components/Base/Skeletons/VaultSkeletons";
 
 export const VaultInfoWrapper = styled(Box)`
   display: flex;

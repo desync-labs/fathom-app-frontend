@@ -1,46 +1,29 @@
 import { FC, useMemo, memo } from "react";
-import {
-  CircularProgress,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  Box,
-} from "@mui/material";
-import { ICollateralPool } from "fathom-sdk";
-import PoolsListItem from "components/Pools/PoolsListItem";
-import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
+import { Table, TableBody, TableHead, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { AppTableHeaderRow } from "components/AppComponents/AppTable/AppTable";
-import {
-  NoResults,
-  TitleSecondary,
-} from "components/AppComponents/AppBox/AppBox";
-import usePoolsList from "hooks/Pools/usePoolsList";
-import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
+import { ICollateralPool } from "fathom-sdk";
+
 import { OpenPositionProvider } from "context/openPosition";
 import useSharedContext from "context/shared";
-
-const PoolsListHeaderRow = styled(AppTableHeaderRow)`
-  background: transparent;
-
-  th {
-    text-align: left;
-  }
-`;
-
-const CircleWrapper = styled(Box)`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import usePoolsList from "hooks/Pools/usePoolsList";
+import PoolsListItem from "components/Pools/PoolsListItem";
+import OpenNewPositionDialog from "components/Positions/OpenNewPositionDialog";
+import { TitleSecondary } from "components/AppComponents/AppBox/AppBox";
+import PoolsListItemMobile from "components/Pools/PoolsListItemMobile";
+import {
+  BaseTableCell,
+  BaseTableContainer,
+  BaseTableHeaderRow,
+} from "components/Base/Table/StyledTable";
+import { NoResults } from "components/Base/Typography/StyledTypography";
+import { PoolListSkeleton } from "components/Base/Skeletons/StablecoinSkeletons";
 
 const PoolsTitle = styled(TitleSecondary)`
+  font-size: 20px;
+  margin-bottom: 12px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-top: 25px;
+    font-size: 16px;
+    margin-bottom: 10px;
   }
 `;
 
@@ -58,34 +41,29 @@ const PoolsListView: FC<PoolsListViewProps> = ({
   const { isMobile } = useSharedContext();
 
   return (
-    <>
+    <Box>
       <PoolsTitle variant="h2">Available Pools</PoolsTitle>
       {pools.length === 0 ? (
-        <NoResults variant={"h6"}>
+        <>
           {loading ? (
-            <CircleWrapper>
-              <CircularProgress size={30} />
-            </CircleWrapper>
+            <PoolListSkeleton />
           ) : (
-            "No Pool Available!"
+            <NoResults variant={"h6"}>No Pool Available!</NoResults>
           )}
-        </NoResults>
+        </>
       ) : (
         <>
           {!isMobile && (
-            <TableContainer>
-              <Table
-                sx={{ minWidth: 500, "& td": { padding: "9px" } }}
-                aria-label="simple table"
-              >
+            <BaseTableContainer>
+              <Table aria-label="pools table">
                 <TableHead>
-                  <PoolsListHeaderRow>
-                    <TableCell>Pool</TableCell>
-                    <TableCell>Price</TableCell>
-                    <TableCell>Borrowed</TableCell>
-                    <TableCell>Available</TableCell>
-                    <TableCell></TableCell>
-                  </PoolsListHeaderRow>
+                  <BaseTableHeaderRow>
+                    <BaseTableCell>Pool</BaseTableCell>
+                    <BaseTableCell>Price</BaseTableCell>
+                    <BaseTableCell>Borrowed</BaseTableCell>
+                    <BaseTableCell>Available</BaseTableCell>
+                    <BaseTableCell></BaseTableCell>
+                  </BaseTableHeaderRow>
                 </TableHead>
 
                 <TableBody>
@@ -98,7 +76,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({
                   ))}
                 </TableBody>
               </Table>
-            </TableContainer>
+            </BaseTableContainer>
           )}
           {isMobile &&
             pools.map((pool: ICollateralPool) => (
@@ -124,7 +102,7 @@ const PoolsListView: FC<PoolsListViewProps> = ({
           )
         );
       }, [selectedPool, onCloseNewPosition, proxyWallet])}
-    </>
+    </Box>
   );
 };
 

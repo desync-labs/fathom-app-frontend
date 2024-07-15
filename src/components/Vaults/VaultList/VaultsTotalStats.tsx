@@ -5,19 +5,17 @@ import BigNumber from "bignumber.js";
 import { formatNumber } from "utils/format";
 import usePricesContext from "context/prices";
 import useSharedContext from "context/shared";
-import { AppSkeletonValue } from "components/AppComponents/AppSkeleton/AppSkeleton";
+import useTotalStats from "hooks/Vaults/useTotalStats";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { BaseSkeletonValue } from "components/Base/Skeletons/StyledSkeleton";
 
 import { ReactComponent as DepositedIcon } from "assets/svg/icons/vault-stats-deposited.svg";
 import { ReactComponent as EarnedIcon } from "assets/svg/icons/vault-stats-earning.svg";
-import useTotalStats from "hooks/Vaults/useTotalStats";
 
 const StatsWrapper = styled(AppFlexBox)`
   gap: 16px;
-  padding: 40px 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     gap: 4px;
-    padding: 16px 0;
   }
 `;
 
@@ -91,7 +89,7 @@ const StatItem: FC<StatItemPropsType> = memo(({ title, value, icon }) => {
         <StatItemLabel>{title}</StatItemLabel>
         <StatItemValue>
           {value === "-1" || fetchPricesInProgress ? (
-            <AppSkeletonValue
+            <BaseSkeletonValue
               animation={"wave"}
               width={isMobile ? 80 : 110}
               height={isMobile ? 24 : 28}
