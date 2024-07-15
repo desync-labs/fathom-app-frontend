@@ -13,9 +13,9 @@ export const DarkTooltip: FC<TooltipProps & { wrap?: boolean }> = ({
         componentsProps={{
           tooltip: {
             sx: {
-              bgcolor: "rgba(15, 18, 29, 0.8)",
+              bgcolor: "#fff",
               "& .MuiTooltip-arrow": {
-                color: "rgba(15, 18, 29, 0.8)",
+                color: "#000c24",
               },
             },
           },
