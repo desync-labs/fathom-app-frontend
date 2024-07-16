@@ -19,7 +19,7 @@ import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 const PositionActivityListItemWrapper = styled(BaseListItem)`
   justify-content: space-between;
   border-top: none;
-  border-bottom: 1px solid #1d2d49;
+  border-bottom: 1px solid #3d5580;
   padding: 16px 24px 16px 48px;
   .MuiListItemText-root {
     ${({ theme }) => theme.breakpoints.down("sm")} {

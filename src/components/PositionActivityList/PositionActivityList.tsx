@@ -61,7 +61,7 @@ const PositionActivityList = () => {
             {isLoading ? (
               <>
                 <PositionActivityListLoader />
-                <PositionActivityListLoader />
+                <PositionActivityListLoader txAmount={3} />
               </>
             ) : (
               <>

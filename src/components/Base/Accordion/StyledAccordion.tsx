@@ -10,6 +10,7 @@ export const BaseAccordion = styled(Accordion)`
     margin: 0;
   }
   &.MuiAccordion-root {
+    background: transparent;
     &:before {
       opacity: 0;
     }
