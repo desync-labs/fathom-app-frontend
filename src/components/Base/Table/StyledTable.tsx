@@ -23,6 +23,10 @@ export const BaseTableCell = styled(TableCell)`
 
   &:first-of-type {
     padding: 16px 24px;
+
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      padding: 16px;
+    }
   }
 `;
 
