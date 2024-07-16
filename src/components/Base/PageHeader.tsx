@@ -30,16 +30,18 @@ const PageDescription = styled(Box)`
 
 type PageHeaderType = {
   title: string;
-  description: string;
+  description?: string;
 };
 
 const BasePageHeader: FC<PageHeaderType> = ({ title, description }) => {
   return (
     <PageHeaderWrapper>
       <PageTitle variant={"h1"}>{title}</PageTitle>
-      <PageDescription
-        dangerouslySetInnerHTML={{ __html: description }}
-      ></PageDescription>
+      {description && (
+        <PageDescription
+          dangerouslySetInnerHTML={{ __html: description }}
+        ></PageDescription>
+      )}
     </PageHeaderWrapper>
   );
 };

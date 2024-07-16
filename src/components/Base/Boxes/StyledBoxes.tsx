@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Box as MuiBox, Box, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 export const BaseInfoBox = styled(Box)`
   display: flex;
@@ -57,7 +57,7 @@ export const BaseWarningBox = styled(Box)`
   }
 `;
 
-export const BaseErrorBox = styled(MuiBox)`
+export const BaseErrorBox = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -91,4 +91,11 @@ export const BaseErrorMessage = styled(Typography)`
   font-size: 14px;
   line-height: 20px;
   color: #ff8585;
+`;
+
+export const BaseFlexBox = styled(Stack)`
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 `;
