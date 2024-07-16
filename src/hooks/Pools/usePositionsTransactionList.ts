@@ -195,6 +195,12 @@ const usePositionsTransactionList = () => {
     };
   }, [poolsLoading, activitiesLoading]);
 
+  useEffect(() => {
+    if (account) {
+      setIsLoading(true);
+    }
+  }, [account, setIsLoading]);
+
   return {
     fxdActivities: filteredActivities,
     isLoading,
