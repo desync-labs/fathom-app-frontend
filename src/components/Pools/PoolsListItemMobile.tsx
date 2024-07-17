@@ -24,6 +24,10 @@ export const PoolsListItemMobileContainer = styled(Box)`
   border-radius: 8px;
   margin-bottom: 4px;
   padding: 14px 16px;
+
+  &:active {
+    background: #2c4066;
+  }
 `;
 
 export const PoolWrapper = styled(Box)`
