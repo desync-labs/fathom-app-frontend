@@ -99,7 +99,7 @@ const BasePageStatsItem: FC<PageStatsItemProps> = ({
       className={"page-stats-item"}
     >
       <PositionStatWrapper className={isMobileRow ? "mobileRow" : ""}>
-        <PositionStatItemTitle data-testid={testId}>
+        <PositionStatItemTitle>
           {title}
           {helpText && (
             <BasePopover
@@ -109,7 +109,9 @@ const BasePageStatsItem: FC<PageStatsItemProps> = ({
             />
           )}
         </PositionStatItemTitle>
-        <PositionStatItemValue>{value}</PositionStatItemValue>
+        <PositionStatItemValue data-testid={testId}>
+          {value}
+        </PositionStatItemValue>
       </PositionStatWrapper>
     </PositionStatItem>
   );
