@@ -6,7 +6,10 @@ export const BaseDialogWrapper = styled(
   {}
 )(({ theme }) => ({
   "& .MuiDialogContent-root": {
-    padding: "0 16px 24px",
+    padding: "0 24px 24px",
+    [theme.breakpoints.down("sm")]: {
+      padding: "0 16px 24px",
+    },
   },
   "& .MuiDivider-root": {
     borderColor: "rgba(255, 255, 255, 0.12)",
