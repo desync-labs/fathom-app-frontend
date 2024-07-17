@@ -14,12 +14,13 @@ const ArrowIcon = styled(ArrowForwardRoundedIcon)`
   width: 20px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     width: 18px;
+    height: 18px;
   }
 `;
 
 const PositionActivityListItemAmountsWrapper = styled(Box)`
   display: flex;
-  align-items: start;
+  align-items: center;
   gap: 7px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     gap: 2px;
@@ -35,7 +36,6 @@ const PositionActivityListItemAmountsItemWrapper = styled(Box)`
   display: flex;
   align-items: center;
   gap: 5px;
-  padding-top: 2px;
   & img {
     border-radius: 50%;
   }
