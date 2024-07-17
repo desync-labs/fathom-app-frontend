@@ -15,6 +15,24 @@ export const BaseAccordion = styled(Accordion)`
       opacity: 0;
     }
   }
+  &:last-of-type {
+    & .MuiAccordionSummary-root {
+      border-bottom: none;
+
+      &.Mui-expanded {
+        border-bottom: 1px solid #3d5580;
+      }
+    }
+    &.Mui-expanded {
+      & .MuiAccordionDetails-root {
+        & .MuiListItem-root {
+          &:last-of-type {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
 `;
 export const BaseAccordionTxGroupSummary = styled(AccordionSummary)`
   height: 56px;

@@ -134,6 +134,7 @@ import {
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
 import { FxdProvider } from "context/fxd";
+import useVH from "../../hooks/General/useVH";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -313,6 +314,8 @@ const MainLayout = () => {
    */
   useGlobalData();
   useGlobalChartData();
+
+  useVH();
 
   /**
    * Google Analytics
