@@ -184,7 +184,7 @@ export const RightNetwork = styled(MuiBox)`
 
 export const MainBox = styled(MuiBox)`
   background: linear-gradient(180deg, #071126 0%, #050c1a 100%);
-  min-height: -webkit-fill-available;
+  min-height: calc(var(--vh, 1vh) * 100);
   overflow: auto;
   display: flex;
   flex-direction: column;
