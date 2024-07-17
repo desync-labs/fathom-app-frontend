@@ -60,6 +60,7 @@ const PositionActivityFilters: FC<PositionsTransactionFiltersProps> = ({
         autoWidth
         value={filterByType}
         onChange={handleFilterByType}
+        sx={{ minWidth: isMobile ? "40%" : "210px" }}
       >
         {filterOptions.map((option, index) => (
           <MenuItem key={option} value={filterValues[index]}>

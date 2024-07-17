@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import { Box, styled, Typography } from "@mui/material";
 
 const PageHeaderWrapper = styled(Box)`
-  padding-top: 36px;
+  padding-top: 6px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding-top: 9px;
   }

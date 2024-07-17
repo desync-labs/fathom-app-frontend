@@ -87,7 +87,7 @@ export const ListItem: FC<ListItemProps> = ({
   );
 };
 
-const PostionListActivityRowItem = () => {
+const PositionListActivityRowItem = () => {
   const { isMobile } = useSharedContext();
 
   return (
@@ -109,8 +109,8 @@ const PostionListActivityRowItem = () => {
       )}
       <ListColumn align="right">
         <CustomSkeleton
-          width={isMobile ? 44 : 96}
-          height={isMobile ? 28 : 36}
+          width={isMobile ? 44 : 77}
+          height={isMobile ? 28 : 32}
         />
       </ListColumn>
     </ListItem>
@@ -131,7 +131,7 @@ export const PositionActivityListLoader = ({
         </ListColumn>
       </ListItem>
       {Array.from({ length: txAmount }).map((_, index) => (
-        <PostionListActivityRowItem key={index} />
+        <PositionListActivityRowItem key={index} />
       ))}
     </>
   );

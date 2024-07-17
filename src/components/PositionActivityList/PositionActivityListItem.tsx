@@ -41,7 +41,7 @@ const TxListItemContent = styled(BaseFlexBox)`
     flex-direction: column;
     align-items: flex-start;
     width: calc(100% - 48px);
-    gap: 4px;
+    gap: 8px;
 
     & .MuiListItemText-multiline {
       display: flex;
@@ -79,6 +79,13 @@ const TxListItemText = styled(ListItemText)`
   }
 `;
 
+const TxListItemViewBtn = styled(BaseButtonSecondaryLink)`
+  gap: 3px;
+  padding: 8px 12px;
+  height: 32px;
+  font-size: 13px;
+`;
+
 const PositionActivityListItem: FC<{ transaction: IFxdTransaction }> = ({
   transaction,
 }) => {
@@ -88,7 +95,7 @@ const PositionActivityListItem: FC<{ transaction: IFxdTransaction }> = ({
   return (
     <PositionActivityListItemWrapper
       secondaryAction={
-        <BaseButtonSecondaryLink
+        <TxListItemViewBtn
           target={"_blank"}
           href={getBlockScanLink(
             chainId,
@@ -97,8 +104,8 @@ const PositionActivityListItem: FC<{ transaction: IFxdTransaction }> = ({
           )}
         >
           View
-          {!isMobile && <ExtLinkIcon />}
-        </BaseButtonSecondaryLink>
+          {!isMobile && <ExtLinkIcon width={"14px"} height={"14px"} />}
+        </TxListItemViewBtn>
       }
     >
       <TxListItemContent>
