@@ -53,7 +53,7 @@ const PositionActivityList = () => {
         <Table aria-label="pools table">
           <TableHead>
             <BaseTableHeaderRow>
-              <BaseTableCell>Time</BaseTableCell>
+              <BaseTableCell>Date</BaseTableCell>
             </BaseTableHeaderRow>
           </TableHead>
 
