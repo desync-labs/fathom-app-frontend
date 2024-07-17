@@ -145,7 +145,7 @@ export const OpenPositionButton = styled(MuiButton)`
   border-radius: 8px;
   background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
   height: 32px;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 16px;
   font-weight: 600;
   color: #00332f;
@@ -169,7 +169,7 @@ export const ManagePositionButton = styled(MuiButton)`
   border-radius: 8px;
   background: transparent;
   color: #43FFF1;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 600;
   line-height: 16px;
   height: 32px;
