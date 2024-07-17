@@ -8,7 +8,7 @@ export const BaseTableContainer = styled(TableContainer)`
 `;
 
 export const BaseTableHeaderRow = styled(TableRow)`
-  height: 50px;
+  height: 36px;
   background: #2c4066;
 `;
 
@@ -19,13 +19,13 @@ export const BaseTableCell = styled(TableCell)`
   line-height: 16px;
   letter-spacing: 0.44px;
   text-transform: uppercase;
-  padding: 16px 8px;
+  padding: 8px 8px;
 
   &:first-of-type {
-    padding: 16px 24px;
+    padding: 8px 24px;
 
     ${({ theme }) => theme.breakpoints.down("sm")} {
-      padding: 16px;
+      padding: 8px 16px;
     }
   }
 `;
@@ -48,6 +48,7 @@ export const BaseTableItemRow = styled(AppTableRow)`
     }
   }
   & td {
+    height: 68px;
     color: #fff;
     border-bottom: 1px solid #4f658c4d;
     padding: 16px 8px;

@@ -26,6 +26,10 @@ export const VaultItemTableRow = styled(AppTableRow)`
   & td:first-of-type {
     padding-left: 16px;
   }
+
+  &:active {
+    background: #2c4066;
+  }
 `;
 
 export const VaultTitle = styled("div")`
