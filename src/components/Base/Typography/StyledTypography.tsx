@@ -6,7 +6,7 @@ export const BaseSummary = styled(Typography)`
   font-weight: bold;
   font-size: 16px;
   line-height: 24px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;

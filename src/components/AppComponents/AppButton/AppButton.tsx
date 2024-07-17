@@ -271,7 +271,7 @@ export const ModalButtonWrapper = styled(Box)`
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  padding-top: 20px;
+  padding-top: 16px;
 
   & > button {
     height: 48px;

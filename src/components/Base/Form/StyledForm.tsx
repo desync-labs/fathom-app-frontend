@@ -95,7 +95,7 @@ export const BaseDialogFormWrapper = styled(Box)`
   width: 100%;
   border-radius: 12px;
   background: #1e2f4d;
-  padding: 24px 16px;
+  padding: 16px;
 `;
 
 export const BaseDialogFormInfoWrapper = styled(Box)`
@@ -103,13 +103,8 @@ export const BaseDialogFormInfoWrapper = styled(Box)`
   width: 100%;
   border-radius: 12px;
   background: #1e2f4c;
-  padding: 24px;
-  margin-top: 20px;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 20px 16px;
-    margin-top: 8px;
-  }
+  padding: 16px;
+  margin-top: 8px;
 `;
 
 export const BaseFormInputWrapper = styled("div")`
