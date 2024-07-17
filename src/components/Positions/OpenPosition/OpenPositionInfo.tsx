@@ -14,10 +14,15 @@ import {
 } from "components/Base/Form/StyledForm";
 
 const ListDivider = styled(Divider)`
-  margin: 0 0 8px 0;
+  margin: 4px 0 8px 0;
 `;
 
 export const InfoListItem = styled(BaseListItem)`
+  & .MuiListItemText-root {
+    margin-top: 1px;
+    margin-bottom: 1px;
+  }
+
   ${({ theme }) => theme.breakpoints.down("sm")} {
     & .MuiListItemText-root {
       margin-top: 2px;

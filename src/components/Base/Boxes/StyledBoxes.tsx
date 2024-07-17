@@ -7,7 +7,7 @@ export const BaseInfoBox = styled(Box)`
   justify-content: flex-start;
   align-items: center;
   gap: 8px;
-  margin-top: 20px;
+  margin-top: 16px;
 
   svg {
     height: 20px;
@@ -38,7 +38,7 @@ export const BaseWarningBox = styled(Box)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 10px 0 20px;
+  margin-top: 16px;
 
   svg {
     color: #f7b06e;
@@ -65,7 +65,7 @@ export const BaseErrorBox = styled(Box)`
   border: 1px solid #5a0000;
   border-radius: 8px;
   padding: 12px 16px;
-  margin: 20px 0;
+  margin-top: 16px;
 
   svg {
     width: 20px;
