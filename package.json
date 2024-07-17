@@ -114,6 +114,9 @@
     "playwright:test:smoke": "npx playwright test --grep @smoke",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
