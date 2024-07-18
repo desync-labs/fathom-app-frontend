@@ -25,6 +25,7 @@ import {
   BaseListPreviewModal,
 } from "components/Base/List/StyledList";
 import useConnector from "../../../context/connector";
+import { BaseFlexBox } from "../../Base/Boxes/StyledBoxes";
 
 const BreadcrumbsContainer = styled(Box)`
   display: flex;
@@ -60,6 +61,15 @@ const PreviewModalButtonWrapper = styled("div")`
 
 const ListItemLabel = styled(ListItemText)`
   width: 30%;
+`;
+
+const PriceWrapper = styled(BaseFlexBox)`
+  justify-content: flex-end;
+  gap: 4px;
+
+  & span {
+    height: 20px;
+  }
 `;
 
 type PseudoBreadcrumbsProps = {
@@ -142,7 +152,7 @@ const PoolListItemPreviewModal: FC<PoolListItemPreviewModalProps> = ({
         <BaseListPreviewModal>
           <BaseListItem
             secondaryAction={
-              <>
+              <PriceWrapper>
                 {formatCurrency(
                   pool.poolName.toUpperCase() === "XDC" &&
                     BigNumber(xdcPrice).isGreaterThan(0)
@@ -170,7 +180,7 @@ const PoolListItemPreviewModal: FC<PoolListItemPreviewModalProps> = ({
                       : Number(pool.collateralLastPrice)
                   }
                 />
-              </>
+              </PriceWrapper>
             }
           >
             <ListItemLabel primary={"Price"} />
