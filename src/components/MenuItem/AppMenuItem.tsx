@@ -37,11 +37,12 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
   (theme, { isActive, showText }) => ({
     menuItem: {
       margin: "0 auto",
-      padding: "8px 9px 9px 8px",
+      padding: "8px 16px",
       width: showText ? "100%" : "40px",
       borderRadius: "8px",
+      justifyContent: showText ? "flex-start" : "center",
       "&.active": {
-        background: isActive ? "#2A3E5A" : "transparent",
+        backgroundColor: isActive ? "#2C4066" : "transparent",
 
         "& .MuiListItemIcon-root": {
           color: isActive
@@ -50,7 +51,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
         },
       },
       "&:hover": {
-        background: "#2A3E5A",
+        background: "#2C4066",
         borderRadius: "8px",
       },
       "& .MuiListItemText-inset": {
@@ -60,7 +61,7 @@ const useStyles = makeStyles<{ isActive: boolean; showText: boolean }>()(
     menuItemIcon: {
       color: isActive ? theme.palette.primary.main : "#415D83",
       minWidth: "0",
-      marginRight: showText ? "7px" : "0",
+      marginRight: showText ? "16px" : "0",
     },
     menuItemText: {
       "> span": {
