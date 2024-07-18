@@ -93,86 +93,90 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        {isTfVaultType && (
-          <VaultModalLockingBar
-            tfVaultLockEndDate={tfVaultLockEndDate}
-            tfVaultDepositEndDate={tfVaultDepositEndDate}
-            activeTfPeriod={activeTfPeriod}
-          />
-        )}
         <FormProvider {...methods}>
-          <DepositVaultForm
-            vaultItemData={vaultItemData}
-            walletBalance={walletBalance}
-            control={control}
-            setMax={setMax}
-            validateMaxDepositValue={validateMaxDepositValue}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            minimumDeposit={minimumDeposit}
-            depositLimitExceeded={depositLimitExceeded}
-            dataTestIdPrefix="vault-listItemDepositModal"
-          />
-          <DepositVaultInfo
-            vaultItemData={vaultItemData}
-            deposit={deposit}
-            sharedToken={sharedToken}
-            performanceFee={performanceFee}
-          />
-          {isWalletFetching &&
-            (BigNumber(walletBalance)
-              .dividedBy(10 ** 18)
-              .isLessThan(BigNumber(deposit)) ||
-              walletBalance == "0") && (
-              <BaseErrorBox sx={{ marginBottom: 0 }}>
-                <InfoIcon />
-                <Typography>
-                  Wallet balance is not enough to deposit.
-                </Typography>
-              </BaseErrorBox>
+          <Box>
+            {isTfVaultType && (
+              <VaultModalLockingBar
+                tfVaultLockEndDate={tfVaultLockEndDate}
+                tfVaultDepositEndDate={tfVaultDepositEndDate}
+                activeTfPeriod={activeTfPeriod}
+              />
             )}
-          {isTfVaultType && !isUserKycPassed && activeTfPeriod === 0 && (
-            <BaseWarningBox>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
-              />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Only KYC-verified users can deposit. Please completing KYC at{" "}
-                  <a
-                    href={"https://kyc.tradeflow.network/"}
-                    target={"_blank"}
-                    rel={"noreferrer"}
-                  >
-                    https://kyc.tradeflow.network/
-                  </a>
-                </Typography>
-              </Box>
-            </BaseWarningBox>
-          )}
-          {activeTfPeriod === 1 && (
-            <BaseWarningBox>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
-              />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Deposit period has been completed.
-                </Typography>
-              </Box>
-            </BaseWarningBox>
-          )}
-          {approveBtn && walletBalance !== "0" && (
-            <BaseInfoBox>
-              <InfoIcon />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  First-time connect? Please allow token approval in your
-                  MetaMask
-                </Typography>
-              </Box>
-            </BaseInfoBox>
-          )}
+
+            <DepositVaultForm
+              vaultItemData={vaultItemData}
+              walletBalance={walletBalance}
+              control={control}
+              setMax={setMax}
+              validateMaxDepositValue={validateMaxDepositValue}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              minimumDeposit={minimumDeposit}
+              depositLimitExceeded={depositLimitExceeded}
+              dataTestIdPrefix="vault-listItemDepositModal"
+            />
+            <DepositVaultInfo
+              vaultItemData={vaultItemData}
+              deposit={deposit}
+              sharedToken={sharedToken}
+              performanceFee={performanceFee}
+            />
+            {isWalletFetching &&
+              (BigNumber(walletBalance)
+                .dividedBy(10 ** 18)
+                .isLessThan(BigNumber(deposit)) ||
+                walletBalance == "0") && (
+                <BaseErrorBox sx={{ marginBottom: 0 }}>
+                  <InfoIcon />
+                  <Typography>
+                    Wallet balance is not enough to deposit.
+                  </Typography>
+                </BaseErrorBox>
+              )}
+            {isTfVaultType && !isUserKycPassed && activeTfPeriod === 0 && (
+              <BaseWarningBox>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    Only KYC-verified users can deposit. Please completing KYC
+                    at{" "}
+                    <a
+                      href={"https://kyc.tradeflow.network/"}
+                      target={"_blank"}
+                      rel={"noreferrer"}
+                    >
+                      https://kyc.tradeflow.network/
+                    </a>
+                  </Typography>
+                </Box>
+              </BaseWarningBox>
+            )}
+            {activeTfPeriod === 1 && (
+              <BaseWarningBox>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    Deposit period has been completed.
+                  </Typography>
+                </Box>
+              </BaseWarningBox>
+            )}
+            {approveBtn && walletBalance !== "0" && (
+              <BaseInfoBox>
+                <InfoIcon />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    First-time connect? Please allow token approval in your
+                    MetaMask
+                  </Typography>
+                </Box>
+              </BaseInfoBox>
+            )}
+          </Box>
           <ModalButtonWrapper>
             <ButtonSecondary
               onClick={onClose}

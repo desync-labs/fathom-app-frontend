@@ -55,47 +55,50 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
         Top Up Position
       </BaseDialogTitle>
       <DialogContent>
-        <TopUpPositionForm
-          topUpPosition={topUpPosition}
-          closePosition={closePosition}
-          setTopUpPosition={setTopUpPosition}
-          setClosePosition={setClosePosition}
-        />
-        <TopUpPositionInfo />
+        <Box>
+          <TopUpPositionForm
+            topUpPosition={topUpPosition}
+            closePosition={closePosition}
+            setTopUpPosition={setTopUpPosition}
+            setClosePosition={setClosePosition}
+          />
+          <TopUpPositionInfo />
 
-        {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && (
-          <BaseWarningBox>
-            <InfoIcon />
-            <Typography>
-              Resulting in lowering safety buffer - consider provide more
-              collateral or borrow less FXD.
-            </Typography>
-          </BaseWarningBox>
-        )}
-        {BigNumber(collateral).isLessThanOrEqualTo(0) && (
-          <BaseWarningBox>
-            <InfoIcon />
-            <Typography>
-              Providing 0 collateral you are making your position unsafer.
-            </Typography>
-          </BaseWarningBox>
-        )}
-        {errorAtLeastOneField && (
-          <BaseErrorBox>
-            <InfoIcon />
-            <Typography>Please fill at least one field</Typography>
-          </BaseErrorBox>
-        )}
-        {approveBtn && !!balance && (
-          <BaseInfoBox>
-            <InfoIcon />
-            <Box flexDirection="column">
-              <Typography width="100%">
-                First-time connect? Please allow token approval in your MetaMask
+          {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && (
+            <BaseWarningBox>
+              <InfoIcon />
+              <Typography>
+                Resulting in lowering safety buffer - consider provide more
+                collateral or borrow less FXD.
               </Typography>
-            </Box>
-          </BaseInfoBox>
-        )}
+            </BaseWarningBox>
+          )}
+          {BigNumber(collateral).isLessThanOrEqualTo(0) && (
+            <BaseWarningBox>
+              <InfoIcon />
+              <Typography>
+                Providing 0 collateral you are making your position unsafer.
+              </Typography>
+            </BaseWarningBox>
+          )}
+          {errorAtLeastOneField && (
+            <BaseErrorBox>
+              <InfoIcon />
+              <Typography>Please fill at least one field</Typography>
+            </BaseErrorBox>
+          )}
+          {approveBtn && !!balance && (
+            <BaseInfoBox>
+              <InfoIcon />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  First-time connect? Please allow token approval in your
+                  MetaMask
+                </Typography>
+              </Box>
+            </BaseInfoBox>
+          )}
+        </Box>
         <ModalButtonWrapper>
           <ButtonSecondary
             onClick={onClose}

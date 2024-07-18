@@ -50,33 +50,36 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
         Repay Position
       </BaseDialogTitle>
       <DialogContent>
-        <RepayPositionForm
-          topUpPosition={topUpPosition}
-          closePosition={closePosition}
-          setTopUpPosition={setTopUpPosition}
-          setClosePosition={setClosePosition}
-        />
-        <RepayPositionInfo />
+        <Box>
+          <RepayPositionForm
+            topUpPosition={topUpPosition}
+            closePosition={closePosition}
+            setTopUpPosition={setTopUpPosition}
+            setClosePosition={setClosePosition}
+          />
+          <RepayPositionInfo />
 
-        {balanceError && (
-          <BaseWarningBox>
-            <InfoIcon />
-            <Typography>
-              Wallet balance is not enough to close this position entirely
-              (repay in full).
-            </Typography>
-          </BaseWarningBox>
-        )}
-        {approveBtn && (
-          <BaseInfoBox>
-            <InfoIcon />
-            <Box flexDirection="column">
-              <Typography width="100%">
-                First-time connect? Please allow token approval in your MetaMask
+          {balanceError && (
+            <BaseWarningBox>
+              <InfoIcon />
+              <Typography>
+                Wallet balance is not enough to close this position entirely
+                (repay in full).
               </Typography>
-            </Box>
-          </BaseInfoBox>
-        )}
+            </BaseWarningBox>
+          )}
+          {approveBtn && (
+            <BaseInfoBox>
+              <InfoIcon />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  First-time connect? Please allow token approval in your
+                  MetaMask
+                </Typography>
+              </Box>
+            </BaseInfoBox>
+          )}
+        </Box>
         <ModalButtonWrapper>
           <ButtonSecondary
             onClick={onClose}

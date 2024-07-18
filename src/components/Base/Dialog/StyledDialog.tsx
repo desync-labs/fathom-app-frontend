@@ -8,6 +8,9 @@ export const BaseDialogWrapper = styled(
   "& .MuiDialogContent-root": {
     padding: "0 24px 24px",
     [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "space-between",
       padding: "0 16px 24px",
     },
   },
@@ -19,9 +22,12 @@ export const BaseDialogWrapper = styled(
     border: "1px solid #2c4066",
     background: "#132340",
     [theme.breakpoints.down("sm")]: {
-      height: "fit-content",
-      width: "calc(100% - 32px)",
-      margin: "32px 16px",
+      width: "100vw",
+      height: "calc(var(--vh, 1vh) * 100)",
+      maxWidth: "100vw",
+      maxHeight: "100vh",
+      borderRadius: "0",
+      margin: "0",
     },
   },
   "& .MuiDialogActions-root": {
