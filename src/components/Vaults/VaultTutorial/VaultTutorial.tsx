@@ -1,9 +1,10 @@
-import { Box, styled, Typography } from "@mui/material";
+import { styled } from "@mui/material";
 import ReactPlayer from "react-player";
+import BasePageHeader from "components/Base/PageHeader";
 
 const EmbedVideoWrapper = styled("div")`
   position: relative;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  padding-top: 50%;
 `;
 
 const ResponsiveReactPlayer = styled(ReactPlayer)`
@@ -12,16 +13,10 @@ const ResponsiveReactPlayer = styled(ReactPlayer)`
   left: 0;
 `;
 
-const VaultTitle = styled(Typography)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin-bottom: -50px;
-  }
-`;
-
 const VaultTutorial = () => {
   return (
-    <Box>
-      <VaultTitle variant={"h1"}>Vault Tutorial</VaultTitle>
+    <>
+      <BasePageHeader title={"Vault Tutorial"} />
       <EmbedVideoWrapper>
         <ResponsiveReactPlayer
           url={"/videos/vaults/vault-tutorial.mp4"}
@@ -30,7 +25,7 @@ const VaultTutorial = () => {
           height="100%"
         />
       </EmbedVideoWrapper>
-    </Box>
+    </>
   );
 };
 

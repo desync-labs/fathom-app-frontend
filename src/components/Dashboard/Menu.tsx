@@ -32,7 +32,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const { allowStableSwap, chainId } = useConnector();
 
   const isDashboardActive = useMemo(
-    () => location.pathname.includes("/fxd"),
+    () => location.pathname.includes("fxd"),
     [location.pathname]
   );
   const isStableSwapActive = useMemo(
@@ -70,7 +70,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   if (!chainId || DISPLAY_FXD.includes(chainId)) {
     appMenuItems.push({
       name: "FXD",
-      link: "/",
+      link: "/fxd",
       Icon: <FxdIcon isactive={isDashboardActive ? "true" : ""} />,
       isActive: isDashboardActive,
       showText: showText,

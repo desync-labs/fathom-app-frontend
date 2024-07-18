@@ -29,7 +29,7 @@ const ButtonsWrapper = styled(Box)`
   height: 100%;
   display: flex;
   align-items: center;
-  padding-right: 20px;
+  padding-right: 36px;
   justify-content: right;
 `;
 

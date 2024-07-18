@@ -144,12 +144,13 @@ export const PositionListItemSkeleton = () => {
       <TableCell>
         <CustomSkeleton height={20} width={60} animation={"wave"} />
       </TableCell>
-      <TableCell align="right" width={"200px"}>
-        <CustomSkeleton height={32} width={160} animation={"wave"} />
+      <TableCell align="right" width={"180px"}>
+        <CustomSkeleton height={32} width={128} animation={"wave"} />
       </TableCell>
     </BaseTableItemRow>
   );
 };
+
 export const PositionListItemMobileSkeleton = () => {
   return (
     <PositionListItemMobileContainer>
