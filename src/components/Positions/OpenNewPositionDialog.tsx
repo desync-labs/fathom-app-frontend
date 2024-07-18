@@ -50,58 +50,61 @@ const OpenNewPositionDialog: FC = () => {
         Open Position
       </BaseDialogTitle>
       <DialogContent>
-        <OpenPositionForm />
-        <OpenPositionInfo />
+        <Box>
+          <OpenPositionForm />
+          <OpenPositionInfo />
 
-        {!isOpenPositionWhitelisted && (
-          <BaseWarningBox>
-            <InfoIcon />
-            <Typography>
-              Your wallet address is not whitelisted for open position.
-              <br />
-              <a
-                href={
-                  "https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform"
-                }
-                target={"_blank"}
-                rel="noreferrer"
-              >
-                Apply for being added to the whitelist to borrow FXD.
-              </a>
-            </Typography>
-          </BaseWarningBox>
-        )}
-        {!proxyWalletExists && (
-          <BaseWarningBox>
-            <InfoIcon />
-            <Typography>
-              Your wallet address has no proxy wallet. <br />
-              First transaction will be creation of proxy wallet.
-            </Typography>
-          </BaseWarningBox>
-        )}
-        {dangerSafetyBuffer ? (
-          <BaseErrorBox>
-            <InfoIcon
-              sx={{ width: "16px", color: "#F5953D", height: "16px" }}
-            />
-            <BaseErrorMessage>
-              Safety Buffer is moved into the danger zone. We recommend
-              borrowing a lesser amount of FXD. Otherwise, your position may be
-              at risk of liquidation if the price of collateral will drop.
-            </BaseErrorMessage>
-          </BaseErrorBox>
-        ) : null}
-        {approveBtn && !!balance && (
-          <BaseInfoBox>
-            <InfoIcon />
-            <Box flexDirection="column">
-              <Typography width="100%">
-                First-time connect? Please allow token approval in your MetaMask
+          {!isOpenPositionWhitelisted && (
+            <BaseWarningBox>
+              <InfoIcon />
+              <Typography>
+                Your wallet address is not whitelisted for open position.
+                <br />
+                <a
+                  href={
+                    "https://docs.google.com/forms/d/e/1FAIpQLSdyQkwpYPAAUc5llJxk09ymMdjSSSjjiY3spwvRvCwfV08h2A/viewform"
+                  }
+                  target={"_blank"}
+                  rel="noreferrer"
+                >
+                  Apply for being added to the whitelist to borrow FXD.
+                </a>
               </Typography>
-            </Box>
-          </BaseInfoBox>
-        )}
+            </BaseWarningBox>
+          )}
+          {!proxyWalletExists && (
+            <BaseWarningBox>
+              <InfoIcon />
+              <Typography>
+                Your wallet address has no proxy wallet. <br />
+                First transaction will be creation of proxy wallet.
+              </Typography>
+            </BaseWarningBox>
+          )}
+          {dangerSafetyBuffer ? (
+            <BaseErrorBox>
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
+              <BaseErrorMessage>
+                Safety Buffer is moved into the danger zone. We recommend
+                borrowing a lesser amount of FXD. Otherwise, your position may
+                be at risk of liquidation if the price of collateral will drop.
+              </BaseErrorMessage>
+            </BaseErrorBox>
+          ) : null}
+          {approveBtn && !!balance && (
+            <BaseInfoBox>
+              <InfoIcon />
+              <Box flexDirection="column">
+                <Typography width="100%">
+                  First-time connect? Please allow token approval in your
+                  MetaMask
+                </Typography>
+              </Box>
+            </BaseInfoBox>
+          )}
+        </Box>
         <ModalButtonWrapper>
           <ButtonSecondary
             onClick={onClose}

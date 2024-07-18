@@ -128,81 +128,84 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        {isTfVaultType && (
-          <VaultModalLockingBar
-            tfVaultLockEndDate={tfVaultLockEndDate}
-            tfVaultDepositEndDate={tfVaultDepositEndDate}
-            activeTfPeriod={activeTfPeriod}
-          />
-        )}
         <FormProvider {...methods}>
-          <ManageVaultForm
-            balanceToken={balancePosition}
-            vaultItemData={vaultItemData}
-            vaultPosition={vaultPosition}
-            walletBalance={walletBalance}
-            control={control}
-            formType={formType}
-            setMax={setMax}
-            validateMaxValue={validateMaxValue}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            depositLimitExceeded={depositLimitExceeded}
-            dataTestIdPrefix="vault-listItemManageModal"
-          />
-          <ManageVaultInfo
-            formType={formType}
-            vaultItemData={vaultItemData}
-            vaultPosition={vaultPosition}
-            formToken={formToken}
-            formSharedToken={formSharedToken}
-            performanceFee={performanceFee}
-          />
-          {isWalletFetching &&
-            formType === FormType.DEPOSIT &&
-            (BigNumber(walletBalance)
-              .dividedBy(10 ** 18)
-              .isLessThan(BigNumber(formToken)) ||
-              walletBalance == "0") && (
-              <BaseErrorBox sx={{ marginBottom: 0 }}>
-                <InfoIcon />
-                <Typography>
-                  Wallet balance is not enough to deposit.
-                </Typography>
-              </BaseErrorBox>
-            )}
-          {formType === FormType.WITHDRAW &&
-            withdrawLimitExceeded(formToken) && (
-              <BaseErrorBox sx={{ marginBottom: 0 }}>
-                <InfoIcon />
-                <Typography>{withdrawLimitExceeded(formToken)}</Typography>
-              </BaseErrorBox>
-            )}
-          {activeTfPeriod === 1 && (
-            <BaseWarningBox>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+          <Box>
+            {isTfVaultType && (
+              <VaultModalLockingBar
+                tfVaultLockEndDate={tfVaultLockEndDate}
+                tfVaultDepositEndDate={tfVaultDepositEndDate}
+                activeTfPeriod={activeTfPeriod}
               />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Deposit period has been completed.
-                </Typography>
-              </Box>
-            </BaseWarningBox>
-          )}
-          {approveBtn &&
-            formType === FormType.DEPOSIT &&
-            walletBalance !== "0" && (
-              <BaseInfoBox>
-                <InfoIcon />
+            )}
+
+            <ManageVaultForm
+              balanceToken={balancePosition}
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              walletBalance={walletBalance}
+              control={control}
+              formType={formType}
+              setMax={setMax}
+              validateMaxValue={validateMaxValue}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              depositLimitExceeded={depositLimitExceeded}
+              dataTestIdPrefix="vault-listItemManageModal"
+            />
+            <ManageVaultInfo
+              formType={formType}
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              formToken={formToken}
+              formSharedToken={formSharedToken}
+              performanceFee={performanceFee}
+            />
+            {isWalletFetching &&
+              formType === FormType.DEPOSIT &&
+              (BigNumber(walletBalance)
+                .dividedBy(10 ** 18)
+                .isLessThan(BigNumber(formToken)) ||
+                walletBalance == "0") && (
+                <BaseErrorBox sx={{ marginBottom: 0 }}>
+                  <InfoIcon />
+                  <Typography>
+                    Wallet balance is not enough to deposit.
+                  </Typography>
+                </BaseErrorBox>
+              )}
+            {formType === FormType.WITHDRAW &&
+              withdrawLimitExceeded(formToken) && (
+                <BaseErrorBox sx={{ marginBottom: 0 }}>
+                  <InfoIcon />
+                  <Typography>{withdrawLimitExceeded(formToken)}</Typography>
+                </BaseErrorBox>
+              )}
+            {activeTfPeriod === 1 && (
+              <BaseWarningBox>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
                 <Box flexDirection="column">
                   <Typography width="100%">
-                    First-time connect? Please allow token approval in your
-                    MetaMask
+                    Deposit period has been completed.
                   </Typography>
                 </Box>
-              </BaseInfoBox>
+              </BaseWarningBox>
             )}
+            {approveBtn &&
+              formType === FormType.DEPOSIT &&
+              walletBalance !== "0" && (
+                <BaseInfoBox>
+                  <InfoIcon />
+                  <Box flexDirection="column">
+                    <Typography width="100%">
+                      First-time connect? Please allow token approval in your
+                      MetaMask
+                    </Typography>
+                  </Box>
+                </BaseInfoBox>
+              )}
+          </Box>
           <ModalButtonWrapper>
             <ButtonSecondary
               onClick={onClose}
