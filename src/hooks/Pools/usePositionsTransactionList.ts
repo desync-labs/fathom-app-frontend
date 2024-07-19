@@ -75,6 +75,7 @@ const usePositionsTransactionList = () => {
       orderBy: "blockNumber",
       orderDirection: "desc",
     },
+    fetchPolicy: "network-only",
   });
 
   const { data: pools, loading: poolsLoading } = useQuery(FXD_POOLS, {
