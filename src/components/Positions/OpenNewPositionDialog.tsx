@@ -26,6 +26,7 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
+import OpenPositionAiAssist from "components/Positions/OpenPosition/OpenPositionAiAssist";
 
 const OpenNewPositionDialog: FC = () => {
   const {
@@ -52,6 +53,7 @@ const OpenNewPositionDialog: FC = () => {
       <DialogContent>
         <Box>
           <OpenPositionForm />
+          <OpenPositionAiAssist />
           <OpenPositionInfo />
 
           {!isOpenPositionWhitelisted && (
