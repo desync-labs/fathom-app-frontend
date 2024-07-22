@@ -1,4 +1,4 @@
-import { IconButton, Popover, Slider, styled } from "@mui/material";
+import { IconButton, Popover, styled, ToggleButton } from "@mui/material";
 import {
   BaseFormInputLabel,
   BaseFormInputWrapper,
@@ -11,6 +11,8 @@ import { FC, useEffect, useState } from "react";
 
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import dayjs from "dayjs";
+import { BaseSlider } from "./Slider";
+import { BaseToggleButtonGroup } from "components/Base/Buttons/StyledButtons";
 
 const DateRangePickerWrapper = styled("div")``;
 
@@ -39,7 +41,7 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
   range,
   handleChangeRange,
 }) => {
-  const [startDate, setStartDate] = useState<Date | undefined>();
+  const startDate = new Date();
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -51,10 +53,8 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
     setAnchorEl(null);
   };
 
-  const handleChange = (dates: [Date | null, Date | null]) => {
-    const [start, end] = dates;
-    start && setStartDate(start);
-    end && setEndDate(end);
+  const handleChange = (date: Date | null) => {
+    date && setEndDate(date);
   };
 
   useEffect(() => {
@@ -66,8 +66,6 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
         const fullDays = dayjs(endDate).diff(dayjs(startDate), "day");
         handleChangeRange(fullDays);
       }
-    } else {
-      handleChangeRange(0);
     }
   }, [startDate, endDate]);
 
@@ -78,17 +76,16 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
       <BaseFormLabelRow>
         <BaseFormInputLabel>Position duration</BaseFormInputLabel>
       </BaseFormLabelRow>
-      <BaseFormInputWrapper>
+      <BaseFormInputWrapper sx={{ marginBottom: 0 }}>
         <RangeTextFields
           type="number"
           value={range.toString()}
           onChange={(e) => handleChangeRange(Number(e.target.value))}
           placeholder="Number of Days"
         />
-        <DatePickerButton>
+        <DatePickerButton onClick={handleOpen}>
           <CalendarTodayOutlinedIcon
             sx={{ color: "#43FFF1", width: "22px", height: "22px" }}
-            onClick={handleOpen}
           />
         </DatePickerButton>
         <Popover
@@ -106,22 +103,40 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
           }}
         >
           <DatePicker
-            selected={startDate}
+            selected={endDate}
             onChange={handleChange}
             startDate={startDate}
             endDate={endDate}
-            selectsRange
+            minDate={startDate}
+            selectsEnd
             inline
           />
         </Popover>
       </BaseFormInputWrapper>
-      <Slider
+      <BaseSlider
         value={range}
+        max={180}
         onChange={(e, newValue: number | number[]) =>
           handleChangeRange(newValue as number)
         }
         aria-labelledby="input-slider"
       />
+      <BaseFormInputWrapper>
+        <BaseFormLabelRow mb="8px">
+          <BaseFormInputLabel>Recommend period</BaseFormInputLabel>
+        </BaseFormLabelRow>
+        <BaseToggleButtonGroup
+          value={range}
+          exclusive
+          onChange={(e, value) => handleChangeRange(value as number)}
+          sx={{ marginBottom: "16px" }}
+        >
+          <ToggleButton value={30}>1-Month</ToggleButton>
+          <ToggleButton value={60}>2-Month</ToggleButton>
+          <ToggleButton value={90}>3-Month</ToggleButton>
+          <ToggleButton value={180}>6-Month</ToggleButton>
+        </BaseToggleButtonGroup>
+      </BaseFormInputWrapper>
     </DateRangePickerWrapper>
   );
 };

@@ -1,4 +1,3 @@
-import { SyntheticEvent, useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -18,6 +17,10 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import BaseDateRangePicker from "../../Base/Form/PeriodInput";
 import { BaseSummary } from "../../Base/Typography/StyledTypography";
+import { BaseButtonSecondary } from "../../Base/Buttons/StyledButtons";
+import useOpenPositionAiAssist from "../../../hooks/Positions/useOpenPositionAiAssist";
+import useOpenPositionContext from "../../../context/openPosition";
+import { CustomSkeleton } from "../../Base/Skeletons/StyledSkeleton";
 
 const ShowAiAccordion = styled(Accordion)`
   background: transparent;
@@ -57,19 +60,18 @@ const ShowAiSuggestionButton = styled(AccordionSummary)`
 `;
 
 const OpenPositionAiAssist = () => {
-  const [isAiSuggestionOpen, setIsAiSuggestionOpen] = useState<string | false>(
-    false
-  );
-  const [range, setRange] = useState<number>(1);
+  const { pool, setAiPredictionCollateral } = useOpenPositionContext();
 
-  const handleChangeRange = (range: number) => {
-    setRange(range);
-  };
-
-  const handleAiSuggestionOpen =
-    (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
-      setIsAiSuggestionOpen(isExpanded ? panel : false);
-    };
+  const {
+    isAiSuggestionOpen,
+    range,
+    pricesPrediction,
+    minPricePrediction,
+    loadingPricePrediction,
+    predictionLiquidation,
+    handleChangeRange,
+    handleAiSuggestionOpen,
+  } = useOpenPositionAiAssist(pool);
   return (
     <ShowAiAccordion
       expanded={isAiSuggestionOpen === "panel1"}
@@ -95,7 +97,15 @@ const OpenPositionAiAssist = () => {
           <BaseFormInfoList>
             <InfoListItem
               alignItems="flex-start"
-              secondaryAction={`$${formatNumber(1000)}`}
+              secondaryAction={
+                <>
+                  {loadingPricePrediction || pricesPrediction["1m"] === null ? (
+                    <CustomSkeleton animation={"wave"} height={20} width={50} />
+                  ) : (
+                    `$${formatNumber(pricesPrediction["1m"])}`
+                  )}
+                </>
+              }
             >
               <ListItemText
                 primary={
@@ -105,7 +115,15 @@ const OpenPositionAiAssist = () => {
             </InfoListItem>
             <InfoListItem
               alignItems="flex-start"
-              secondaryAction={`$${formatNumber(2000)}`}
+              secondaryAction={
+                <>
+                  {loadingPricePrediction || pricesPrediction["2m"] === null ? (
+                    <CustomSkeleton animation={"wave"} height={20} width={50} />
+                  ) : (
+                    `$${formatNumber(pricesPrediction["2m"])}`
+                  )}
+                </>
+              }
             >
               <ListItemText
                 primary={
@@ -115,11 +133,37 @@ const OpenPositionAiAssist = () => {
             </InfoListItem>
             <InfoListItem
               alignItems="flex-start"
-              secondaryAction={`$${formatNumber(3000)}`}
+              secondaryAction={
+                <>
+                  {loadingPricePrediction || pricesPrediction["3m"] === null ? (
+                    <CustomSkeleton animation={"wave"} height={20} width={50} />
+                  ) : (
+                    `$${formatNumber(pricesPrediction["3m"])}`
+                  )}
+                </>
+              }
             >
               <ListItemText
                 primary={
                   <ListTitleWrapper>Collateral (3-Month)</ListTitleWrapper>
+                }
+              />
+            </InfoListItem>
+            <InfoListItem
+              alignItems="flex-start"
+              secondaryAction={
+                <>
+                  {loadingPricePrediction || pricesPrediction["6m"] === null ? (
+                    <CustomSkeleton animation={"wave"} height={20} width={50} />
+                  ) : (
+                    `$${formatNumber(pricesPrediction["6m"])}`
+                  )}
+                </>
+              }
+            >
+              <ListItemText
+                primary={
+                  <ListTitleWrapper>Collateral (6-Month)</ListTitleWrapper>
                 }
               />
             </InfoListItem>
@@ -128,7 +172,15 @@ const OpenPositionAiAssist = () => {
           <BaseFormInfoList>
             <InfoListItem
               alignItems="flex-start"
-              secondaryAction={`$${formatNumber(40)}`}
+              secondaryAction={
+                <>
+                  {loadingPricePrediction || minPricePrediction === null ? (
+                    <CustomSkeleton animation={"wave"} height={20} width={60} />
+                  ) : (
+                    `$${formatNumber(minPricePrediction)}`
+                  )}
+                </>
+              }
             >
               <ListItemText
                 primary={
@@ -138,7 +190,15 @@ const OpenPositionAiAssist = () => {
             </InfoListItem>
             <InfoListItem
               alignItems="flex-start"
-              secondaryAction={`${formatNumber(1500)} XDC`}
+              secondaryAction={
+                <>
+                  {loadingPricePrediction || predictionLiquidation === null ? (
+                    <CustomSkeleton animation={"wave"} height={20} width={60} />
+                  ) : (
+                    `${formatNumber(predictionLiquidation)} ${pool?.poolName}`
+                  )}
+                </>
+              }
             >
               <ListItemText
                 primary={
@@ -149,6 +209,19 @@ const OpenPositionAiAssist = () => {
               />
             </InfoListItem>
           </BaseFormInfoList>
+          <BaseButtonSecondary
+            disabled={predictionLiquidation === null || loadingPricePrediction}
+            onClick={() =>
+              setAiPredictionCollateral(
+                predictionLiquidation === null
+                  ? "0"
+                  : predictionLiquidation.toString()
+              )
+            }
+            sx={{ width: "100%", marginTop: "5px" }}
+          >
+            Apply AI Recommendation
+          </BaseButtonSecondary>
         </BaseDialogFormInfoWrapper>
       </AccordionDetails>
     </ShowAiAccordion>

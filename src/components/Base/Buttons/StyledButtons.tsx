@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Box, IconButton as MuiButton } from "@mui/material";
+import { Box, IconButton as MuiButton, ToggleButtonGroup } from "@mui/material";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 
 export const BaseButtonsSwitcherGroup = styled(Box)`
@@ -28,6 +28,33 @@ export const BaseSwitcherButton = styled(MuiButton)`
   background: transparent;
   &.active {
     background: #3d5580;
+  }
+`;
+
+export const BaseButtonSecondary = styled(MuiButton)`
+  color: #43FFF1;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 8px 16px;
+  gap: 8px;
+  border: 1px solid #009E92;
+  border-radius: 8px;
+  height: 40px;
+  &:hover {
+    background: transparent;
+    color: #B3FFF9;
+    border: 1px solid #B3FFF9;
+    svg: {
+      color: #B3FFF9;
+    }, 
+  }
+  &:disabled {
+    color: gray;
+    background: transparent;
+    border-color: gray;
+    cursor: not-allowed !important;
+    pointer-events: all !important; 
   }
 `;
 
@@ -75,5 +102,22 @@ export const ExtLinkIcon = styled(OpenInNewRoundedIcon, {
   margin-left: 4px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     margin-left: 0;
+  }
+`;
+
+export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
+  gap: 8px;
+
+  & .MuiToggleButton-root {
+    height: 36px;
+    font-size: 14px;
+    font-weight: 400;
+    border-radius: 6px;
+    background: rgba(79, 101, 140, 0.3);
+    padding: 4px 8px;
+
+    &.Mui-selected {
+      font-weight: 600;
+    }
   }
 `;

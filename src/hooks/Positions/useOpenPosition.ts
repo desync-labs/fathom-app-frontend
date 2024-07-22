@@ -439,6 +439,10 @@ const useOpenPosition = (
     }
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
+  const setAiPredictionCollateral = (recomendedCollateral: string) => {
+    setValue("collateral", recomendedCollateral, { shouldValidate: true });
+  };
+
   return {
     proxyWalletExists,
     safeMax,
@@ -471,6 +475,7 @@ const useOpenPosition = (
     minCollateralAmount,
     validateMaxBorrowAmount,
     priceOfCollateral,
+    setAiPredictionCollateral,
   };
 };
 
