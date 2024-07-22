@@ -129,6 +129,35 @@ const PositionActivityListItemAmounts: FC<{
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
     );
+  } else if (
+    [PositionActivityState.LIQUIDATION].includes(transaction.activityState)
+  ) {
+    return (
+      <PositionActivityListItemAmountsWrapper>
+        <PositionActivityListItemAmountsItemWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL(
+              transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
+                ? "WXDC"
+                : transaction.position?.collateralPoolName?.toUpperCase()
+            )}
+            alt={"logo"}
+          />
+          <TokenAmount>
+            {formatNumber(Number(transaction.collateralAmount))}{" "}
+            {transaction.position?.collateralPoolName?.toUpperCase()}
+          </TokenAmount>
+        </PositionActivityListItemAmountsItemWrapper>
+
+        <ArrowIcon />
+
+        <PositionActivityListItemAmountsItemWrapper>
+          🔥
+        </PositionActivityListItemAmountsItemWrapper>
+      </PositionActivityListItemAmountsWrapper>
+    );
   }
   return (
     <PositionActivityListItemAmountsWrapper>
