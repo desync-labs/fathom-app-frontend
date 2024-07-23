@@ -148,10 +148,18 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
           onChange={(e, value) => handleChangeEndDate(value as number)}
           sx={{ marginBottom: "16px" }}
         >
-          <ToggleButton value={30}>1-Month</ToggleButton>
-          <ToggleButton value={60}>2-Month</ToggleButton>
-          <ToggleButton value={90}>3-Month</ToggleButton>
-          <ToggleButton value={180}>6-Month</ToggleButton>
+          <ToggleButton selected={range <= 30} value={30}>
+            1-Month
+          </ToggleButton>
+          <ToggleButton selected={range > 30 && range <= 60} value={60}>
+            2-Month
+          </ToggleButton>
+          <ToggleButton selected={range > 60 && range <= 90} value={90}>
+            3-Month
+          </ToggleButton>
+          <ToggleButton selected={range > 90} value={180}>
+            6-Month
+          </ToggleButton>
         </BaseToggleButtonGroup>
       </BaseFormInputWrapper>
     </DateRangePickerWrapper>
