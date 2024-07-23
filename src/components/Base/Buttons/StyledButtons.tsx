@@ -107,6 +107,7 @@ export const ExtLinkIcon = styled(OpenInNewRoundedIcon, {
 
 export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
   gap: 8px;
+  width: 100%;
 
   & .MuiToggleButton-root {
     height: 36px;
@@ -115,6 +116,7 @@ export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
     border-radius: 6px;
     background: rgba(79, 101, 140, 0.3);
     padding: 4px 8px;
+    width: 25%;
 
     &.Mui-selected {
       font-weight: 600;

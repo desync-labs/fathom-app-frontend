@@ -9,18 +9,18 @@ import {
 import {
   BaseDialogFormInfoWrapper,
   BaseFormInfoList,
-} from "../../Base/Form/StyledForm";
+} from "components/Base/Form/StyledForm";
 import { InfoListItem, ListTitleWrapper } from "./OpenPositionInfo";
 import { formatNumber, formatPercentage } from "utils/format";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
-import BaseDateRangePicker from "../../Base/Form/PeriodInput";
-import { BaseSummary } from "../../Base/Typography/StyledTypography";
-import { BaseButtonSecondary } from "../../Base/Buttons/StyledButtons";
-import useOpenPositionAiAssist from "../../../hooks/Positions/useOpenPositionAiAssist";
-import useOpenPositionContext from "../../../context/openPosition";
-import { CustomSkeleton } from "../../Base/Skeletons/StyledSkeleton";
+import BaseDateRangePicker from "components/Base/Form/PeriodInput";
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
+import { BaseButtonSecondary } from "components/Base/Buttons/StyledButtons";
+import useOpenPositionAiAssist from "hooks/Positions/useOpenPositionAiAssist";
+import useOpenPositionContext from "context/openPosition";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import BigNumber from "bignumber.js";
 
 const ShowAiAccordion = styled(Accordion)`
@@ -75,6 +75,7 @@ const OpenPositionAiAssist = () => {
     handleAiSuggestionOpen,
     handleApplyAiRecommendation,
   } = useOpenPositionAiAssist(pool, fathomToken, setAiPredictionCollateral);
+
   return (
     <ShowAiAccordion
       expanded={isAiSuggestionOpen === "panel1"}
