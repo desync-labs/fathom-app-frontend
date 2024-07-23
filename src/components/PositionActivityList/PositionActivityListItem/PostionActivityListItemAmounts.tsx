@@ -18,6 +18,14 @@ const ArrowIcon = styled(ArrowForwardRoundedIcon)`
   }
 `;
 
+const BirnIcon = styled("span")`
+  font-size: 20px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 18px;
+  }
+`;
+
 const PositionActivityListItemAmountsWrapper = styled(Box)`
   display: flex;
   align-items: center;
@@ -146,7 +154,7 @@ const PositionActivityListItemAmounts: FC<{
             alt={"logo"}
           />
           <TokenAmount>
-            {formatNumber(Number(transaction.collateralAmount))}{" "}
+            -{formatNumber(Number(transaction.collateralAmount))}{" "}
             {transaction.position?.collateralPoolName?.toUpperCase()}
           </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
@@ -154,7 +162,16 @@ const PositionActivityListItemAmounts: FC<{
         <ArrowIcon />
 
         <PositionActivityListItemAmountsItemWrapper>
-          🔥
+          <BirnIcon>🔥</BirnIcon>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL("FXD")}
+            alt={"logo"}
+          />
+          <TokenAmount>
+            {formatNumber(Number(transaction.debtAmount))} FXD
+          </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
     );
