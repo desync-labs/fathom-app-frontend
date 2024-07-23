@@ -129,54 +129,6 @@ const PositionActivityListItemAmounts: FC<{
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
     );
-  } else if (
-    [PositionActivityState.LIQUIDATION].includes(transaction.activityState)
-  ) {
-    return (
-      <PositionActivityListItemAmountsWrapper>
-        <PositionActivityListItemAmountsItemWrapper>
-          <img
-            width={20}
-            height={20}
-            src={getTokenLogoURL(
-              transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
-                ? "WXDC"
-                : transaction.position?.collateralPoolName?.toUpperCase()
-            )}
-            alt={"logo"}
-          />
-          <TokenAmount>
-            -
-            {formatNumber(
-              BigNumber(transaction.collateralAmount)
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}{" "}
-            {transaction.position?.collateralPoolName?.toUpperCase()}
-          </TokenAmount>
-        </PositionActivityListItemAmountsItemWrapper>
-
-        <ArrowIcon />
-
-        <PositionActivityListItemAmountsItemWrapper>
-          <img
-            width={20}
-            height={20}
-            src={getTokenLogoURL("FXD")}
-            alt={"logo"}
-          />
-          <TokenAmount>
-            +
-            {formatNumber(
-              BigNumber(transaction.debtAmount)
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}{" "}
-            FXD
-          </TokenAmount>
-        </PositionActivityListItemAmountsItemWrapper>
-      </PositionActivityListItemAmountsWrapper>
-    );
   }
   return (
     <PositionActivityListItemAmountsWrapper>
