@@ -159,6 +159,7 @@ const useOpenPosition = (
 
   const handleUpdates = useCallback(
     async (collateralInput: string, fathomTokenInput: string) => {
+      console.log("pool", pool);
       collateralInput = collateralInput || "0";
       fathomTokenInput = fathomTokenInput || "0";
 

@@ -11,7 +11,7 @@ import {
   BaseFormInfoList,
 } from "../../Base/Form/StyledForm";
 import { InfoListItem, ListTitleWrapper } from "./OpenPositionInfo";
-import { formatNumber } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
@@ -21,6 +21,7 @@ import { BaseButtonSecondary } from "../../Base/Buttons/StyledButtons";
 import useOpenPositionAiAssist from "../../../hooks/Positions/useOpenPositionAiAssist";
 import useOpenPositionContext from "../../../context/openPosition";
 import { CustomSkeleton } from "../../Base/Skeletons/StyledSkeleton";
+import BigNumber from "bignumber.js";
 
 const ShowAiAccordion = styled(Accordion)`
   background: transparent;
@@ -60,7 +61,8 @@ const ShowAiSuggestionButton = styled(AccordionSummary)`
 `;
 
 const OpenPositionAiAssist = () => {
-  const { pool, setAiPredictionCollateral } = useOpenPositionContext();
+  const { pool, fathomToken, setAiPredictionCollateral } =
+    useOpenPositionContext();
 
   const {
     isAiSuggestionOpen,
@@ -68,10 +70,11 @@ const OpenPositionAiAssist = () => {
     pricesPrediction,
     minPricePrediction,
     loadingPricePrediction,
-    predictionLiquidation,
+    liquidationCollateralAmount,
     handleChangeRange,
     handleAiSuggestionOpen,
-  } = useOpenPositionAiAssist(pool);
+    handleApplyAiRecommendation,
+  } = useOpenPositionAiAssist(pool, fathomToken, setAiPredictionCollateral);
   return (
     <ShowAiAccordion
       expanded={isAiSuggestionOpen === "panel1"}
@@ -102,7 +105,7 @@ const OpenPositionAiAssist = () => {
                   {loadingPricePrediction || pricesPrediction["1m"] === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={50} />
                   ) : (
-                    `$${formatNumber(pricesPrediction["1m"])}`
+                    `$${formatPercentage(pricesPrediction["1m"])}`
                   )}
                 </>
               }
@@ -120,7 +123,7 @@ const OpenPositionAiAssist = () => {
                   {loadingPricePrediction || pricesPrediction["2m"] === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={50} />
                   ) : (
-                    `$${formatNumber(pricesPrediction["2m"])}`
+                    `$${formatPercentage(pricesPrediction["2m"])}`
                   )}
                 </>
               }
@@ -138,7 +141,7 @@ const OpenPositionAiAssist = () => {
                   {loadingPricePrediction || pricesPrediction["3m"] === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={50} />
                   ) : (
-                    `$${formatNumber(pricesPrediction["3m"])}`
+                    `$${formatPercentage(pricesPrediction["3m"])}`
                   )}
                 </>
               }
@@ -156,7 +159,7 @@ const OpenPositionAiAssist = () => {
                   {loadingPricePrediction || pricesPrediction["6m"] === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={50} />
                   ) : (
-                    `$${formatNumber(pricesPrediction["6m"])}`
+                    `$${formatPercentage(pricesPrediction["6m"])}`
                   )}
                 </>
               }
@@ -177,7 +180,7 @@ const OpenPositionAiAssist = () => {
                   {loadingPricePrediction || minPricePrediction === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={60} />
                   ) : (
-                    `$${formatNumber(minPricePrediction)}`
+                    `$${formatPercentage(minPricePrediction)}`
                   )}
                 </>
               }
@@ -192,10 +195,13 @@ const OpenPositionAiAssist = () => {
               alignItems="flex-start"
               secondaryAction={
                 <>
-                  {loadingPricePrediction || predictionLiquidation === null ? (
+                  {loadingPricePrediction ||
+                  liquidationCollateralAmount === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={60} />
                   ) : (
-                    `${formatNumber(predictionLiquidation)} ${pool?.poolName}`
+                    `${formatNumber(
+                      BigNumber(liquidationCollateralAmount).toNumber()
+                    )} ${pool?.poolName}`
                   )}
                 </>
               }
@@ -210,14 +216,10 @@ const OpenPositionAiAssist = () => {
             </InfoListItem>
           </BaseFormInfoList>
           <BaseButtonSecondary
-            disabled={predictionLiquidation === null || loadingPricePrediction}
-            onClick={() =>
-              setAiPredictionCollateral(
-                predictionLiquidation === null
-                  ? "0"
-                  : predictionLiquidation.toString()
-              )
+            disabled={
+              liquidationCollateralAmount === null || loadingPricePrediction
             }
+            onClick={handleApplyAiRecommendation}
             sx={{ width: "100%", marginTop: "5px" }}
           >
             Apply AI Recommendation
