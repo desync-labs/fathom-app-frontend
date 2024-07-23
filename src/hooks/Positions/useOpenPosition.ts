@@ -33,7 +33,7 @@ const useOpenPosition = (
     control,
     setValue,
     trigger,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm({
     defaultValues,
     reValidateMode: "onChange",
@@ -307,9 +307,44 @@ const useOpenPosition = (
     ]
   );
 
-  const setSafeMax = useCallback(() => {
-    setValue("fathomToken", dangerSafeMax.toString(), { shouldValidate: true });
-  }, [dangerSafeMax, setValue]);
+  const setBorrowAmountSafeMax = useCallback(() => {
+    const { priceWithSafetyMargin } = pool;
+
+    let dangerSafeMax: BigNumber | string = BigNumber(balance)
+      .dividedBy(10 ** 18)
+      .multipliedBy(
+        BigNumber(priceWithSafetyMargin)
+          .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
+          .dividedBy(100)
+      );
+
+    dangerSafeMax = (
+      dangerSafeMax.isGreaterThan(maxBorrowAmount)
+        ? BigNumber(maxBorrowAmount).minus(0.01)
+        : dangerSafeMax
+    )
+      .decimalPlaces(2, BigNumber.ROUND_DOWN)
+      .toString();
+
+    setValue("fathomToken", dangerSafeMax, { shouldValidate: true });
+  }, [dangerSafeMax, setValue, pool, balance, maxBorrowAmount]);
+
+  const setCollateralAmountSafeMax = useCallback(() => {
+    const { priceWithSafetyMargin } = pool;
+
+    const collateral = BigNumber(fathomToken)
+      .dividedBy(
+        BigNumber(priceWithSafetyMargin).multipliedBy(
+          BigNumber(100)
+            .minus(DANGER_SAFETY_BUFFER * 100)
+            .dividedBy(100)
+        )
+      )
+      .decimalPlaces(6, BigNumber.ROUND_UP)
+      .toString();
+
+    setValue("collateral", collateral, { shouldValidate: true });
+  }, [fathomToken, pool, setValue]);
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
@@ -462,7 +497,8 @@ const useOpenPosition = (
     fathomToken,
     openPositionLoading,
     setMax,
-    setSafeMax,
+    setBorrowAmountSafeMax,
+    setCollateralAmountSafeMax,
     onSubmit,
     control,
     handleSubmit,
@@ -476,6 +512,7 @@ const useOpenPosition = (
     validateMaxBorrowAmount,
     priceOfCollateral,
     setAiPredictionCollateral,
+    isSubmitted,
   };
 };
 

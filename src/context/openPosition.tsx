@@ -31,7 +31,8 @@ export type UseOpenPositionContextReturnType = {
   fathomToken: string;
   openPositionLoading: boolean;
   setMax: (balance: string) => void;
-  setSafeMax: () => void;
+  setBorrowAmountSafeMax: () => void;
+  setCollateralAmountSafeMax: () => void;
   onSubmit: (values: Record<string, any>) => void;
   control: Control<typeof defaultValues>;
   handleSubmit: UseFormHandleSubmit<typeof defaultValues>;
@@ -46,6 +47,7 @@ export type UseOpenPositionContextReturnType = {
   validateMaxBorrowAmount: () => boolean | string;
   priceOfCollateral: string;
   setAiPredictionCollateral: (value: string) => void;
+  isSubmitted: boolean;
 };
 
 export const OpenPositionContext =

@@ -28,7 +28,8 @@ const OpenPositionForm = () => {
     balance,
     safeMax,
     setMax,
-    setSafeMax,
+    setBorrowAmountSafeMax,
+    setCollateralAmountSafeMax,
     onSubmit,
     control,
     handleSubmit,
@@ -39,6 +40,8 @@ const OpenPositionForm = () => {
     minCollateralAmount,
     validateMaxBorrowAmount,
     priceOfCollateral,
+    isSubmitted,
+    fathomToken,
   } = useOpenPositionContext();
   const { fxdPrice } = usePricesContext();
 
@@ -52,98 +55,6 @@ const OpenPositionForm = () => {
       >
         <Controller
           control={control}
-          name="collateral"
-          rules={{
-            required: true,
-            min: minCollateralAmount,
-            max: BigNumber(balance)
-              .dividedBy(10 ** 18)
-              .toString(),
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <BaseFormInputWrapper>
-              <BaseFormLabelRow>
-                <BaseFormInputLabel>Collateral</BaseFormInputLabel>
-                {balance ? (
-                  <BaseFormWalletBalance>
-                    Balance:{" "}
-                    {formatPercentage(
-                      BigNumber(balance)
-                        .dividedBy(10 ** 18)
-                        .toNumber()
-                    )}{" "}
-                    {pool?.poolName}
-                  </BaseFormWalletBalance>
-                ) : null}
-              </BaseFormLabelRow>
-              <BaseFormTextField
-                error={!!error}
-                id="outlined-helperText"
-                placeholder={"0"}
-                helperText={
-                  <>
-                    {error && error.type === "max" && (
-                      <BaseFormInputErrorWrapper>
-                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          You do not have enough {pool?.poolName}
-                        </Box>
-                      </BaseFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "required" && (
-                      <BaseFormInputErrorWrapper>
-                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Collateral amount is required
-                        </Box>
-                      </BaseFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "min" && (
-                      <BaseFormInputErrorWrapper>
-                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Minimum collateral amount is {minCollateralAmount}.
-                        </Box>
-                      </BaseFormInputErrorWrapper>
-                    )}
-                  </>
-                }
-                value={value}
-                type="number"
-                onChange={onChange}
-              />
-              <BaseFormInputUsdIndicator>{`$${formatNumber(
-                BigNumber(value || 0)
-                  .multipliedBy(priceOfCollateral)
-                  .dividedBy(10 ** 18)
-                  .toNumber()
-              )}`}</BaseFormInputUsdIndicator>
-              <BaseFormInputLogo
-                className={"extendedInput"}
-                src={getTokenLogoURL(
-                  pool?.poolName?.toUpperCase() === "XDC"
-                    ? "WXDC"
-                    : pool?.poolName
-                )}
-                alt={pool?.poolName}
-              />
-              <BaseFormSetMaxButton onClick={() => setMax(balance)}>
-                Max
-              </BaseFormSetMaxButton>
-            </BaseFormInputWrapper>
-          )}
-        />
-        <Controller
-          control={control}
           name="fathomToken"
           rules={{
             required: true,
@@ -153,7 +64,7 @@ const OpenPositionForm = () => {
                 return "Not enough FXD in pool";
               }
 
-              if (BigNumber(value).isGreaterThan(safeMax)) {
+              if (isSubmitted && BigNumber(value).isGreaterThan(safeMax)) {
                 return `You can't borrow more than ${fxdToBeBorrowed}`;
               }
 
@@ -242,14 +153,108 @@ const OpenPositionForm = () => {
                   className={"extendedInput"}
                   src={getTokenLogoURL("FXD")}
                 />
-                {BigNumber(safeMax).isGreaterThan(0) ? (
-                  <BaseFormSetMaxButton onClick={setSafeMax}>
-                    Safe Max
-                  </BaseFormSetMaxButton>
-                ) : null}
+                <BaseFormSetMaxButton onClick={setBorrowAmountSafeMax}>
+                  Max
+                </BaseFormSetMaxButton>
               </BaseFormInputWrapper>
             );
           }}
+        />
+        <Controller
+          control={control}
+          name="collateral"
+          rules={{
+            required: true,
+            min: minCollateralAmount,
+            max: BigNumber(balance)
+              .dividedBy(10 ** 18)
+              .toString(),
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <BaseFormInputWrapper>
+              <BaseFormLabelRow>
+                <BaseFormInputLabel>Collateral</BaseFormInputLabel>
+                {balance ? (
+                  <BaseFormWalletBalance>
+                    Balance:{" "}
+                    {formatPercentage(
+                      BigNumber(balance)
+                        .dividedBy(10 ** 18)
+                        .toNumber()
+                    )}{" "}
+                    {pool?.poolName}
+                  </BaseFormWalletBalance>
+                ) : null}
+              </BaseFormLabelRow>
+              <BaseFormTextField
+                error={!!error}
+                id="outlined-helperText"
+                placeholder={"0"}
+                helperText={
+                  <>
+                    {error && error.type === "max" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          You do not have enough {pool?.poolName}
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                    {error && error.type === "required" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Collateral amount is required
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                    {error && error.type === "min" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Minimum collateral amount is {minCollateralAmount}.
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                  </>
+                }
+                value={value}
+                type="number"
+                onChange={onChange}
+              />
+              <BaseFormInputUsdIndicator>{`$${formatNumber(
+                BigNumber(value || 0)
+                  .multipliedBy(priceOfCollateral)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}`}</BaseFormInputUsdIndicator>
+              <BaseFormInputLogo
+                className={"extendedInput"}
+                src={getTokenLogoURL(
+                  pool?.poolName?.toUpperCase() === "XDC"
+                    ? "WXDC"
+                    : pool?.poolName
+                )}
+                alt={pool?.poolName}
+              />
+              <BaseFormSetMaxButton
+                onClick={() =>
+                  fathomToken ? setCollateralAmountSafeMax() : setMax(balance)
+                }
+              >
+                {fathomToken ? "Safe Max" : "Max"}
+              </BaseFormSetMaxButton>
+            </BaseFormInputWrapper>
+          )}
         />
       </Box>
     </BaseDialogFormWrapper>
