@@ -8,24 +8,28 @@ import {
   styled,
   Typography,
 } from "@mui/material";
+import BigNumber from "bignumber.js";
+import AddRoundedIcon from "@mui/icons-material/AddRounded";
+import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
+
+import { formatNumber, formatPercentage } from "utils/format";
+import useOpenPositionContext from "context/openPosition";
+import useOpenPositionAiAssist from "hooks/Positions/useOpenPositionAiAssist";
+
+import BaseDateRangePicker from "components/Base/Form/PeriodInput";
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
+import { BaseButtonSecondary } from "components/Base/Buttons/StyledButtons";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import {
   BaseDialogFormInfoWrapper,
   BaseFormInfoList,
 } from "components/Base/Form/StyledForm";
-import { InfoListItem, ListTitleWrapper } from "./OpenPositionInfo";
-import { formatNumber, formatPercentage } from "utils/format";
-
-import AddRoundedIcon from "@mui/icons-material/AddRounded";
-import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
-import BaseDateRangePicker from "components/Base/Form/PeriodInput";
-import { BaseSummary } from "components/Base/Typography/StyledTypography";
-import { BaseButtonSecondary } from "components/Base/Buttons/StyledButtons";
-import useOpenPositionAiAssist from "hooks/Positions/useOpenPositionAiAssist";
-import useOpenPositionContext from "context/openPosition";
-import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
-import BigNumber from "bignumber.js";
-import { BaseWarningBox } from "../../Base/Boxes/StyledBoxes";
-import { InfoIcon } from "../../Governance/Propose";
+import {
+  InfoListItem,
+  ListTitleWrapper,
+} from "components/Positions/OpenPosition/OpenPositionInfo";
+import { BaseWarningBox } from "components/Base/Boxes/StyledBoxes";
+import { InfoIcon } from "components/Governance/Propose";
 
 const ShowAiAccordion = styled(Accordion)`
   background: transparent;
@@ -257,7 +261,7 @@ const OpenPositionAiAssist = () => {
             </InfoListItem>
           </BaseFormInfoList>
           {BigNumber(fathomToken || "0").isLessThanOrEqualTo("0") && (
-            <BaseWarningBox>
+            <BaseWarningBox mb={2}>
               <InfoIcon
                 sx={{ width: "16px", color: "#F5953D", height: "16px" }}
               />
