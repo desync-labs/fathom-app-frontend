@@ -11,6 +11,13 @@ interface PriceData {
   "6m": number | null;
 }
 
+const PERIODS_RELATIONS = {
+  "1m": 30,
+  "2m": 60,
+  "3m": 90,
+  "6m": 180,
+};
+
 const useOpenPositionAiAssist = (
   pool: ICollateralPool,
   borrowInput: string,
@@ -49,25 +56,15 @@ const useOpenPositionAiAssist = (
   }, [minPricePrediction, loadingPricePrediction, borrowInput]);
 
   useEffect(() => {
-    let values: number[] = [];
+    const values: number[] = [];
 
-    if (range <= 30) {
-      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
-    } else if (range <= 60) {
-      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
-      if (pricesPrediction["2m"] !== null) values.push(pricesPrediction["2m"]);
-    } else if (range <= 90) {
-      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
-      if (pricesPrediction["2m"] !== null) values.push(pricesPrediction["2m"]);
-      if (pricesPrediction["3m"] !== null) values.push(pricesPrediction["3m"]);
-    } else {
-      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
-      if (pricesPrediction["2m"] !== null) values.push(pricesPrediction["2m"]);
-      if (pricesPrediction["3m"] !== null) values.push(pricesPrediction["3m"]);
-      if (pricesPrediction["6m"] !== null) values.push(pricesPrediction["6m"]);
+    for (const item of Object.entries(PERIODS_RELATIONS)) {
+      const [period, days] = item;
+      if (BigNumber(range).isGreaterThanOrEqualTo(days)) {
+        if (pricesPrediction[period as keyof PriceData])
+          values.push(pricesPrediction[period as keyof PriceData] as number);
+      }
     }
-
-    values = values.filter((value): value is number => value !== null);
 
     if (values.length > 0) {
       const min = Math.min(...values);
@@ -82,8 +79,7 @@ const useOpenPositionAiAssist = (
 
     try {
       const baseUrl = process.env.REACT_APP_PRICE_PREDICTION_URL;
-      const periods = ["1m", "2m", "3m", "6m"];
-      const endpoints = periods.map(
+      const endpoints = Object.keys(PERIODS_RELATIONS).map(
         (period) => `${baseUrl}/get-${poolName}-price-${period}`
       );
 
@@ -126,18 +122,21 @@ const useOpenPositionAiAssist = (
       const priceWithSafetyMargin = BigNumber(
         minPricePrediction as number
       ).dividedBy(pool.liquidationRatio);
+
       /**
        * SAFE MIN COLLATERAL
        */
-      const safeMinCollateral = BigNumber(borrowInput)
+      const collateral = BigNumber(borrowInput)
         .dividedBy(
-          BigNumber(priceWithSafetyMargin)
-            .dividedBy(BigNumber(100).plus(DANGER_SAFETY_BUFFER * 100))
-            .multipliedBy(100)
+          BigNumber(priceWithSafetyMargin).multipliedBy(
+            BigNumber(100)
+              .minus(DANGER_SAFETY_BUFFER * 100)
+              .dividedBy(100)
+          )
         )
         .toString();
 
-      setRecommendCollateralAmount(safeMinCollateral);
+      setRecommendCollateralAmount(collateral);
     },
     [pool, setRecommendCollateralAmount, minPricePrediction]
   );
