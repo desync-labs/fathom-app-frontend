@@ -32,8 +32,9 @@ const useOpenPositionAiAssist = (
   const [minPricePrediction, setMinPricePrediction] = useState<number | null>(
     null
   );
-  const [liquidationCollateralAmount, setLiquidationCollateralAmount] =
-    useState<string | null>(null);
+  const [recommendCollateralAmount, setRecommendCollateralAmount] = useState<
+    string | null
+  >(null);
 
   const { setShowErrorAlertHandler } = useAlertAndTransactionContext();
 
@@ -46,6 +47,35 @@ const useOpenPositionAiAssist = (
       getLiquidationCollateralAmount(borrowInput);
     }
   }, [minPricePrediction, loadingPricePrediction, borrowInput]);
+
+  useEffect(() => {
+    let values: number[] = [];
+
+    if (range <= 30) {
+      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
+    } else if (range <= 60) {
+      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
+      if (pricesPrediction["2m"] !== null) values.push(pricesPrediction["2m"]);
+    } else if (range <= 90) {
+      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
+      if (pricesPrediction["2m"] !== null) values.push(pricesPrediction["2m"]);
+      if (pricesPrediction["3m"] !== null) values.push(pricesPrediction["3m"]);
+    } else {
+      if (pricesPrediction["1m"] !== null) values.push(pricesPrediction["1m"]);
+      if (pricesPrediction["2m"] !== null) values.push(pricesPrediction["2m"]);
+      if (pricesPrediction["3m"] !== null) values.push(pricesPrediction["3m"]);
+      if (pricesPrediction["6m"] !== null) values.push(pricesPrediction["6m"]);
+    }
+
+    values = values.filter((value): value is number => value !== null);
+
+    if (values.length > 0) {
+      const min = Math.min(...values);
+      setMinPricePrediction(min);
+    } else {
+      setMinPricePrediction(null);
+    }
+  }, [pricesPrediction, range]);
 
   const fetchDataPricePrediction = async (poolName: string) => {
     setLoadingPricePrediction(true);
@@ -77,13 +107,7 @@ const useOpenPositionAiAssist = (
         "6m": data[3].price,
       };
 
-      const values = Object.values(newPrices).filter(
-        (value): value is number => value !== null
-      );
-      const min = Math.min(...values);
-
       setPricesPrediction(newPrices);
-      setMinPricePrediction(min);
     } catch (err) {
       setShowErrorAlertHandler(true, "Failed to fetch price prediction data");
       console.error("Failed to fetch price prediction data", err);
@@ -94,28 +118,28 @@ const useOpenPositionAiAssist = (
 
   const getLiquidationCollateralAmount = useCallback(
     (borrowInput: string) => {
-      console.log("BorrowInput", borrowInput);
       if (!borrowInput) {
-        setLiquidationCollateralAmount("0");
+        setRecommendCollateralAmount("0");
         return;
       }
 
+      const priceWithSafetyMargin = BigNumber(
+        minPricePrediction as number
+      ).dividedBy(pool.liquidationRatio);
       /**
        * SAFE MIN COLLATERAL
        */
       const safeMinCollateral = BigNumber(borrowInput)
         .dividedBy(
-          BigNumber(minPricePrediction as number)
+          BigNumber(priceWithSafetyMargin)
             .dividedBy(BigNumber(100).plus(DANGER_SAFETY_BUFFER * 100))
             .multipliedBy(100)
         )
         .toString();
 
-      console.log(111, safeMinCollateral);
-
-      setLiquidationCollateralAmount(safeMinCollateral);
+      setRecommendCollateralAmount(safeMinCollateral);
     },
-    [pool, setLiquidationCollateralAmount, minPricePrediction]
+    [pool, setRecommendCollateralAmount, minPricePrediction]
   );
 
   const handleChangeRange = (range: number) => {
@@ -129,7 +153,7 @@ const useOpenPositionAiAssist = (
 
   const handleApplyAiRecommendation = () => {
     setAiPredictionCollateral(
-      liquidationCollateralAmount === null ? "0" : liquidationCollateralAmount
+      recommendCollateralAmount === null ? "0" : recommendCollateralAmount
     );
     setIsAiSuggestionOpen(false);
   };
@@ -140,7 +164,7 @@ const useOpenPositionAiAssist = (
     loadingPricePrediction,
     pricesPrediction,
     minPricePrediction,
-    liquidationCollateralAmount,
+    recommendCollateralAmount,
     handleChangeRange,
     handleAiSuggestionOpen,
     handleApplyAiRecommendation,

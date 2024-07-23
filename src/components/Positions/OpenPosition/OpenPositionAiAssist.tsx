@@ -70,7 +70,7 @@ const OpenPositionAiAssist = () => {
     pricesPrediction,
     minPricePrediction,
     loadingPricePrediction,
-    liquidationCollateralAmount,
+    recommendCollateralAmount,
     handleChangeRange,
     handleAiSuggestionOpen,
     handleApplyAiRecommendation,
@@ -116,60 +116,81 @@ const OpenPositionAiAssist = () => {
                 }
               />
             </InfoListItem>
-            <InfoListItem
-              alignItems="flex-start"
-              secondaryAction={
-                <>
-                  {loadingPricePrediction || pricesPrediction["2m"] === null ? (
-                    <CustomSkeleton animation={"wave"} height={20} width={50} />
-                  ) : (
-                    `$${formatPercentage(pricesPrediction["2m"])}`
-                  )}
-                </>
-              }
-            >
-              <ListItemText
-                primary={
-                  <ListTitleWrapper>Collateral (2-Month)</ListTitleWrapper>
+            {range > 30 && (
+              <InfoListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  <>
+                    {loadingPricePrediction ||
+                    pricesPrediction["2m"] === null ? (
+                      <CustomSkeleton
+                        animation={"wave"}
+                        height={20}
+                        width={50}
+                      />
+                    ) : (
+                      `$${formatPercentage(pricesPrediction["2m"])}`
+                    )}
+                  </>
                 }
-              />
-            </InfoListItem>
-            <InfoListItem
-              alignItems="flex-start"
-              secondaryAction={
-                <>
-                  {loadingPricePrediction || pricesPrediction["3m"] === null ? (
-                    <CustomSkeleton animation={"wave"} height={20} width={50} />
-                  ) : (
-                    `$${formatPercentage(pricesPrediction["3m"])}`
-                  )}
-                </>
-              }
-            >
-              <ListItemText
-                primary={
-                  <ListTitleWrapper>Collateral (3-Month)</ListTitleWrapper>
+              >
+                <ListItemText
+                  primary={
+                    <ListTitleWrapper>Collateral (2-Month)</ListTitleWrapper>
+                  }
+                />
+              </InfoListItem>
+            )}
+            {range > 60 && (
+              <InfoListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  <>
+                    {loadingPricePrediction ||
+                    pricesPrediction["3m"] === null ? (
+                      <CustomSkeleton
+                        animation={"wave"}
+                        height={20}
+                        width={50}
+                      />
+                    ) : (
+                      `$${formatPercentage(pricesPrediction["3m"])}`
+                    )}
+                  </>
                 }
-              />
-            </InfoListItem>
-            <InfoListItem
-              alignItems="flex-start"
-              secondaryAction={
-                <>
-                  {loadingPricePrediction || pricesPrediction["6m"] === null ? (
-                    <CustomSkeleton animation={"wave"} height={20} width={50} />
-                  ) : (
-                    `$${formatPercentage(pricesPrediction["6m"])}`
-                  )}
-                </>
-              }
-            >
-              <ListItemText
-                primary={
-                  <ListTitleWrapper>Collateral (6-Month)</ListTitleWrapper>
+              >
+                <ListItemText
+                  primary={
+                    <ListTitleWrapper>Collateral (3-Month)</ListTitleWrapper>
+                  }
+                />
+              </InfoListItem>
+            )}
+            {range > 90 && (
+              <InfoListItem
+                alignItems="flex-start"
+                secondaryAction={
+                  <>
+                    {loadingPricePrediction ||
+                    pricesPrediction["6m"] === null ? (
+                      <CustomSkeleton
+                        animation={"wave"}
+                        height={20}
+                        width={50}
+                      />
+                    ) : (
+                      `$${formatPercentage(pricesPrediction["6m"])}`
+                    )}
+                  </>
                 }
-              />
-            </InfoListItem>
+              >
+                <ListItemText
+                  primary={
+                    <ListTitleWrapper>Collateral (6-Month)</ListTitleWrapper>
+                  }
+                />
+              </InfoListItem>
+            )}
           </BaseFormInfoList>
           <Divider />
           <BaseFormInfoList>
@@ -196,11 +217,11 @@ const OpenPositionAiAssist = () => {
               secondaryAction={
                 <>
                   {loadingPricePrediction ||
-                  liquidationCollateralAmount === null ? (
+                  recommendCollateralAmount === null ? (
                     <CustomSkeleton animation={"wave"} height={20} width={60} />
                   ) : (
                     `${formatNumber(
-                      BigNumber(liquidationCollateralAmount).toNumber()
+                      BigNumber(recommendCollateralAmount).toNumber()
                     )} ${pool?.poolName}`
                   )}
                 </>
@@ -217,7 +238,10 @@ const OpenPositionAiAssist = () => {
           </BaseFormInfoList>
           <BaseButtonSecondary
             disabled={
-              liquidationCollateralAmount === null || loadingPricePrediction
+              loadingPricePrediction ||
+              recommendCollateralAmount === null ||
+              BigNumber(recommendCollateralAmount).isLessThanOrEqualTo("0") ||
+              range <= 0
             }
             onClick={handleApplyAiRecommendation}
             sx={{ width: "100%", marginTop: "5px" }}

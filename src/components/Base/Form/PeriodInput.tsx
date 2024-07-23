@@ -79,7 +79,8 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
       <BaseFormInputWrapper sx={{ marginBottom: 0 }}>
         <RangeTextFields
           type="number"
-          value={range.toString()}
+          value={range}
+          inputProps={{ min: 1, max: 180, step: 1 }}
           onChange={(e) => handleChangeRange(Number(e.target.value))}
           placeholder="Number of Days"
         />
@@ -115,7 +116,9 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
       </BaseFormInputWrapper>
       <BaseSlider
         value={range}
+        min={1}
         max={180}
+        step={1}
         onChange={(e, newValue: number | number[]) =>
           handleChangeRange(newValue as number)
         }
