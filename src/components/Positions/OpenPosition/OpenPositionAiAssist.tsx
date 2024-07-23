@@ -5,6 +5,7 @@ import {
   Divider,
   ListItemText,
   styled,
+  Typography,
 } from "@mui/material";
 import {
   BaseDialogFormInfoWrapper,
@@ -22,6 +23,8 @@ import useOpenPositionAiAssist from "hooks/Positions/useOpenPositionAiAssist";
 import useOpenPositionContext from "context/openPosition";
 import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 import BigNumber from "bignumber.js";
+import { BaseWarningBox } from "../../Base/Boxes/StyledBoxes";
+import { InfoIcon } from "../../Governance/Propose";
 
 const ShowAiAccordion = styled(Accordion)`
   background: transparent;
@@ -237,6 +240,16 @@ const OpenPositionAiAssist = () => {
               />
             </InfoListItem>
           </BaseFormInfoList>
+          {BigNumber(fathomToken || "0").isLessThanOrEqualTo("0") && (
+            <BaseWarningBox>
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
+              <Typography>
+                Enter the desired borrowing amount to get AI suggestions
+              </Typography>
+            </BaseWarningBox>
+          )}
           <BaseButtonSecondary
             disabled={
               loadingPricePrediction ||

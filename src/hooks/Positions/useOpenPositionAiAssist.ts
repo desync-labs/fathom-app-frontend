@@ -1,8 +1,8 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { ICollateralPool } from "fathom-sdk";
-import useAlertAndTransactionContext from "context/alertAndTransaction";
 import BigNumber from "bignumber.js";
-import { DANGER_SAFETY_BUFFER } from "../../utils/Constants";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
+import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 
 interface PriceData {
   "1m": number | null;
