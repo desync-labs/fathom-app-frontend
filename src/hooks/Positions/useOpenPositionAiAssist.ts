@@ -1,8 +1,8 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { ICollateralPool } from "fathom-sdk";
-import useAlertAndTransactionContext from "context/alertAndTransaction";
 import BigNumber from "bignumber.js";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
 
 interface PriceData {
   "1m": number | null;
@@ -48,9 +48,7 @@ const useOpenPositionAiAssist = (
   const { setShowErrorAlertHandler } = useAlertAndTransactionContext();
 
   useEffect(() => {
-    if (pool.poolName) {
-      fetchDataPricePrediction(pool.poolName.toLowerCase());
-    }
+    fetchDataPricePrediction(pool.poolName.toLowerCase());
   }, [pool.poolName]);
 
   useEffect(() => {
