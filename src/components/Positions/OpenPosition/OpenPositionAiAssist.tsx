@@ -69,7 +69,7 @@ const ShowAiSuggestionButton = styled(AccordionSummary)`
 `;
 
 const OpenPositionAiAssist = () => {
-  const { pool, fathomToken, setAiPredictionCollateral, collateral } =
+  const { pool, fathomToken, setAiPredictionCollateral } =
     useOpenPositionContext();
 
   const {
@@ -272,9 +272,6 @@ const OpenPositionAiAssist = () => {
           )}
           {BigNumber(minPricePrediction as number).isLessThan(
             pool.collateralPrice
-          ) &&
-          BigNumber(Number(collateral)).isLessThan(
-            recommendCollateralAmount as string
           ) ? (
             <BaseButtonSecondary
               disabled={
