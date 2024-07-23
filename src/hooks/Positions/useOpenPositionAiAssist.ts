@@ -58,7 +58,7 @@ const useOpenPositionAiAssist = (
   }, [minPricePrediction, loadingPricePrediction, borrowInput]);
 
   useEffect(() => {
-    const values: number[] = [pool.collateralPrice];
+    const values: number[] = [Number(pool.collateralPrice)];
 
     for (const item of Object.entries(PERIODS_RELATIONS)) {
       const [period, days] = item;
