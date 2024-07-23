@@ -66,7 +66,9 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
 
           {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && (
             <BaseWarningBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Typography>
                 Resulting in lowering safety buffer - consider provide more
                 collateral or borrow less FXD.
@@ -75,7 +77,9 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
           )}
           {BigNumber(collateral).isLessThanOrEqualTo(0) && (
             <BaseWarningBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Typography>
                 Providing 0 collateral you are making your position unsafer.
               </Typography>
@@ -83,13 +87,17 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
           )}
           {errorAtLeastOneField && (
             <BaseErrorBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Typography>Please fill at least one field</Typography>
             </BaseErrorBox>
           )}
           {approveBtn && !!balance && (
             <BaseInfoBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Box flexDirection="column">
                 <Typography width="100%">
                   First-time connect? Please allow token approval in your

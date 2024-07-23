@@ -61,7 +61,9 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
 
           {balanceError && (
             <BaseWarningBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Typography>
                 Wallet balance is not enough to close this position entirely
                 (repay in full).
@@ -70,7 +72,9 @@ const RepayPositionDialog: FC<ClosePositionDialogPropsType> = ({
           )}
           {approveBtn && (
             <BaseInfoBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Box flexDirection="column">
                 <Typography width="100%">
                   First-time connect? Please allow token approval in your
