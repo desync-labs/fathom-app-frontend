@@ -273,7 +273,7 @@ const OpenPositionAiAssist = () => {
           {BigNumber(minPricePrediction as number).isLessThan(
             pool.collateralPrice
           ) &&
-          BigNumber(collateral).isLessThan(
+          BigNumber(Number(collateral)).isLessThan(
             recommendCollateralAmount as string
           ) ? (
             <BaseButtonSecondary
