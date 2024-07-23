@@ -2,6 +2,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   Divider,
   ListItemText,
   styled,
@@ -113,7 +114,9 @@ const OpenPositionAiAssist = () => {
             >
               <ListItemText
                 primary={
-                  <ListTitleWrapper>Collateral (1-Month)</ListTitleWrapper>
+                  <ListTitleWrapper>
+                    {pool.poolName} price in 1-month
+                  </ListTitleWrapper>
                 }
               />
             </InfoListItem>
@@ -137,7 +140,9 @@ const OpenPositionAiAssist = () => {
               >
                 <ListItemText
                   primary={
-                    <ListTitleWrapper>Collateral (2-Month)</ListTitleWrapper>
+                    <ListTitleWrapper>
+                      {pool.poolName} price in 2-month
+                    </ListTitleWrapper>
                   }
                 />
               </InfoListItem>
@@ -162,7 +167,9 @@ const OpenPositionAiAssist = () => {
               >
                 <ListItemText
                   primary={
-                    <ListTitleWrapper>Collateral (3-Month)</ListTitleWrapper>
+                    <ListTitleWrapper>
+                      {pool.poolName} price in 3-month
+                    </ListTitleWrapper>
                   }
                 />
               </InfoListItem>
@@ -187,7 +194,9 @@ const OpenPositionAiAssist = () => {
               >
                 <ListItemText
                   primary={
-                    <ListTitleWrapper>Collateral (6-Month)</ListTitleWrapper>
+                    <ListTitleWrapper>
+                      {pool.poolName} price in 6-month
+                    </ListTitleWrapper>
                   }
                 />
               </InfoListItem>
@@ -209,7 +218,14 @@ const OpenPositionAiAssist = () => {
             >
               <ListItemText
                 primary={
-                  <ListTitleWrapper>Lowest collateral price</ListTitleWrapper>
+                  <ListTitleWrapper>
+                    Lowest collateral price{" "}
+                    {BigNumber(minPricePrediction as number).isEqualTo(
+                      pool.collateralPrice
+                    ) ? (
+                      <Box sx={{ color: "#43FFF1" }}>(Current price)</Box>
+                    ) : null}
+                  </ListTitleWrapper>
                 }
               />
             </InfoListItem>
@@ -237,18 +253,22 @@ const OpenPositionAiAssist = () => {
               />
             </InfoListItem>
           </BaseFormInfoList>
-          <BaseButtonSecondary
-            disabled={
-              loadingPricePrediction ||
-              recommendCollateralAmount === null ||
-              BigNumber(recommendCollateralAmount).isLessThanOrEqualTo("0") ||
-              range <= 0
-            }
-            onClick={handleApplyAiRecommendation}
-            sx={{ width: "100%", marginTop: "5px" }}
-          >
-            Apply AI Recommendation
-          </BaseButtonSecondary>
+          {BigNumber(minPricePrediction as number).isLessThan(
+            pool.collateralPrice
+          ) ? (
+            <BaseButtonSecondary
+              disabled={
+                loadingPricePrediction ||
+                recommendCollateralAmount === null ||
+                BigNumber(recommendCollateralAmount).isLessThanOrEqualTo(0) ||
+                range <= 0
+              }
+              onClick={handleApplyAiRecommendation}
+              sx={{ width: "100%", marginTop: "5px" }}
+            >
+              Apply AI Recommendation
+            </BaseButtonSecondary>
+          ) : null}
         </BaseDialogFormInfoWrapper>
       </AccordionDetails>
     </ShowAiAccordion>
