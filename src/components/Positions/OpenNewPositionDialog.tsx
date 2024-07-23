@@ -30,6 +30,7 @@ import OpenPositionAiAssist from "components/Positions/OpenPosition/OpenPosition
 
 const OpenNewPositionDialog: FC = () => {
   const {
+    pool,
     openPositionLoading,
     balance,
     approve,
@@ -53,7 +54,9 @@ const OpenNewPositionDialog: FC = () => {
       <DialogContent>
         <Box>
           <OpenPositionForm />
-          <OpenPositionAiAssist />
+          {(pool?.poolName === "XDC" || pool?.poolName === "CGO") && (
+            <OpenPositionAiAssist />
+          )}
           <OpenPositionInfo />
 
           {!isOpenPositionWhitelisted && (
