@@ -15,7 +15,7 @@ export enum ChainId {
 }
 
 const SUBGRAPH_URLS = {
-  [ChainId.XDC]: "https://xinfin-graph.fathom.fi",
+  [ChainId.XDC]: "https://graph.xinfin.fathom.fi",
   [ChainId.AXDC]: "https://graph.apothem.fathom.fi",
   [ChainId.SEPOLIA]: "https://graph.sepolia.fathom.fi",
 };
