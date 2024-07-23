@@ -69,7 +69,7 @@ const PositionListItem: FC<PositionListItemProps> = ({
           color: BigNumber(position.safetyBufferInPercent)
             .decimalPlaces(3, BigNumber.ROUND_UP)
             .isLessThan(DANGER_SAFETY_BUFFER)
-            ? "#F04242 !important"
+            ? "#f76e6e !important"
             : "#fff",
         }}
       >

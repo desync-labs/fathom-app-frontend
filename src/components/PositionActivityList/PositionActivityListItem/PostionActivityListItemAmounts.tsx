@@ -18,6 +18,14 @@ const ArrowIcon = styled(ArrowForwardRoundedIcon)`
   }
 `;
 
+const BirnIcon = styled("span")`
+  font-size: 20px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 18px;
+  }
+`;
+
 const PositionActivityListItemAmountsWrapper = styled(Box)`
   display: flex;
   align-items: center;
@@ -125,6 +133,44 @@ const PositionActivityListItemAmounts: FC<{
           />
           <TokenAmount>
             +{formatNumber(Number(transaction.debtAmount))} FXD
+          </TokenAmount>
+        </PositionActivityListItemAmountsItemWrapper>
+      </PositionActivityListItemAmountsWrapper>
+    );
+  } else if (
+    [PositionActivityState.LIQUIDATION].includes(transaction.activityState)
+  ) {
+    return (
+      <PositionActivityListItemAmountsWrapper>
+        <PositionActivityListItemAmountsItemWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL(
+              transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
+                ? "WXDC"
+                : transaction.position?.collateralPoolName?.toUpperCase()
+            )}
+            alt={"logo"}
+          />
+          <TokenAmount>
+            -{formatNumber(Number(transaction.collateralAmount))}{" "}
+            {transaction.position?.collateralPoolName?.toUpperCase()}
+          </TokenAmount>
+        </PositionActivityListItemAmountsItemWrapper>
+
+        <ArrowIcon />
+
+        <PositionActivityListItemAmountsItemWrapper>
+          <BirnIcon>🔥</BirnIcon>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL("FXD")}
+            alt={"logo"}
+          />
+          <TokenAmount>
+            {formatNumber(Number(transaction.debtAmount))} FXD
           </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>

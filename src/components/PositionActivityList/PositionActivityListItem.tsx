@@ -4,6 +4,7 @@ import { FC, memo } from "react";
 import {
   FilterTxType,
   IFxdTransaction,
+  PositionActivityState,
 } from "hooks/Pools/usePositionsTransactionList";
 import { getBlockScanLink } from "apps/dex/utils";
 import useConnector from "context/connector";
@@ -77,6 +78,12 @@ const TxListItemText = styled(ListItemText)`
       font-weight: 400;
     }
   }
+
+  &.liquidation {
+    & .MuiListItemText-primary {
+      color: #f76e6e;
+    }
+  }
 `;
 
 const TxListItemViewBtn = styled(BaseButtonSecondaryLink)`
@@ -114,6 +121,11 @@ const PositionActivityListItem: FC<{ transaction: IFxdTransaction }> = ({
           secondary={dayjs(transaction.blockTimestamp * 1000).format(
             "DD/MM/YYYY HH:mm:ss"
           )}
+          className={
+            transaction.activityState === PositionActivityState.LIQUIDATION
+              ? "liquidation"
+              : ""
+          }
         />
         <ListItemText
           primary={
