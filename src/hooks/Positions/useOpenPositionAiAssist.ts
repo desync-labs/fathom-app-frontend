@@ -1,8 +1,8 @@
 import { SyntheticEvent, useCallback, useEffect, useState } from "react";
 import { ICollateralPool } from "fathom-sdk";
 import BigNumber from "bignumber.js";
-import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
 
 interface PriceData {
   "1m": number | null;
@@ -30,12 +30,14 @@ const useOpenPositionAiAssist = (
 
   const [loadingPricePrediction, setLoadingPricePrediction] =
     useState<boolean>(false);
+
   const [pricesPrediction, setPricesPrediction] = useState<PriceData>({
     "1m": null,
     "2m": null,
     "3m": null,
     "6m": null,
   });
+
   const [minPricePrediction, setMinPricePrediction] = useState<number | null>(
     null
   );
@@ -56,7 +58,7 @@ const useOpenPositionAiAssist = (
   }, [minPricePrediction, loadingPricePrediction, borrowInput]);
 
   useEffect(() => {
-    const values: number[] = [];
+    const values: number[] = [pool.collateralPrice];
 
     for (const item of Object.entries(PERIODS_RELATIONS)) {
       const [period, days] = item;
@@ -66,51 +68,54 @@ const useOpenPositionAiAssist = (
       }
     }
 
-    if (values.length > 0) {
+    if (values.length) {
       const min = Math.min(...values);
       setMinPricePrediction(min);
     } else {
       setMinPricePrediction(null);
     }
-  }, [pricesPrediction, range]);
+  }, [pricesPrediction, range, pool]);
 
-  const fetchDataPricePrediction = async (poolName: string) => {
-    setLoadingPricePrediction(true);
+  const fetchDataPricePrediction = useCallback(
+    async (poolName: string) => {
+      setLoadingPricePrediction(true);
 
-    try {
-      const baseUrl = process.env.REACT_APP_PRICE_PREDICTION_URL;
-      const endpoints = Object.keys(PERIODS_RELATIONS).map(
-        (period) => `${baseUrl}/get-${poolName}-price-${period}`
-      );
+      try {
+        const baseUrl = process.env.REACT_APP_PRICE_PREDICTION_URL;
+        const endpoints = Object.keys(PERIODS_RELATIONS).map(
+          (period) => `${baseUrl}/get-${poolName}-price-${period}`
+        );
 
-      const responses = await Promise.all(
-        endpoints.map((endpoint) => fetch(endpoint))
-      );
+        const responses = await Promise.all(
+          endpoints.map((endpoint) => fetch(endpoint))
+        );
 
-      const data = await Promise.all(
-        responses.map((response) => {
-          if (!response.ok) {
-            throw new Error(`Failed to fetch data for ${response.url}`);
-          }
-          return response.json();
-        })
-      );
+        const data = await Promise.all(
+          responses.map((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch data for ${response.url}`);
+            }
+            return response.json();
+          })
+        );
 
-      const newPrices: PriceData = {
-        "1m": data[0].price,
-        "2m": data[1].price,
-        "3m": data[2].price,
-        "6m": data[3].price,
-      };
+        const newPrices: PriceData = {
+          "1m": data[0].price,
+          "2m": data[1].price,
+          "3m": data[2].price,
+          "6m": data[3].price,
+        };
 
-      setPricesPrediction(newPrices);
-    } catch (err) {
-      setShowErrorAlertHandler(true, "Failed to fetch price prediction data");
-      console.error("Failed to fetch price prediction data", err);
-    } finally {
-      setLoadingPricePrediction(false);
-    }
-  };
+        setPricesPrediction(newPrices);
+      } catch (err) {
+        setShowErrorAlertHandler(true, "Failed to fetch price prediction data");
+        console.error("Failed to fetch price prediction data", err);
+      } finally {
+        setLoadingPricePrediction(false);
+      }
+    },
+    [setLoadingPricePrediction, setShowErrorAlertHandler, setPricesPrediction]
+  );
 
   const getLiquidationCollateralAmount = useCallback(
     (borrowInput: string) => {
@@ -145,17 +150,19 @@ const useOpenPositionAiAssist = (
     setRange(range);
   };
 
-  const handleAiSuggestionOpen =
+  const handleAiSuggestionOpen = useCallback(
     (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
       setIsAiSuggestionOpen(isExpanded ? panel : false);
-    };
+    },
+    [setIsAiSuggestionOpen]
+  );
 
-  const handleApplyAiRecommendation = () => {
+  const handleApplyAiRecommendation = useCallback(() => {
     setAiPredictionCollateral(
       recommendCollateralAmount === null ? "0" : recommendCollateralAmount
     );
     setIsAiSuggestionOpen(false);
-  };
+  }, [setIsAiSuggestionOpen, recommendCollateralAmount]);
 
   return {
     isAiSuggestionOpen,

@@ -7,7 +7,7 @@ import {
 } from "./StyledForm";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { FC, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useState } from "react";
 
 import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import dayjs from "dayjs";
@@ -41,21 +41,35 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
   range,
   handleChangeRange,
 }) => {
-  const startDate = new Date();
+  const [startDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handleOpen = (event: any) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const handleOpen = useCallback(
+    (event: any) => {
+      setAnchorEl(event.currentTarget);
+    },
+    [setAnchorEl]
+  );
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, [setAnchorEl]);
 
-  const handleChange = (date: Date | null) => {
-    date && setEndDate(date);
-  };
+  const handleChange = useCallback(
+    (date: Date | null) => {
+      date && setEndDate(date);
+    },
+    [setEndDate]
+  );
+
+  const handleChangeEndDate = useCallback(
+    (number: number) => {
+      const date = dayjs(startDate).add(number, "day").toDate();
+      setEndDate(date);
+    },
+    [setEndDate, startDate]
+  );
 
   useEffect(() => {
     if (startDate && endDate) {
@@ -81,7 +95,7 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
           type="number"
           value={range}
           inputProps={{ min: 1, max: 180, step: 1 }}
-          onChange={(e) => handleChangeRange(Number(e.target.value))}
+          onChange={(e) => handleChangeEndDate(Number(e.target.value))}
           placeholder="Number of Days"
         />
         <DatePickerButton onClick={handleOpen}>
@@ -120,7 +134,7 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
         max={180}
         step={1}
         onChange={(e, newValue: number | number[]) =>
-          handleChangeRange(newValue as number)
+          handleChangeEndDate(newValue as number)
         }
         aria-labelledby="input-slider"
       />
@@ -131,7 +145,7 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
         <BaseToggleButtonGroup
           value={range}
           exclusive
-          onChange={(e, value) => handleChangeRange(value as number)}
+          onChange={(e, value) => handleChangeEndDate(value as number)}
           sx={{ marginBottom: "16px" }}
         >
           <ToggleButton value={30}>1-Month</ToggleButton>
@@ -144,4 +158,4 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
   );
 };
 
-export default BaseDateRangePicker;
+export default memo(BaseDateRangePicker);

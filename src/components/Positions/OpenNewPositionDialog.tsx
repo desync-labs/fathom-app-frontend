@@ -54,7 +54,7 @@ const OpenNewPositionDialog: FC = () => {
       <DialogContent>
         <Box>
           <OpenPositionForm />
-          {(pool?.poolName === "XDC" || pool?.poolName === "CGO") && (
+          {["XDC", "CGO"].includes(pool?.poolName?.toUpperCase()) && (
             <OpenPositionAiAssist />
           )}
           <OpenPositionInfo />
