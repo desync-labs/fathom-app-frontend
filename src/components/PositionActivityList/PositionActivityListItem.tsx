@@ -81,7 +81,7 @@ const TxListItemText = styled(ListItemText)`
 
   &.liquidation {
     & .MuiListItemText-primary {
-      color: #f44336;
+      color: #f76e6e;
     }
   }
 `;
