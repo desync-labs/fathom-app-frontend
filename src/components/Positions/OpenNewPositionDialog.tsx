@@ -26,9 +26,11 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
+import OpenPositionAiAssist from "components/Positions/OpenPosition/OpenPositionAiAssist";
 
 const OpenNewPositionDialog: FC = () => {
   const {
+    pool,
     openPositionLoading,
     balance,
     approve,
@@ -52,11 +54,16 @@ const OpenNewPositionDialog: FC = () => {
       <DialogContent>
         <Box>
           <OpenPositionForm />
+          {["XDC", "CGO"].includes(pool?.poolName?.toUpperCase()) && (
+            <OpenPositionAiAssist />
+          )}
           <OpenPositionInfo />
 
           {!isOpenPositionWhitelisted && (
             <BaseWarningBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Typography>
                 Your wallet address is not whitelisted for open position.
                 <br />
@@ -74,7 +81,9 @@ const OpenNewPositionDialog: FC = () => {
           )}
           {!proxyWalletExists && (
             <BaseWarningBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Typography>
                 Your wallet address has no proxy wallet. <br />
                 First transaction will be creation of proxy wallet.
@@ -95,7 +104,9 @@ const OpenNewPositionDialog: FC = () => {
           ) : null}
           {approveBtn && !!balance && (
             <BaseInfoBox>
-              <InfoIcon />
+              <InfoIcon
+                sx={{ width: "16px", color: "#F5953D", height: "16px" }}
+              />
               <Box flexDirection="column">
                 <Typography width="100%">
                   First-time connect? Please allow token approval in your

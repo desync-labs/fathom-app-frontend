@@ -45,6 +45,7 @@ export type UseOpenPositionContextReturnType = {
   minCollateralAmount: number;
   validateMaxBorrowAmount: () => boolean | string;
   priceOfCollateral: string;
+  setAiPredictionCollateral: (value: string) => void;
 };
 
 export const OpenPositionContext =
