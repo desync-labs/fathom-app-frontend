@@ -274,10 +274,6 @@ const useTopUpPosition = (
         BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
       );
 
-      console.log("totalFathomToken", totalFathomToken);
-      console.log("borrow", borrow.toString());
-      //if (BigNumber(totalFathomToken).isGreaterThanOrEqualTo(maxBorrowAmount)) {
-
       borrow = (
         borrow.isGreaterThan(maxBorrowAmount)
           ? BigNumber(maxBorrowAmount).minus(totalFathomToken)
