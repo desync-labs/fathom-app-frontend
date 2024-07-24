@@ -24,9 +24,8 @@ import {
 
 const OpenPositionForm = () => {
   const {
-    fxdToBeBorrowed,
     balance,
-    safeMax,
+    safeMinCollateral,
     setMax,
     setBorrowAmountSafeMax,
     setCollateralAmountSafeMax,
@@ -40,7 +39,6 @@ const OpenPositionForm = () => {
     minCollateralAmount,
     validateMaxBorrowAmount,
     priceOfCollateral,
-    isSubmitted,
     fathomToken,
   } = useOpenPositionContext();
   const { fxdPrice } = usePricesContext();
@@ -62,10 +60,6 @@ const OpenPositionForm = () => {
             validate: (value) => {
               if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
-              }
-
-              if (isSubmitted && BigNumber(value).isGreaterThan(safeMax)) {
-                return `You can't borrow more than ${fxdToBeBorrowed}`;
               }
 
               if (validateMaxBorrowAmount()) {
@@ -169,6 +163,13 @@ const OpenPositionForm = () => {
             max: BigNumber(balance)
               .dividedBy(10 ** 18)
               .toString(),
+            validate: (value) => {
+              if (BigNumber(value).isLessThan(safeMinCollateral)) {
+                return `You need at least ${safeMinCollateral} collateral for the desired amount of borrowing`;
+              }
+
+              return true;
+            },
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <BaseFormInputWrapper>
@@ -192,6 +193,22 @@ const OpenPositionForm = () => {
                 placeholder={"0"}
                 helperText={
                   <>
+                    {error && error.type === "validate" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            fontSize: "14px",
+                          }}
+                        />
+                        <Box
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          component={"span"}
+                        >
+                          {error?.message}
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
                     {error && error.type === "max" && (
                       <BaseFormInputErrorWrapper>
                         <InfoIcon sx={{ float: "left", fontSize: "14px" }} />

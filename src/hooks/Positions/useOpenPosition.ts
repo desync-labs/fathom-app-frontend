@@ -14,8 +14,8 @@ import { formatNumber } from "utils/format";
 export const defaultValues = {
   collateral: "",
   fathomToken: "",
-  safeMax: "0",
   dangerSafeMax: "0",
+  safeMinCollateral: "0",
 };
 
 const useOpenPosition = (
@@ -33,7 +33,7 @@ const useOpenPosition = (
     control,
     setValue,
     trigger,
-    formState: { errors, isSubmitted },
+    formState: { errors },
   } = useForm({
     defaultValues,
     reValidateMode: "onChange",
@@ -42,8 +42,8 @@ const useOpenPosition = (
 
   const collateral = watch("collateral");
   const fathomToken = watch("fathomToken");
-  const safeMax = watch("safeMax");
   const dangerSafeMax = watch("dangerSafeMax");
+  const safeMinCollateral = watch("safeMinCollateral");
 
   const [balance, setBalance] = useState<string>("0");
 
@@ -193,9 +193,25 @@ const useOpenPosition = (
         .decimalPlaces(6, BigNumber.ROUND_DOWN)
         .toString();
 
+      /**
+       * SAFE MIN COLLATERAL
+       */
+      const safeMinCollateral = BigNumber(fathomTokenInput)
+        .dividedBy(
+          BigNumber(priceWithSafetyMargin).multipliedBy(
+            BigNumber(100)
+              .minus(DANGER_SAFETY_BUFFER * 100)
+              .dividedBy(100)
+          )
+        )
+        .decimalPlaces(6, BigNumber.ROUND_UP)
+        .toString();
+
       setFxdToBeBorrowed(safeMax);
-      setValue("safeMax", safeMax, { shouldValidate: false });
       setValue("dangerSafeMax", dangerSafeMax, { shouldValidate: false });
+      setValue("safeMinCollateral", safeMinCollateral, {
+        shouldValidate: false,
+      });
 
       const collateralAvailableToWithdraw = (
         BigNumber(priceWithSafetyMargin).isGreaterThan(0)
@@ -480,7 +496,7 @@ const useOpenPosition = (
 
   return {
     proxyWalletExists,
-    safeMax,
+    safeMinCollateral,
     approveBtn,
     approve,
     approvalPending,
@@ -512,7 +528,6 @@ const useOpenPosition = (
     validateMaxBorrowAmount,
     priceOfCollateral,
     setAiPredictionCollateral,
-    isSubmitted,
   };
 };
 

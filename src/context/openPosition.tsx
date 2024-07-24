@@ -14,7 +14,7 @@ export type OpenPositionContextType = {
 };
 
 export type UseOpenPositionContextReturnType = {
-  safeMax: string;
+  safeMinCollateral: string;
   approveBtn: boolean;
   approve: () => void;
   approvalPending: boolean;
@@ -47,7 +47,6 @@ export type UseOpenPositionContextReturnType = {
   validateMaxBorrowAmount: () => boolean | string;
   priceOfCollateral: string;
   setAiPredictionCollateral: (value: string) => void;
-  isSubmitted: boolean;
 };
 
 export const OpenPositionContext =
