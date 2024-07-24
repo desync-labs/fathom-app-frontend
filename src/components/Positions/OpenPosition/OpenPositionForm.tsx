@@ -44,6 +44,13 @@ const OpenPositionForm = () => {
   } = useOpenPositionContext();
   const { fxdPrice } = usePricesContext();
 
+  console.log({
+    max: BigNumber(balance)
+      .dividedBy(10 ** 18)
+      .toString(),
+    collateral,
+  });
+
   return (
     <BaseDialogFormWrapper>
       <Box

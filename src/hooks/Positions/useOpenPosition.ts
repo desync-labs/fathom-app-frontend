@@ -185,7 +185,7 @@ const useOpenPosition = (
       const safeMinCollateral = BigNumber(fathomTokenInput)
         .dividedBy(
           BigNumber(priceWithSafetyMargin).multipliedBy(
-            1 - DANGER_SAFETY_BUFFER
+            BigNumber(100).minus(pool.stabilityFeeRate).dividedBy(100)
           )
         )
         .decimalPlaces(6, BigNumber.ROUND_UP)
@@ -340,15 +340,21 @@ const useOpenPosition = (
   const setCollateralSafeMax = useCallback(() => {
     const { priceWithSafetyMargin } = pool;
 
-    const collateral = BigNumber(fathomToken)
-      .dividedBy(
-        BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
-      )
-      .decimalPlaces(6, BigNumber.ROUND_UP)
-      .toString();
+    let collateral: BigNumber | string = BigNumber(fathomToken).dividedBy(
+      BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
+    );
+    const formattedBalance = BigNumber(balance).dividedBy(10 ** 18);
+
+    if (collateral.isGreaterThan(formattedBalance)) {
+      collateral = formattedBalance
+        .decimalPlaces(6, BigNumber.ROUND_DOWN)
+        .toString();
+    } else {
+      collateral = collateral.decimalPlaces(6, BigNumber.ROUND_UP).toString();
+    }
 
     setValue("collateral", collateral, { shouldValidate: true });
-  }, [fathomToken, pool, setValue]);
+  }, [fathomToken, pool, setValue, balance]);
 
   /**
    * Set wallet balance to collateral input.
