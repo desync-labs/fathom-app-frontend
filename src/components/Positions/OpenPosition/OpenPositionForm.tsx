@@ -24,11 +24,13 @@ import {
 
 const OpenPositionForm = () => {
   const {
+    collateral,
     balance,
     safeMinCollateral,
-    setMax,
-    setBorrowAmountSafeMax,
-    setCollateralAmountSafeMax,
+
+    setCollateralMax,
+    setCollateralSafeMax,
+    setBorrowMax,
     onSubmit,
     control,
     handleSubmit,
@@ -147,8 +149,14 @@ const OpenPositionForm = () => {
                   className={"extendedInput"}
                   src={getTokenLogoURL("FXD")}
                 />
-                <BaseFormSetMaxButton onClick={setBorrowAmountSafeMax}>
-                  Max
+                <BaseFormSetMaxButton
+                  onClick={() =>
+                    collateral
+                      ? setBorrowMax(Number(collateral))
+                      : setBorrowMax()
+                  }
+                >
+                  {collateral ? "Safe Max" : "Max"}
                 </BaseFormSetMaxButton>
               </BaseFormInputWrapper>
             );
@@ -265,7 +273,9 @@ const OpenPositionForm = () => {
               />
               <BaseFormSetMaxButton
                 onClick={() =>
-                  fathomToken ? setCollateralAmountSafeMax() : setMax(balance)
+                  fathomToken
+                    ? setCollateralSafeMax()
+                    : setCollateralMax(balance)
                 }
               >
                 {fathomToken ? "Safe Max" : "Max"}

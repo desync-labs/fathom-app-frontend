@@ -30,9 +30,9 @@ export type UseOpenPositionContextReturnType = {
   collateral: string;
   fathomToken: string;
   openPositionLoading: boolean;
-  setMax: (balance: string) => void;
-  setBorrowAmountSafeMax: () => void;
-  setCollateralAmountSafeMax: () => void;
+  setCollateralMax: (balance: string) => void;
+  setCollateralSafeMax: () => void;
+  setBorrowMax: (collateral?: number) => void;
   onSubmit: (values: Record<string, any>) => void;
   control: Control<typeof defaultValues>;
   handleSubmit: UseFormHandleSubmit<typeof defaultValues>;
