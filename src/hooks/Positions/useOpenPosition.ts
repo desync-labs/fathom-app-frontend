@@ -307,7 +307,7 @@ const useOpenPosition = (
   );
 
   /**
-   * Max borrow amount, wallet balance of collateral token by price with safety margin and 25% overcollateralization.
+   * Max borrow amount, wallet balance or collateral amount by price with safety margin and 25% overcollateralization.
    */
   const setBorrowMax = useCallback(
     (collateralAmount?: number) => {
@@ -481,8 +481,8 @@ const useOpenPosition = (
     }
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
-  const setAiPredictionCollateral = (recomendedCollateral: string) => {
-    setValue("collateral", recomendedCollateral, { shouldValidate: true });
+  const setAiPredictionCollateral = (recommendedCollateral: string) => {
+    setValue("collateral", recommendedCollateral, { shouldValidate: true });
   };
 
   return {
