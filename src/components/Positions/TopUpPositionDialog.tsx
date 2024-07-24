@@ -37,7 +37,8 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
 }) => {
   const {
     pool,
-    fathomToken,
+    position,
+    totalFathomToken,
     collateral,
     safetyBuffer,
     onClose,
@@ -69,8 +70,9 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
           {["XDC", "CGO"].includes(pool?.poolName?.toUpperCase()) && (
             <PositionFormAiAssist
               pool={pool}
-              borrowInput={fathomToken}
+              borrowInput={totalFathomToken}
               setAiPredictionCollateral={setAiPredictionCollateral}
+              lockedCollateral={position?.lockedCollateral}
             />
           )}
           <TopUpPositionInfo />

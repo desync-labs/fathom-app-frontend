@@ -69,16 +69,29 @@ const ShowAiSuggestionButton = styled(AccordionSummary)`
   }
 `;
 
+const InfoListItemCollateral = styled(InfoListItem)`
+  &.insufficient {
+    & .MuiListItemSecondaryAction-root {
+      color: #f76e6e;
+    }
+  }
+  & .MuiListItemSecondaryAction-root {
+    color: #4dcc33;
+  }
+`;
+
 interface PositionFormAiAssistProps {
   pool: ICollateralPool;
   borrowInput: string;
   setAiPredictionCollateral: (value: string) => void;
+  lockedCollateral?: number;
 }
 
 const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
   pool,
   borrowInput,
   setAiPredictionCollateral,
+  lockedCollateral,
 }) => {
   const {
     isAiSuggestionOpen,
@@ -267,6 +280,40 @@ const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
                 }
               />
             </InfoListItem>
+            {lockedCollateral && (
+              <InfoListItemCollateral
+                alignItems="flex-start"
+                secondaryAction={
+                  <>
+                    {loadingPricePrediction ||
+                    recommendCollateralAmount === null ? (
+                      <CustomSkeleton
+                        animation={"wave"}
+                        height={20}
+                        width={60}
+                      />
+                    ) : (
+                      `${formatNumber(
+                        BigNumber(lockedCollateral).toNumber()
+                      )} ${pool?.poolName}`
+                    )}
+                  </>
+                }
+                className={
+                  BigNumber(recommendCollateralAmount || "0").isLessThan(
+                    lockedCollateral
+                  )
+                    ? ""
+                    : "insufficient"
+                }
+              >
+                <ListItemText
+                  primary={
+                    <ListTitleWrapper>Current Collateral</ListTitleWrapper>
+                  }
+                />
+              </InfoListItemCollateral>
+            )}
           </BaseFormInfoList>
           {BigNumber(borrowInput || "0").isLessThanOrEqualTo("0") && (
             <BaseWarningBox mb={2}>
@@ -286,6 +333,10 @@ const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
                 loadingPricePrediction ||
                 recommendCollateralAmount === null ||
                 BigNumber(recommendCollateralAmount).isLessThanOrEqualTo(0) ||
+                (lockedCollateral &&
+                  BigNumber(recommendCollateralAmount).isLessThan(
+                    lockedCollateral
+                  )) ||
                 range <= 0
               }
               onClick={handleApplyAiRecommendation}

@@ -12,7 +12,7 @@ export type TopUpPositionContextType = {
 
 export type UseTopUpPositionContextReturnType = {
   position: IOpenPosition;
-  safeMax: number;
+  safeMinCollateral: string;
   debtValue: string;
   approveBtn: boolean;
   approve: () => Promise<void>;
@@ -24,23 +24,19 @@ export type UseTopUpPositionContextReturnType = {
   collateral: number;
   fathomToken: string;
   openPositionLoading: boolean;
-  setMax: (balance: string) => void;
-  setSafeMax: () => void;
   onSubmit: (values: any) => Promise<void>;
   control: Control<
     {
       collateral: string;
       fathomToken: string;
-      safeMax: number;
-      dangerSafeMax: number;
+      safeMinCollateral: string;
     },
     any
   >;
   handleSubmit: UseFormHandleSubmit<{
     collateral: string;
     fathomToken: string;
-    safeMax: number;
-    dangerSafeMax: number;
+    safeMinCollateral: string;
   }>;
   pool: ICollateralPool;
   onClose: () => void;
@@ -53,6 +49,9 @@ export type UseTopUpPositionContextReturnType = {
   errorAtLeastOneField: boolean;
   validateMaxBorrowAmount: () => boolean | string;
   priceOfCollateral: string;
+  setBorrowMax: (collateralAmount?: number) => void;
+  setCollateralMax: (balance: string) => void;
+  setCollateralSafeMax: () => void;
   setAiPredictionCollateral: (value: string) => void;
 };
 
