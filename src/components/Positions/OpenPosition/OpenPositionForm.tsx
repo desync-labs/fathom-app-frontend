@@ -44,13 +44,6 @@ const OpenPositionForm = () => {
   } = useOpenPositionContext();
   const { fxdPrice } = usePricesContext();
 
-  console.log({
-    max: BigNumber(balance)
-      .dividedBy(10 ** 18)
-      .toString(),
-    collateral,
-  });
-
   return (
     <BaseDialogFormWrapper>
       <Box
@@ -127,7 +120,7 @@ const OpenPositionForm = () => {
                           </Box>
                         </BaseFormInputErrorWrapper>
                       )}
-                      {(!error || error.type === "required") && (
+                      {error && error.type === "required" && (
                         <BaseFormInputErrorWrapper>
                           <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
                           <Box

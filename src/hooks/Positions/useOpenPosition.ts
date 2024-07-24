@@ -147,7 +147,6 @@ const useOpenPosition = (
 
   const dangerSafetyBuffer = useMemo(() => {
     return (
-      !Object.keys(errors).length &&
       isTouched &&
       isDirty &&
       BigNumber(safetyBuffer).isGreaterThanOrEqualTo(0) &&
