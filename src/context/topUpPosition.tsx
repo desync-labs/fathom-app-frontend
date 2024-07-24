@@ -53,6 +53,7 @@ export type UseTopUpPositionContextReturnType = {
   errorAtLeastOneField: boolean;
   validateMaxBorrowAmount: () => boolean | string;
   priceOfCollateral: string;
+  setAiPredictionCollateral: (value: string) => void;
 };
 
 export const TopUpPositionContext =

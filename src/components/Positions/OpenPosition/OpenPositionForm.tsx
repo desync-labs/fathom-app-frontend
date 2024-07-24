@@ -27,7 +27,6 @@ const OpenPositionForm = () => {
     collateral,
     balance,
     safeMinCollateral,
-
     setCollateralMax,
     setCollateralSafeMax,
     setBorrowMax,

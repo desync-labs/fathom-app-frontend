@@ -26,11 +26,12 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
-import OpenPositionAiAssist from "components/Positions/OpenPosition/OpenPositionAiAssist";
+import PositionFormAiAssist from "components/Positions/PositionFormAiAssist";
 
 const OpenNewPositionDialog: FC = () => {
   const {
     pool,
+    fathomToken,
     openPositionLoading,
     balance,
     approve,
@@ -42,6 +43,7 @@ const OpenNewPositionDialog: FC = () => {
     dangerSafetyBuffer,
     handleSubmit,
     onSubmit,
+    setAiPredictionCollateral,
   } = useOpenPositionContext();
 
   const { isOpenPositionWhitelisted, account } = useConnector();
@@ -55,7 +57,11 @@ const OpenNewPositionDialog: FC = () => {
         <Box>
           <OpenPositionForm />
           {["XDC", "CGO"].includes(pool?.poolName?.toUpperCase()) && (
-            <OpenPositionAiAssist />
+            <PositionFormAiAssist
+              pool={pool}
+              borrowInput={fathomToken}
+              setAiPredictionCollateral={setAiPredictionCollateral}
+            />
           )}
           <OpenPositionInfo />
 

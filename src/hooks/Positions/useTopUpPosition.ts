@@ -440,6 +440,10 @@ const useTopUpPosition = (
     }
   }, [collateral, fathomToken]);
 
+  const setAiPredictionCollateral = (recomendedCollateral: string) => {
+    setValue("collateral", recomendedCollateral, { shouldValidate: true });
+  };
+
   return {
     position,
     safeMax,
@@ -470,6 +474,7 @@ const useTopUpPosition = (
     errorAtLeastOneField,
     validateMaxBorrowAmount,
     priceOfCollateral,
+    setAiPredictionCollateral,
   };
 };
 

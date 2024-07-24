@@ -18,7 +18,7 @@ const PERIODS_RELATIONS = {
   "6m": 180,
 };
 
-const useOpenPositionAiAssist = (
+const usePositionFormAiAssist = (
   pool: ICollateralPool,
   borrowInput: string,
   setAiPredictionCollateral: (value: string) => void
@@ -177,4 +177,4 @@ const useOpenPositionAiAssist = (
   };
 };
 
-export default useOpenPositionAiAssist;
+export default usePositionFormAiAssist;

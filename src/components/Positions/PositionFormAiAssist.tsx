@@ -1,3 +1,5 @@
+import { FC } from "react";
+import { ICollateralPool } from "fathom-sdk";
 import {
   Accordion,
   AccordionDetails,
@@ -13,8 +15,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 
 import { formatNumber, formatPercentage } from "utils/format";
-import useOpenPositionContext from "context/openPosition";
-import useOpenPositionAiAssist from "hooks/Positions/useOpenPositionAiAssist";
+import usePositionFormAiAssist from "hooks/Positions/usePositionFormAiAssist";
 
 import BaseDateRangePicker from "components/Base/Form/PeriodInput";
 import { BaseSummary } from "components/Base/Typography/StyledTypography";
@@ -68,10 +69,17 @@ const ShowAiSuggestionButton = styled(AccordionSummary)`
   }
 `;
 
-const OpenPositionAiAssist = () => {
-  const { pool, fathomToken, setAiPredictionCollateral } =
-    useOpenPositionContext();
+interface PositionFormAiAssistProps {
+  pool: ICollateralPool;
+  borrowInput: string;
+  setAiPredictionCollateral: (value: string) => void;
+}
 
+const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
+  pool,
+  borrowInput,
+  setAiPredictionCollateral,
+}) => {
   const {
     isAiSuggestionOpen,
     range,
@@ -82,7 +90,7 @@ const OpenPositionAiAssist = () => {
     handleChangeRange,
     handleAiSuggestionOpen,
     handleApplyAiRecommendation,
-  } = useOpenPositionAiAssist(pool, fathomToken, setAiPredictionCollateral);
+  } = usePositionFormAiAssist(pool, borrowInput, setAiPredictionCollateral);
 
   return (
     <ShowAiAccordion
@@ -260,7 +268,7 @@ const OpenPositionAiAssist = () => {
               />
             </InfoListItem>
           </BaseFormInfoList>
-          {BigNumber(fathomToken || "0").isLessThanOrEqualTo("0") && (
+          {BigNumber(borrowInput || "0").isLessThanOrEqualTo("0") && (
             <BaseWarningBox mb={2}>
               <InfoIcon
                 sx={{ width: "16px", color: "#F5953D", height: "16px" }}
@@ -291,4 +299,4 @@ const OpenPositionAiAssist = () => {
     </ShowAiAccordion>
   );
 };
-export default OpenPositionAiAssist;
+export default PositionFormAiAssist;
