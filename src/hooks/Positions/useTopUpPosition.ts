@@ -196,7 +196,7 @@ const useTopUpPosition = (
           const safeMinCollateral = BigNumber(totalFathomAmount)
             .dividedBy(
               BigNumber(priceWithSafetyMargin).multipliedBy(
-                1 - DANGER_SAFETY_BUFFER
+                BigNumber(100).minus(pool.stabilityFeeRate).dividedBy(100)
               )
             )
             .decimalPlaces(6, BigNumber.ROUND_UP)
@@ -261,30 +261,77 @@ const useTopUpPosition = (
 
   /**
    * Max borrow amount, wallet balance or collateral amount by price with safety margin and 25% overcollateralization.
+   * @param totalCollateralAmount - total collateral amount, debt value + collateral input.
    */
   const setBorrowMax = useCallback(
-    (collateralAmount?: number) => {
+    (totalCollateralAmount?: number) => {
       const { priceWithSafetyMargin } = pool;
 
       const formattedBalance = BigNumber(balance).dividedBy(10 ** 18);
 
-      let borrow: BigNumber | string = BigNumber(
-        collateralAmount || formattedBalance
-      ).multipliedBy(
-        BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
-      );
+      let totalBorrow: BigNumber | string = BigNumber(
+        totalCollateralAmount || formattedBalance
+      )
+        .multipliedBy(
+          BigNumber(priceWithSafetyMargin).multipliedBy(
+            1 - DANGER_SAFETY_BUFFER
+          )
+        )
+        .plus(debtValue);
 
-      borrow = (
-        borrow.isGreaterThan(maxBorrowAmount)
-          ? BigNumber(maxBorrowAmount).minus(totalFathomToken)
-          : borrow
+      totalBorrow = (
+        totalBorrow.isGreaterThan(maxBorrowAmount)
+          ? BigNumber(maxBorrowAmount).minus(0.01).minus(debtValue)
+          : totalBorrow.minus(debtValue)
       )
         .decimalPlaces(2, BigNumber.ROUND_DOWN)
         .toString();
 
-      setValue("fathomToken", borrow, { shouldValidate: true });
+      setValue("fathomToken", totalBorrow, { shouldValidate: true });
     },
-    [pool, balance, maxBorrowAmount, setValue]
+    [pool, balance, maxBorrowAmount, setValue, debtValue]
+  );
+
+  /**
+   * Safe max collateral input, price with safety margin and 25% overcollateralization.
+   */
+  const setCollateralSafeMax = useCallback(() => {
+    const { priceWithSafetyMargin } = pool;
+
+    /**
+     * Calculate how much collateral need for safety collateralize total debt.
+     */
+    let collateral: BigNumber | string = BigNumber(totalFathomToken)
+      .dividedBy(
+        BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
+      )
+      .minus(position.lockedCollateral);
+
+    const formattedBalance = BigNumber(balance).dividedBy(10 ** 18);
+
+    /**
+     * Try to set collateral to max value, if it's greater than wallet balance.
+     */
+    if (collateral.isGreaterThan(formattedBalance)) {
+      collateral = formattedBalance
+        .decimalPlaces(6, BigNumber.ROUND_DOWN)
+        .toString();
+    } else {
+      collateral = collateral.decimalPlaces(6, BigNumber.ROUND_UP).toString();
+    }
+
+    setValue("collateral", collateral, { shouldValidate: true });
+  }, [totalFathomToken, fathomToken, pool, setValue, balance]);
+
+  /**
+   * Set wallet balance to collateral input.
+   */
+  const setCollateralMax = useCallback(
+    (balance: string) => {
+      const max = BigNumber(balance).dividedBy(10 ** 18);
+      setValue("collateral", max.toString(), { shouldValidate: true });
+    },
+    [setValue]
   );
 
   const onSubmit = useCallback(
@@ -390,26 +437,6 @@ const useTopUpPosition = (
     setApprovalPending,
     setApproveBtn,
   ]);
-
-  /**
-   * Safe max collateral input, price with safety margin and 25% overcollateralization.
-   */
-  const setCollateralSafeMax = useCallback(() => {
-    BigNumber(safeMinCollateral).isGreaterThan(0)
-      ? setValue("collateral", safeMinCollateral, { shouldValidate: true })
-      : setValue("collateral", "0", { shouldValidate: true });
-  }, [safeMinCollateral, setValue]);
-
-  /**
-   * Set wallet balance to collateral input.
-   */
-  const setCollateralMax = useCallback(
-    (balance: string) => {
-      const max = BigNumber(balance).dividedBy(10 ** 18);
-      setValue("collateral", max.toString(), { shouldValidate: true });
-    },
-    [setValue]
-  );
 
   useEffect(() => {
     if (account && chainId) {

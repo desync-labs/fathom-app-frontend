@@ -38,9 +38,9 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   setTopUpPosition,
 }) => {
   const {
+    totalCollateral,
+    totalFathomToken,
     pool,
-    collateral,
-    fathomToken,
     balance,
     safeMinCollateral,
     onSubmit,
@@ -175,12 +175,12 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                 />
                 <BaseFormSetMaxButton
                   onClick={() =>
-                    collateral
-                      ? setBorrowMax(Number(collateral))
+                    totalCollateral
+                      ? setBorrowMax(Number(totalCollateral))
                       : setBorrowMax()
                   }
                 >
-                  {collateral ? "Safe Max" : "Max"}
+                  {totalCollateral ? "Safe Max" : "Max"}
                 </BaseFormSetMaxButton>
               </BaseFormInputWrapper>
             );
@@ -285,12 +285,12 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
               />
               <BaseFormSetMaxButton
                 onClick={() =>
-                  fathomToken
+                  totalFathomToken
                     ? setCollateralSafeMax()
                     : setCollateralMax(balance)
                 }
               >
-                {fathomToken ? "Safe Max" : "Max"}
+                {totalFathomToken ? "Safe Max" : "Max"}
               </BaseFormSetMaxButton>
             </BaseFormInputWrapper>
           )}

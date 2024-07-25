@@ -15,12 +15,7 @@ import OpenPositionForm from "components/Positions/OpenPosition/OpenPositionForm
 import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import { InfoIcon } from "components/Governance/Propose";
-import {
-  BaseErrorBox,
-  BaseErrorMessage,
-  BaseInfoBox,
-  BaseWarningBox,
-} from "components/Base/Boxes/StyledBoxes";
+import { BaseInfoBox, BaseWarningBox } from "components/Base/Boxes/StyledBoxes";
 import {
   ButtonPrimary,
   ButtonSecondary,
@@ -97,16 +92,16 @@ const OpenNewPositionDialog: FC = () => {
             </BaseWarningBox>
           )}
           {dangerSafetyBuffer ? (
-            <BaseErrorBox>
+            <BaseWarningBox>
               <InfoIcon
                 sx={{ width: "16px", color: "#F5953D", height: "16px" }}
               />
-              <BaseErrorMessage>
+              <Typography>
                 Safety Buffer is moved into the danger zone. We recommend
                 borrowing a lesser amount of FXD. Otherwise, your position may
                 be at risk of liquidation if the price of collateral will drop.
-              </BaseErrorMessage>
-            </BaseErrorBox>
+              </Typography>
+            </BaseWarningBox>
           ) : null}
           {approveBtn && !!balance && (
             <BaseInfoBox>
