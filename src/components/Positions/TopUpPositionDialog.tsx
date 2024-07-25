@@ -16,6 +16,7 @@ import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
 import TopUpPositionInfo from "components/Positions/TopUpPosition/TopUpPositionInfo";
 import TopUpPositionForm from "components/Positions/TopUpPosition/TopUpPositionForm";
+import PositionFormAiAssist from "components/Positions/PositionFormAiAssist";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import {
   ButtonPrimary,
@@ -35,6 +36,9 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
   setClosePosition,
 }) => {
   const {
+    pool,
+    position,
+    totalFathomToken,
     collateral,
     safetyBuffer,
     onClose,
@@ -46,6 +50,7 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
     balance,
     handleSubmit,
     onSubmit,
+    setAiPredictionCollateral,
   } = useTopUpPositionContext();
   const { account } = useConnector();
 
@@ -62,6 +67,14 @@ const TopUpPositionDialog: FC<ClosePositionDialogPropsType> = ({
             setTopUpPosition={setTopUpPosition}
             setClosePosition={setClosePosition}
           />
+          {["XDC", "CGO"].includes(pool?.poolName?.toUpperCase()) && (
+            <PositionFormAiAssist
+              pool={pool}
+              borrowInput={totalFathomToken}
+              setAiPredictionCollateral={setAiPredictionCollateral}
+              lockedCollateral={position?.lockedCollateral}
+            />
+          )}
           <TopUpPositionInfo />
 
           {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && (
