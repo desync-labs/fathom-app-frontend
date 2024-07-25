@@ -54,7 +54,10 @@ const VaultPositionStats = () => {
 
   const getVaultDepositLimit = () => {
     if (isTfVaultType) {
-      return BigNumber(tfVaultDepositLimit).dividedBy(10 ** 18);
+      return BigNumber.max(
+        BigNumber(tfVaultDepositLimit).dividedBy(10 ** 18),
+        0
+      );
     } else {
       return BigNumber.max(
         BigNumber(vault?.depositLimit || 0)
