@@ -293,5 +293,7 @@ vaultTitle["0x3c8e9896933b374e638f9a5c309535409129aaa2".toLowerCase()] =
   "Education Vault";
 vaultTitle["0x5a51e6d4c58f1585d74ce71cf709c4f939c3dac2".toLowerCase()] =
   "TradeFi Vault (FXD) #1";
+vaultTitle["0x7e5c3caD163963d7AFef7143a19919310243AC21".toLowerCase()] =
+  "TradeFi Vault (AutoTest)";
 
 export { vaultTitle, vaultDescription };
