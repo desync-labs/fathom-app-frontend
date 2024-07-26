@@ -70,7 +70,7 @@ const TransactionRowItem: FC<TransactionHistoryItemProps> = ({
   return (
     <Box px={6}>
       <ListItem
-        px={3}
+        px={0}
         minHeight={50}
         sx={{
           borderWidth: `1px 0 0 0`,

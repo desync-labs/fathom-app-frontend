@@ -8,7 +8,9 @@ interface ListItemProps extends BoxProps {
   button?: boolean;
 }
 
-export const ListItem: FC<ListItemProps> = ({
+type ListItemType = ListItemProps & { border?: boolean };
+
+export const ListItem: FC<ListItemType> = ({
   children,
   minHeight = 71,
   px = 2,
