@@ -18,6 +18,7 @@ import { FilterOptions } from "./types";
 
 import { Check as CheckIcon, Sort as SortIcon } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import useSharedContext from "context/shared";
 
 interface HistoryFilterMenuProps {
   onFilterChange: (filter: FilterOptions[]) => void;
@@ -78,6 +79,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
   const [localFilter, setLocalFilter] =
     useState<FilterOptions[]>(currentFilter);
   const trackEvent = useRootStore((store) => store.trackEvent);
+  const { isMobile } = useSharedContext();
 
   useEffect(() => {
     onFilterChange(localFilter);
@@ -156,7 +158,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
   };
 
   return (
-    <Box>
+    <Box sx={{ marginBottom: isMobile ? "30px" : "0" }}>
       <FilterButton
         sx={{
           minWidth: 148,
