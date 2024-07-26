@@ -199,13 +199,13 @@ export const getDesignTokens = () => {
       },
       background: {
         default: "#071028",
-        paper: "#131F35",
+        paper: "#132340",
         surface: "#1d2d49",
         surface2: "#1d2d49",
         header: "#101d32",
         disabled: "#EBEBEF14",
       },
-      divider: "#1d2d49",
+      divider: "#2c4066",
       action: {
         active: "#EBEBEF8F",
         hover: "#2a3e5a",
