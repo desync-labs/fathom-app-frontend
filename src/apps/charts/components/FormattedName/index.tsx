@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
 import { Box, styled } from "@mui/material";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 const TextWrapper = styled(Box)<{
   link?: boolean;
@@ -48,7 +48,7 @@ const FormattedName: FC<FormattedNameProps> = (props) => {
 
   if (text.length > maxCharacters) {
     return (
-      <AppPopover
+      <BasePopover
         id={"help_text"}
         text={text}
         element={

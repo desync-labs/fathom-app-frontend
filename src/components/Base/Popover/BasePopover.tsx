@@ -6,9 +6,8 @@ import { styled } from "@mui/material/styles";
 const PopoverWrapper = styled(Popover)<{ type: PopoverType }>`
   .MuiPaper-root {
     background: ${({ type }) =>
-      type === PopoverType.Error ? "#FF6767" : "#3D5580"};
-    box-shadow: 0 4px 40px 0 rgba(0, 7, 21, 0.3);
-    color: #fff;
+      type === PopoverType.Error ? "#FF6767" : "rgba(255, 255, 255, 0.9)"};
+    color: #000c24;
     max-width: 400px;
     border-radius: 12px;
     padding: 12px 16px;
@@ -23,6 +22,8 @@ const PopoverWrapper = styled(Popover)<{ type: PopoverType }>`
   ${({ theme }) => theme.breakpoints.down("sm")} {
     .MuiPaper-root {
       max-width: 350px;
+      border-radius: 8px;
+      padding: 8px 12px;
       p {
         font-size: 12px;
         line-height: 15px;

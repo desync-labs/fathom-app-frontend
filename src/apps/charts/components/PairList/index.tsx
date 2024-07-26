@@ -18,7 +18,7 @@ import FormattedName from "apps/charts/components/FormattedName";
 import { PAIR_BLACKLIST } from "apps/charts/constants";
 import { AutoColumn } from "apps/charts/components/Column";
 import { TableHeaderBox } from "apps/charts/components/Row";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 dayjs.extend(utc);
 
@@ -445,7 +445,7 @@ const PairList: FC<PairListProps> = (props) => {
                   : ""}
               </TableHeaderBox>
             </ClickableText>
-            <AppPopover
+            <BasePopover
               id="pairs_sorting"
               text="Based on 24hr volume annualized"
             />

@@ -57,10 +57,10 @@ import { TableHeaderBox } from "apps/charts/components/Row";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { isAddress } from "apps/charts/utils";
 import { LayoutWrapper } from "apps/charts/App";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import useSharedContext from "context/shared";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 const DashboardWrapper = styled(Box)`
   width: 100%;
@@ -460,7 +460,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     Pair Stats
                   </TYPE.main>
                   {showUSDWaning ? (
-                    <AppPopover id={"pair_stats"} text={UNTRACKED_COPY} />
+                    <BasePopover id={"pair_stats"} text={UNTRACKED_COPY} />
                   ) : null}
                 </RowFixed>
               )}

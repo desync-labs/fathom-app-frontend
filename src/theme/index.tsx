@@ -517,7 +517,7 @@ export function getThemedComponents(theme: Theme) {
             style: {
               color: theme.palette.other.fathomAccent,
               background: "transparent",
-              border: "0.7px solid " + theme.palette.other.fathomAccent,
+              border: "1px solid " + theme.palette.other.fathomAccent,
               "&:hover, &.Mui-focusVisible": {
                 background: "transparent",
                 color: theme.palette.other.fathomAccentLight,

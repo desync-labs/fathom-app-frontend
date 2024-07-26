@@ -17,7 +17,7 @@ import { VaultPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { AppFlexBox, WarningBox } from "components/AppComponents/AppBox/AppBox";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 import { InfoIcon } from "components/Governance/Propose";
 
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
@@ -239,7 +239,7 @@ const VaultLockingBar = () => {
         label: (
           <LockWrapper>
             Deposit Time
-            <AppPopover
+            <BasePopover
               id={"deposit-time"}
               text={
                 <>
@@ -262,7 +262,7 @@ const VaultLockingBar = () => {
           <LockWrapper>
             Lock Time (
             {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
-            <AppPopover
+            <BasePopover
               id={"lock-time"}
               text={
                 <>
