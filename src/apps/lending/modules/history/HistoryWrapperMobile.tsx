@@ -290,7 +290,7 @@ export const HistoryWrapperMobile = () => {
               <Typography
                 variant="h4"
                 color="text.primary"
-                sx={{ ml: 2, mt: 3, mb: 1 }}
+                sx={{ ml: 2, mt: 1, mb: 1 }}
               >
                 {date}
               </Typography>

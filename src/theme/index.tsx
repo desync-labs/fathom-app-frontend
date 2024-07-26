@@ -377,7 +377,7 @@ export const getDesignTokens = () => {
         fontWeight: 500,
         letterSpacing: pxToRem(0.15),
         lineHeight: pxToRem(20),
-        fontSize: pxToRem(14),
+        fontSize: "14px",
       },
       main12: {
         fontFamily: FONT,

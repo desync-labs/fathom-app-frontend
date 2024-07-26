@@ -132,7 +132,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
   };
 
   return (
-    <Box>
+    <Box sx={{ marginBottom: "30px" }}>
       <Button
         sx={{
           minWidth: 148,

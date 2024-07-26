@@ -169,7 +169,7 @@ const HistoryWrapper = () => {
           justifyContent: "space-between",
           mx: 4,
           mt: 3,
-          mb: 2,
+          mb: 4,
         }}
       >
         <Box sx={{ display: "inline-flex" }}>
@@ -242,7 +242,7 @@ const HistoryWrapper = () => {
               <Typography
                 variant="h4"
                 color="text.light"
-                sx={{ ml: 4.5, mt: 3, mb: 1 }}
+                sx={{ ml: 4.5, mt: 1.5, mb: 1 }}
               >
                 {date}
               </Typography>
