@@ -123,7 +123,7 @@ const WarningGrouping = styled(Box)<{ disabled?: boolean }>`
 `;
 
 const HeaderWrapper = styled(Box)`
-  background: #131f35;
+  background: #2c4066;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
