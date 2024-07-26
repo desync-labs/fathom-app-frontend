@@ -62,7 +62,7 @@ import { shortenAddress } from "apps/charts/utils";
 import { TableHeaderBox } from "apps/charts/components/Row";
 import { isAddress } from "apps/charts/utils";
 import { LayoutWrapper } from "apps/charts/App";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import useSharedContext from "context/shared";
@@ -351,7 +351,7 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
                     Token Stats
                   </TYPE.main>
                   {usingUtVolume && (
-                    <AppPopover id={"token_stats"} text={UNTRACKED_COPY} />
+                    <BasePopover id={"token_stats"} text={UNTRACKED_COPY} />
                   )}
                 </RowFixed>
               )}
@@ -456,7 +456,7 @@ const TokenPage: FC<{ address: string }> = memo(({ address }) => {
                   setChecked={() => setUseTracked(!useTracked)}
                   text={"Hide untracked pairs"}
                 />
-                <AppPopover
+                <BasePopover
                   id="untracked_pairs"
                   text="USD amounts may be inaccurate in low liquiidty pairs or pairs without XDC or stablecoins."
                 />

@@ -24,10 +24,8 @@ import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { Box } from "@mui/material";
 import useConnector from "context/connector";
 import useSharedContext from "context/shared";
-import AppPopover, {
-  PopoverType,
-} from "components/AppComponents/AppPopover/AppPopover";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
+import BasePopover, { PopoverType } from "components/Base/Popover/BasePopover";
 
 const NetworkPaper = styled(AppPaper)`
   background: #253656;
@@ -119,7 +117,7 @@ const Web3Status = () => {
   } else if (isError) {
     button = isMobile ? (
       <WrongNetworkMobile onClick={() => setOpen(!open)}>
-        <AppPopover
+        <BasePopover
           id={"wrong-network"}
           type={PopoverType.Error}
           text={<>Select XDC network in your wallet.</>}
