@@ -325,26 +325,22 @@ const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
               </Typography>
             </BaseWarningBox>
           )}
-          {BigNumber(minPricePrediction as number).isLessThan(
-            pool.collateralPrice
-          ) ? (
-            <BaseButtonSecondary
-              disabled={
-                loadingPricePrediction ||
-                recommendCollateralAmount === null ||
-                BigNumber(recommendCollateralAmount).isLessThanOrEqualTo(0) ||
-                (lockedCollateral &&
-                  BigNumber(recommendCollateralAmount).isLessThan(
-                    lockedCollateral
-                  )) ||
-                range <= 0
-              }
-              onClick={handleApplyAiRecommendation}
-              sx={{ width: "100%", marginTop: "5px" }}
-            >
-              Apply AI Recommendation
-            </BaseButtonSecondary>
-          ) : null}
+          <BaseButtonSecondary
+            disabled={
+              loadingPricePrediction ||
+              recommendCollateralAmount === null ||
+              BigNumber(recommendCollateralAmount).isLessThanOrEqualTo(0) ||
+              (lockedCollateral &&
+                BigNumber(recommendCollateralAmount).isLessThan(
+                  lockedCollateral
+                )) ||
+              range <= 0
+            }
+            onClick={handleApplyAiRecommendation}
+            sx={{ width: "100%", marginTop: "5px" }}
+          >
+            Apply AI Recommendation
+          </BaseButtonSecondary>
         </BaseDialogFormInfoWrapper>
       </AccordionDetails>
     </ShowAiAccordion>
