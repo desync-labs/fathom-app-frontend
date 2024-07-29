@@ -60,10 +60,3 @@ export const formatHashShorten = (hash: string) => {
 
   return `${prefix}...${suffix}`;
 };
-
-export const roundUpToSixDecimalPlaces = (value: string): string => {
-  const num = parseFloat(value);
-
-  const roundedNum = Math.ceil(num * 1e6) / 1e6;
-  return roundedNum.toFixed(6);
-};
