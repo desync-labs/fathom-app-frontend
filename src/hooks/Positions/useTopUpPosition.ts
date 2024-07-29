@@ -9,7 +9,7 @@ import useConnector from "context/connector";
 import { IOpenPosition } from "fathom-sdk";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 import { NATIVE_ASSETS } from "connectors/networks";
-import { formatNumber } from "utils/format";
+import { formatNumber, roundUpToSixDecimalPlaces } from "utils/format";
 
 const defaultValues = {
   collateral: "",
@@ -490,7 +490,9 @@ const useTopUpPosition = (
       .toString();
 
     BigNumber(collateralAmount).isGreaterThan(0) &&
-      setValue("collateral", collateralAmount, { shouldValidate: true });
+      setValue("collateral", roundUpToSixDecimalPlaces(collateralAmount), {
+        shouldValidate: true,
+      });
   };
 
   return {

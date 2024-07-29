@@ -9,7 +9,7 @@ import useConnector from "context/connector";
 import { DANGER_SAFETY_BUFFER } from "utils/Constants";
 import { ZERO_ADDRESS } from "fathom-sdk";
 import { NATIVE_ASSETS } from "connectors/networks";
-import { formatNumber } from "utils/format";
+import { formatNumber, roundUpToSixDecimalPlaces } from "utils/format";
 
 export const defaultValues = {
   collateral: "",
@@ -487,7 +487,9 @@ const useOpenPosition = (
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
   const setAiPredictionCollateral = (recommendedCollateral: string) => {
-    setValue("collateral", recommendedCollateral, { shouldValidate: true });
+    setValue("collateral", roundUpToSixDecimalPlaces(recommendedCollateral), {
+      shouldValidate: true,
+    });
   };
 
   return {
