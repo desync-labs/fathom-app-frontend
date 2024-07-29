@@ -10,7 +10,7 @@ import {
   StepContentCounter,
   StepLabelOptionalValue,
 } from "components/Vaults/VaultDetail/VaultLockingBar";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 import { getPeriodInDays } from "utils/getPeriodInDays";
 
 const CustomPaper = styled(Box)`
@@ -39,7 +39,7 @@ const VaultModalLockingBar: FC<VaultModalLockingBarProps> = ({
       label: (
         <LockWrapper>
           Deposit Time
-          <AppPopover
+          <BasePopover
             id={"deposit-time"}
             text={
               <>
@@ -62,7 +62,7 @@ const VaultModalLockingBar: FC<VaultModalLockingBarProps> = ({
         <LockWrapper>
           Lock Time (
           {getPeriodInDays(tfVaultDepositEndDate, tfVaultLockEndDate)} days)
-          <AppPopover
+          <BasePopover
             id={"lock-time"}
             text={
               <>

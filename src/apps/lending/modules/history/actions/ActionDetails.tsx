@@ -35,6 +35,8 @@ export const ActionTextMap: FC<{ action: string }> = ({ action }) => {
       return <>Liquidation</>;
     case "UserEModeSet":
       return <>E-Mode</>;
+    case "ClaimRewardsCall":
+      return <>Claim Rewards</>;
     default:
       return <></>;
   }

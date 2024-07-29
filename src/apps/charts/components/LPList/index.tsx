@@ -44,7 +44,7 @@ const DashGrid = styled(Box)`
 `;
 
 const HeaderWrapper = styled(DashGrid)`
-  background: #131f35;
+  background: #2c4066;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;

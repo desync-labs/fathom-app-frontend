@@ -7,7 +7,7 @@ import { PageWrapper, FullWrapper } from "apps/charts/components";
 import { RowBetween, AutoRow } from "apps/charts/components/Row";
 import Search from "apps/charts/components/Search";
 import CheckBox from "apps/charts/components/Checkbox";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 const AllPairsPage: FC = () => {
   const allPairs = useAllPairData();
@@ -33,7 +33,7 @@ const AllPairsPage: FC = () => {
             setChecked={() => setUseTracked(!useTracked)}
             text={"Hide untracked pairs"}
           />
-          <AppPopover
+          <BasePopover
             id="untracked_pairs"
             text="USD amounts may be inaccurate in low liquidity pairs or pairs without XDC or stablecoins."
           />

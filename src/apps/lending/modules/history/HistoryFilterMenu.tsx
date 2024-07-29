@@ -4,6 +4,7 @@ import {
   Divider,
   Menu,
   MenuItem,
+  styled,
   SvgIcon,
   Typography,
   useMediaQuery,
@@ -17,6 +18,7 @@ import { FilterOptions } from "./types";
 
 import { Check as CheckIcon, Sort as SortIcon } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import useSharedContext from "context/shared";
 
 interface HistoryFilterMenuProps {
   onFilterChange: (filter: FilterOptions[]) => void;
@@ -26,6 +28,29 @@ interface HistoryFilterMenuProps {
 interface FilterLabelProps {
   filter: FilterOptions;
 }
+
+const FilterButton = styled(Button)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #091433;
+  border-radius: 8px;
+  border: 1px solid #3d5580;
+  color: #b0c5e7;
+
+  &.open {
+    background: #091433;
+    border: 1px solid #5a81ff;
+    box-shadow: 0 0 8px #003cff;
+  }
+
+  &:hover,
+  &:focus {
+    background: #091433;
+    border: 1px solid #5a81ff;
+    box-shadow: 0 0 8px #003cff;
+  }
+`;
 
 const FilterLabel: React.FC<FilterLabelProps> = ({ filter }) => {
   switch (filter) {
@@ -54,6 +79,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
   const [localFilter, setLocalFilter] =
     useState<FilterOptions[]>(currentFilter);
   const trackEvent = useRootStore((store) => store.trackEvent);
+  const { isMobile } = useSharedContext();
 
   useEffect(() => {
     onFilterChange(localFilter);
@@ -132,27 +158,22 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
   };
 
   return (
-    <Box>
-      <Button
+    <Box sx={{ marginBottom: isMobile ? "30px" : "0" }}>
+      <FilterButton
         sx={{
           minWidth: 148,
           maxWidth: downToMD ? "100%" : 360,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
           height: 36,
-          border: "1px solid",
-          borderColor: "divider",
-          borderRadius: "4px",
           mr: downToMD ? 0 : 1,
           ml: downToMD ? 2 : 0,
           pl: 1,
           pr: 0.5,
         }}
+        className={anchorEl ? "open" : ""}
         onClick={handleClick}
       >
         <Box display="flex" alignItems="center" overflow="hidden">
-          <SvgIcon height={9} width={9} color="primary">
+          <SvgIcon height={9} width={9} sx={{ color: "#9fadc6" }}>
             <SortIcon />
           </SvgIcon>
           <Typography
@@ -191,7 +212,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
             </Box>
           </DarkTooltip>
         )}
-      </Button>
+      </FilterButton>
       <Menu
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
@@ -210,9 +231,7 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
         <MenuItem
           onClick={() => handleFilterClick(undefined)}
           sx={{
-            background: allSelected
-              ? theme.palette.background.surface
-              : undefined,
+            background: allSelected ? "#2C4066" : "transparent",
             display: "flex",
             justifyContent: "space-between",
             color: theme.palette.text.light,
@@ -250,8 +269,8 @@ export const HistoryFilterMenu: React.FC<HistoryFilterMenuProps> = ({
                   onClick={() => handleFilterClick(option)}
                   sx={{
                     background: currentFilter.includes(option)
-                      ? theme.palette.background.surface
-                      : undefined,
+                      ? "#2C4066"
+                      : "transparent",
                     display: "flex",
                     justifyContent: "space-between",
                     color: theme.palette.text.light,

@@ -2,7 +2,7 @@ import { ChangeEvent, FC, memo } from "react";
 import { IVault, IVaultPosition } from "fathom-sdk";
 import { Pagination, Table, TableBody, TableHead } from "@mui/material";
 import { COUNT_PER_PAGE_VAULT } from "utils/Constants";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 import { VaultListItemSkeleton } from "components/Vaults/VaultList/VaultListItemSkeleton";
 import VaultListItem from "components/Vaults/VaultList/VaultListItem";
 import {
@@ -41,7 +41,7 @@ const VaultsList: FC<VaultListPropsType> = ({
             <BaseTableCell colSpan={1}>
               <BaseTableCellPopover>
                 Earned
-                <AppPopover
+                <BasePopover
                   id={"earned"}
                   text={<>How much have you earned on this Vault so far.</>}
                 />
@@ -50,7 +50,7 @@ const VaultsList: FC<VaultListPropsType> = ({
             <BaseTableCell colSpan={1}>
               <BaseTableCellPopover>
                 Apy
-                <AppPopover
+                <BasePopover
                   id={"apr"}
                   text={
                     <>
@@ -64,7 +64,7 @@ const VaultsList: FC<VaultListPropsType> = ({
             <BaseTableCell colSpan={2}>
               <BaseTableCellPopover>
                 Tvl
-                <AppPopover
+                <BasePopover
                   id={"tvl"}
                   text={
                     <>

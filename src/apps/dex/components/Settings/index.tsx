@@ -92,10 +92,10 @@ const StyledMenu = styled(Box)`
 
 const MenuFlyout = styled(Box)`
   min-width: 320px;
-  background-color: #061023;
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04),
-    0 16px 24px rgba(0, 0, 0, 0.04), 0 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
+  background: #2a3e5a;
+  box-shadow: 0 12px 32px 0 rgba(0, 7, 21, 0.5);
+  padding: 8px;
   display: flex;
   flex-direction: column;
   font-size: 1rem;
@@ -219,7 +219,7 @@ const SettingsTab = () => {
       {open && (
         <MenuFlyout>
           <AutoColumn gap="md" style={{ padding: "1rem" }}>
-            <Typography fontWeight={600} fontSize={14}>
+            <Typography fontWeight={600} fontSize={14} color="#b7c8e5">
               Transaction Settings
             </Typography>
             <TransactionSettings
@@ -228,12 +228,12 @@ const SettingsTab = () => {
               deadline={ttl}
               setDeadline={setTtl}
             />
-            <Typography fontWeight={600} fontSize={14}>
+            <Typography fontWeight={600} fontSize={14} color="#b7c8e5">
               Interface Settings
             </Typography>
             <RowBetween>
               <RowFixed color={"#4F658C"}>
-                <TYPE.main fontWeight={400} fontSize={14}>
+                <TYPE.main fontWeight={400} fontSize={14} color="#b7c8e5">
                   Toggle Expert Mode
                 </TYPE.main>
                 <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
@@ -256,7 +256,7 @@ const SettingsTab = () => {
             </RowBetween>
             <RowBetween>
               <RowFixed color={"#4F658C"}>
-                <TYPE.main fontWeight={400} fontSize={14}>
+                <TYPE.main fontWeight={400} fontSize={14} color="#b7c8e5">
                   Disable Multihops
                 </TYPE.main>
                 <QuestionHelper text="Restricts swaps to direct pairs only." />

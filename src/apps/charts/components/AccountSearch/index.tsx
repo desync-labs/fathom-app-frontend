@@ -34,10 +34,10 @@ const Input = styled("input")`
   outline: none;
   padding: 12px 16px;
   border-radius: 8px;
-  color: #fafafa;
-  background-color: #0e1d34;
+  color: #8ea4cc;
+  border: 1px solid #3d5580;
+  background-color: #091433;
   font-size: 16px;
-  border: 1px solid #253656;
 
   :hover,
   :focus {
@@ -78,12 +78,13 @@ const DashGrid = styled(Box)`
 `;
 
 export const HeaderWrapper = styled(DashGrid)`
-  background: #131f35;
+  background: #2c4066;
   border-radius: 8px;
   padding: 0.5rem 1.125rem 0.5rem;
-  color: #5977a0;
+  color: #8ea4cc;
   text-transform: uppercase;
   font-size: 11px;
+  font-weight: 600;
 `;
 
 const CloseIconButton = styled(IconButton)`

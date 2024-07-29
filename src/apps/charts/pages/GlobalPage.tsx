@@ -22,7 +22,7 @@ import { CustomLink } from "apps/charts/components/Link";
 import { PageWrapper, ContentWrapper } from "apps/charts/components";
 import CheckBox from "apps/charts/components/Checkbox";
 import { TOKEN_BLACKLIST } from "apps/charts/constants";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 const ListOptions = styled(AutoRow)`
   width: 100%;
@@ -201,7 +201,7 @@ const GlobalPage: FC = () => {
                   setChecked={() => setUseTracked(!useTracked)}
                   text={"Hide untracked pairs"}
                 />
-                <AppPopover
+                <BasePopover
                   id="untracked_pairs"
                   text="USD amounts may be inaccurate in low liquiidty pairs or pairs without XDC or stablecoins."
                 />
