@@ -268,7 +268,11 @@ const useOpenPosition = (
         .dividedBy(collateralInput)
         .precision(10, BigNumber.ROUND_FLOOR);
 
-      setSafetyBuffer(safetyBuffer.isNaN() ? "0" : safetyBuffer.toString());
+      setSafetyBuffer(
+        safetyBuffer.isNaN() || !isFinite(safetyBuffer.toNumber())
+          ? "0"
+          : safetyBuffer.toString()
+      );
 
       /**
        * LIQUIDATION PRICE
@@ -278,7 +282,9 @@ const useOpenPosition = (
         .multipliedBy(pool.liquidationRatio);
 
       setLiquidationPrice(
-        liquidationPrice.isNaN() ? "0" : liquidationPrice.toString()
+        liquidationPrice.isNaN() || !isFinite(liquidationPrice.toNumber())
+          ? "0"
+          : liquidationPrice.toString()
       );
 
       /**
