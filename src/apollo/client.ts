@@ -146,21 +146,21 @@ export const client = new ApolloClient({
 
 export const dexClient = new ApolloClient({
   link: new HttpLink({
-    uri: "https://xinfin-graph.fathom.fi/subgraphs/name/dex-subgraph",
+    uri: "https://graph.xinfin.fathom.fi/subgraphs/name/dex-subgraph",
   }),
   cache: new InMemoryCache(),
 });
 
 export const healthClient = new ApolloClient({
   link: new HttpLink({
-    uri: "https://xinfin-graph.fathom.fi/graphql",
+    uri: "https://graph.xinfin.fathom.fi/graphql",
   }),
   cache: new InMemoryCache(),
 });
 
 export const blockClient = new ApolloClient({
   link: new HttpLink({
-    uri: "https://xinfin-graph.fathom.fi/subgraphs/name/blocklytics/ethereum-blocks",
+    uri: "https://graph.xinfin.fathom.fi/subgraphs/name/blocklytics/ethereum-blocks",
   }),
   cache: new InMemoryCache(),
 });

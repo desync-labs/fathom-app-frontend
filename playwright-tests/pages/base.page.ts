@@ -35,10 +35,9 @@ export default class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-
     switch (process.env.ENVIRONMENT_URL) {
       case "https://dapp.fathom.fi":
-        this.graphAPIBaseUrl = "https://xinfin-graph.fathom.fi";
+        this.graphAPIBaseUrl = "https://graph.xinfin.fathom.fi";
         break;
       case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
         "http://127.0.0.1:3000":
