@@ -13,16 +13,15 @@ const HistoryMobileRowItem = () => {
             flexDirection: "column",
             display: "flex",
             gap: "8px",
-            paddingTop: "5px",
           }}
         >
-          <Skeleton width={40} height={16} />
+          <Skeleton width={80} height={16} />
           <Skeleton variant="circular" width={24} height={24} />
         </Box>
       </ListColumn>
 
       <ListColumn align="right">
-        <Box sx={{ display: "flex", gap: 1, paddingTop: "10px" }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <Skeleton width={55} height={16} />
           <Skeleton width={70} height={20} />
         </Box>
