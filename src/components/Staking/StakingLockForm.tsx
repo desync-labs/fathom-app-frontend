@@ -4,21 +4,16 @@ import { Box, Slider, Grid, Typography, CircularProgress } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 import {
-  AppFormInputLogo,
   AppFormInputWrapper,
   AppFormLabel,
   AppTextField,
 } from "components/AppComponents/AppForm/AppForm";
-import {
-  ErrorBox,
-  WalletBalance,
-} from "components/AppComponents/AppBox/AppBox";
+import { ErrorBox } from "components/AppComponents/AppBox/AppBox";
 import {
   ButtonPrimary,
   MaxButton,
 } from "components/AppComponents/AppButton/AppButton";
 import useStakingLockForm from "hooks/Staking/useStakingLockForm";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import Period from "components/Staking/Components/Period";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
@@ -27,20 +22,17 @@ import usePricesContext from "context/prices";
 import useStakingContext from "context/staking";
 import BigNumber from "bignumber.js";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
-
-const StakingLockPaper = styled(AppPaper)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 32px 32px 30px;
-  gap: 35px;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 20px 20px 25px;
-  }
-  form {
-    width: 100%;
-  }
-`;
+import { BasePaper } from "components/Base/Paper/StyledPaper";
+import {
+  BaseFormInputLabel,
+  BaseFormInputLogo,
+  BaseFormInputUsdIndicator,
+  BaseFormInputWrapper,
+  BaseFormLabelRow,
+  BaseFormSetMaxButton,
+  BaseFormTextField,
+  BaseFormWalletBalance,
+} from "../Base/Form/StyledForm";
 
 const StakingLabelWhite = styled("div")`
   color: #fff;
@@ -84,11 +76,12 @@ const USDBalance = styled(Box)`
 `;
 
 const StakingLockFormTitle = styled("h2")`
-  font-weight: 600;
-  font-size: 28px;
-  line-height: 32px;
   width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
   text-align: left;
+  padding: 6px 0;
   margin: 0;
 `;
 
@@ -119,7 +112,7 @@ const StakingLockForm: FC = () => {
   const { fthmPrice, xdcPrice, fxdPrice } = usePricesContext();
 
   return (
-    <StakingLockPaper>
+    <BasePaper>
       <StakingLockFormTitle>New Stake</StakingLockFormTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Controller
@@ -127,49 +120,63 @@ const StakingLockForm: FC = () => {
           name="stakePosition"
           rules={{ required: true, min: 1 }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <>
-              <AppFormLabel>Staking amount</AppFormLabel>
-              {fthmBalance ? (
-                <WalletBalance>
-                  Available: {formatPercentage(Number(fthmBalance))} FTHM
-                </WalletBalance>
-              ) : null}
-              <AppFormInputWrapper>
-                <AppTextField
-                  error={balanceError || lowInputAmountError || !!error}
-                  id="outlined-helperText"
-                  placeholder={"0"}
-                  type="number"
-                  helperText={
-                    <>
-                      {lowInputAmountError && (
+            <BaseFormInputWrapper>
+              <BaseFormLabelRow>
+                <BaseFormLabelRow>
+                  <BaseFormInputLabel>Staking amount</BaseFormInputLabel>
+                </BaseFormLabelRow>
+                {fthmBalance ? (
+                  <BaseFormWalletBalance>
+                    Balance: {formatPercentage(Number(fthmBalance))} FTHM
+                  </BaseFormWalletBalance>
+                ) : null}
+              </BaseFormLabelRow>
+              <BaseFormTextField
+                error={balanceError || lowInputAmountError || !!error}
+                id="outlined-helperText"
+                placeholder={"0"}
+                type="number"
+                helperText={
+                  <>
+                    {lowInputAmountError && (
+                      <Box component={"span"} sx={{ fontSize: "12px" }}>
+                        Staking amount should be at least 1
+                      </Box>
+                    )}
+                    {!lowInputAmountError && balanceError && (
+                      <>
+                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
                         <Box component={"span"} sx={{ fontSize: "12px" }}>
-                          Staking amount should be at least 1
+                          You do not have enough FTHM
                         </Box>
-                      )}
-                      {!lowInputAmountError && balanceError && (
-                        <>
-                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                          <Box component={"span"} sx={{ fontSize: "12px" }}>
-                            You do not have enough FTHM
-                          </Box>
-                        </>
-                      )}
-                      {!balanceError && !lowInputAmountError && error && (
-                        <Box component={"span"} sx={{ fontSize: "12px" }}>
-                          Field is required
-                        </Box>
-                      )}
-                    </>
-                  }
-                  value={value}
-                  onChange={onChange}
-                  data-testid="dao-stakingAmount-input"
-                />
-                <AppFormInputLogo src={getTokenLogoURL("FTHM")} />
-                <MaxButton onClick={() => setMax(fthmBalance)}>Max</MaxButton>
-              </AppFormInputWrapper>
-            </>
+                      </>
+                    )}
+                    {!balanceError && !lowInputAmountError && error && (
+                      <Box component={"span"} sx={{ fontSize: "12px" }}>
+                        Field is required
+                      </Box>
+                    )}
+                  </>
+                }
+                value={value}
+                onChange={onChange}
+                data-testid="dao-stakingAmount-input"
+              />
+              <BaseFormInputUsdIndicator>{`$${formatNumber(
+                BigNumber(value || 0)
+                  .multipliedBy(fthmPrice)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}`}</BaseFormInputUsdIndicator>
+              <BaseFormInputLogo
+                className={"extendedInput"}
+                src={getTokenLogoURL("FTHM")}
+                alt={"fthm"}
+              />
+              <BaseFormSetMaxButton onClick={() => setMax(fthmBalance)}>
+                Max
+              </BaseFormSetMaxButton>
+            </BaseFormInputWrapper>
           )}
         />
         <Controller
@@ -388,7 +395,7 @@ const StakingLockForm: FC = () => {
           </Grid>
         )}
       </form>
-    </StakingLockPaper>
+    </BasePaper>
   );
 };
 
