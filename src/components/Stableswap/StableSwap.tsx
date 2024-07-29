@@ -1,12 +1,6 @@
 import { useState, memo, useMemo } from "react";
 import BigNumber from "bignumber.js";
-import {
-  Grid,
-  Box as MuiBox,
-  Box,
-  CircularProgress,
-  Container,
-} from "@mui/material";
+import { Grid, Box as MuiBox, Box, CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { StableSwapPaper } from "components/AppComponents/AppPaper/AppPaper";
 import { PageHeader } from "components/Dashboard/PageHeader";
@@ -35,11 +29,12 @@ import StableSwapForm, {
   StableSwapFormProps,
 } from "components/Stableswap/StableSwapForm";
 import useSharedContext from "context/shared";
+import BasePageContainer from "components/Base/PageContainer";
 
 export const StableSwapInputWrapper = styled(MuiBox)`
   position: relative;
   padding: 20px 24px 44px;
-  background: #1d2d49;
+  background: #1e2f4c;
   border-radius: 12px;
   width: 100%;
 `;
@@ -77,7 +72,7 @@ export const StableSwapFormLabel = styled(AppFormLabel)`
 `;
 
 export const StableSwapWalletBalance = styled(WalletBalance)`
-  color: #5a81ff;
+  color: #43fff1;
 `;
 
 export const StableSwapMaxButton = styled(MaxButton)`
@@ -164,10 +159,7 @@ const StableSwap = () => {
   const { isMobile } = useSharedContext();
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4 }}
-    >
+    <BasePageContainer>
       <Grid container spacing={isMobile ? 1 : 3}>
         <PageHeader
           addPadding={true}
@@ -355,7 +347,7 @@ const StableSwap = () => {
           </StableSwapPaper>
         </Grid>
       </Grid>
-    </Container>
+    </BasePageContainer>
   );
 };
 

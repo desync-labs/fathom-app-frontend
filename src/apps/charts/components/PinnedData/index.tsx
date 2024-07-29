@@ -25,8 +25,8 @@ const RightColumn = styled(Box)<{ open?: boolean; scrolled: number }>`
   height: 100vh;
   width: ${({ open }) => (open ? "220px" : "64px")};
   padding: 1.25rem;
-  border-left: 1px solid #253656;
-  background-color: #0e1d34;
+  border-left: 1px solid #2c4066;
+  background-color: #132340;
   z-index: 9999;
   overflow: auto;
 

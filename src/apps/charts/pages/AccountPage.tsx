@@ -76,8 +76,8 @@ const DropdownMenu = styled(Menu)<{ hide?: boolean }>`
   }
   .MuiList-root {
     border-radius: 0 0 8px 8px;
-    border: 1px solid #253656;
-    background: #0e1d34;
+    border: 1px solid #3d5580;
+    background: #091433;
   }
 `;
 
@@ -111,7 +111,7 @@ const Warning = styled(Box)`
 `;
 
 const HeaderWrapper = styled(Box)`
-  background: #131f35;
+  background: #2c4066;
   border-radius: 8px;
   font-size: 1.125rem;
   padding: 7px 1.125rem 7px;

@@ -1,5 +1,4 @@
 import { useState, useRef, FC } from "react";
-import { darken } from "polished";
 import { styled } from "@mui/material";
 
 import QuestionHelper from "apps/dex/components/QuestionHelper";
@@ -18,31 +17,33 @@ enum DeadlineError {
 }
 
 const FancyButton = styled("button")`
-  color: #fff;
+  color: #b7c8e5;
   align-items: center;
   height: 2rem;
   border-radius: 36px;
   font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid #43fff6;
+  border: 1px solid transparent;
   outline: none;
   background: #131f35;
   :hover {
-    border: 1px solid #565a69;
+    border: 1px solid #b7c8e5;
+    cursor: pointer;
   }
   :focus {
     border: 1px solid #253656;
+  }
+  &.active {
+    color: #fff;
+    border: 1px solid #b7c8e5;
   }
 `;
 
 const Option = styled(FancyButton)<{ active: boolean }>`
   margin-right: 8px;
-  :hover {
-    cursor: pointer;
-  }
+  border: none;
   background-color: ${({ active }) => active && "#253656"};
-  color: #fff;
 `;
 
 const Input = styled("input")`
@@ -66,13 +67,6 @@ const OptionCustom = styled(FancyButton)<{
   position: relative;
   padding: 0 0.75rem;
   flex: 1;
-  border: ${({ active, warning }) =>
-    active && `1px solid ${warning ? "#FD4040" : "#253656"}`};
-  :hover {
-    border: ${({ active, warning }) =>
-      active &&
-      `1px solid ${warning ? darken(0.1, "#FD4040") : darken(0.1, "#253656")}`};
-  }
 
   input {
     width: 100%;
@@ -159,7 +153,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
     <AutoColumn gap="md">
       <AutoColumn gap="sm">
         <RowFixed color={"#4F658C"}>
-          <TYPE.main fontWeight={400} fontSize={14}>
+          <TYPE.main fontWeight={400} fontSize={14} color="#b7c8e5">
             Slippage tolerance
           </TYPE.main>
           <QuestionHelper text="Your transaction will revert if the price changes unfavorably by more than this percentage." />
@@ -171,6 +165,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
               setRawSlippage(10);
             }}
             active={rawSlippage === 10}
+            className={rawSlippage === 10 ? "active" : ""}
           >
             0.1%
           </Option>
@@ -180,6 +175,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
               setRawSlippage(50);
             }}
             active={rawSlippage === 50}
+            className={rawSlippage === 50 ? "active" : ""}
           >
             0.5%
           </Option>
@@ -189,6 +185,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
               setRawSlippage(100);
             }}
             active={rawSlippage === 100}
+            className={rawSlippage === 100 ? "active" : ""}
           >
             1%
           </Option>
@@ -196,6 +193,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
             active={![10, 50, 100].includes(rawSlippage)}
             warning={!slippageInputIsValid}
             tabIndex={-1}
+            className={![10, 50, 100].includes(rawSlippage) ? "active" : ""}
           >
             <RowBetween>
               {!!slippageInput &&
@@ -244,7 +242,7 @@ const SlippageTabs: FC<SlippageTabsProps> = ({
 
       <AutoColumn gap="sm">
         <RowFixed color={"#4F658C"}>
-          <TYPE.main fontSize={14} fontWeight={400}>
+          <TYPE.main fontSize={14} fontWeight={400} color="#b7c8e5">
             Transaction deadline
           </TYPE.main>
           <QuestionHelper text="Your transaction will revert if it is pending for more than this long." />

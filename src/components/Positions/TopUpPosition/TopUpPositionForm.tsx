@@ -38,11 +38,11 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   setTopUpPosition,
 }) => {
   const {
+    totalCollateral,
+    totalFathomToken,
     pool,
     balance,
-    safeMax,
-    setMax,
-    setSafeMax,
+    safeMinCollateral,
     onSubmit,
     control,
     handleSubmit,
@@ -51,6 +51,9 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
     availableFathomInPool,
     validateMaxBorrowAmount,
     priceOfCollateral,
+    setCollateralMax,
+    setCollateralSafeMax,
+    setBorrowMax,
   } = useTopUpPositionContext();
   const { fxdPrice } = usePricesContext();
 
@@ -77,96 +80,11 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
         </BaseButtonsSwitcherGroup>
         <Controller
           control={control}
-          name="collateral"
-          rules={{
-            required: false,
-            min: 0,
-            max: BigNumber(balance)
-              .dividedBy(10 ** 18)
-              .toNumber(),
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <BaseFormInputWrapper>
-              <BaseFormLabelRow>
-                <BaseFormInputLabel>Collateral</BaseFormInputLabel>
-                {balance ? (
-                  <BaseFormWalletBalance>
-                    Balance:{" "}
-                    {formatPercentage(
-                      BigNumber(balance)
-                        .dividedBy(10 ** 18)
-                        .toNumber()
-                    )}{" "}
-                    {pool?.poolName}
-                  </BaseFormWalletBalance>
-                ) : null}
-              </BaseFormLabelRow>
-              <BaseFormTextField
-                error={!!error}
-                id="outlined-helperText"
-                placeholder={"0"}
-                helperText={
-                  <>
-                    {error && error.type === "max" && (
-                      <BaseFormInputErrorWrapper>
-                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          You do not have enough {pool?.poolName}
-                        </Box>
-                      </BaseFormInputErrorWrapper>
-                    )}
-                    {error && error.type === "min" && (
-                      <BaseFormInputErrorWrapper>
-                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Collateral amount should be positive.
-                        </Box>
-                      </BaseFormInputErrorWrapper>
-                    )}
-                  </>
-                }
-                value={value}
-                type="number"
-                onChange={onChange}
-              />
-              <BaseFormInputUsdIndicator>{`$${formatNumber(
-                BigNumber(value || 0)
-                  .multipliedBy(priceOfCollateral)
-                  .dividedBy(10 ** 18)
-                  .toNumber()
-              )}`}</BaseFormInputUsdIndicator>
-              <BaseFormInputLogo
-                className={"extendedInput"}
-                src={getTokenLogoURL(
-                  pool?.poolName?.toUpperCase() === "XDC"
-                    ? "WXDC"
-                    : pool?.poolName
-                )}
-              />
-              <BaseFormSetMaxButton onClick={() => setMax(balance)}>
-                Max
-              </BaseFormSetMaxButton>
-            </BaseFormInputWrapper>
-          )}
-        />
-        <Controller
-          key={safeMax}
-          control={control}
           name="fathomToken"
           rules={{
             validate: (value) => {
               if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
-              }
-
-              if (BigNumber(value).isGreaterThan(safeMax)) {
-                return `You can't borrow more than ${safeMax}`;
               }
 
               if (validateMaxBorrowAmount()) {
@@ -255,14 +173,127 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                   className={"extendedInput"}
                   src={getTokenLogoURL("FXD")}
                 />
-                {safeMax > 0 ? (
-                  <BaseFormSetMaxButton onClick={setSafeMax}>
-                    Safe Max
-                  </BaseFormSetMaxButton>
-                ) : null}
+                <BaseFormSetMaxButton
+                  onClick={() =>
+                    totalCollateral
+                      ? setBorrowMax(Number(totalCollateral))
+                      : setBorrowMax()
+                  }
+                >
+                  {totalCollateral ? "Safe Max" : "Max"}
+                </BaseFormSetMaxButton>
               </BaseFormInputWrapper>
             );
           }}
+        />
+        <Controller
+          control={control}
+          name="collateral"
+          rules={{
+            required: false,
+            min: 0,
+            max: BigNumber(balance)
+              .dividedBy(10 ** 18)
+              .toNumber(),
+            validate: (value) => {
+              if (BigNumber(value || "0").isLessThan(safeMinCollateral)) {
+                return `You need at least ${safeMinCollateral} collateral for the desired amount of borrowing`;
+              }
+
+              return true;
+            },
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <BaseFormInputWrapper>
+              <BaseFormLabelRow>
+                <BaseFormInputLabel>Collateral</BaseFormInputLabel>
+                {balance ? (
+                  <BaseFormWalletBalance>
+                    Balance:{" "}
+                    {formatPercentage(
+                      BigNumber(balance)
+                        .dividedBy(10 ** 18)
+                        .toNumber()
+                    )}{" "}
+                    {pool?.poolName}
+                  </BaseFormWalletBalance>
+                ) : null}
+              </BaseFormLabelRow>
+              <BaseFormTextField
+                error={!!error}
+                id="outlined-helperText"
+                placeholder={"0"}
+                helperText={
+                  <>
+                    {error && error.type === "validate" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            fontSize: "14px",
+                          }}
+                        />
+                        <Box
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          component={"span"}
+                        >
+                          {error?.message}
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                    {error && error.type === "max" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          You do not have enough {pool?.poolName}
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                    {error && error.type === "min" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Collateral amount should be positive.
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                  </>
+                }
+                value={value}
+                type="number"
+                onChange={onChange}
+              />
+              <BaseFormInputUsdIndicator>{`$${formatNumber(
+                BigNumber(value || 0)
+                  .multipliedBy(priceOfCollateral)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}`}</BaseFormInputUsdIndicator>
+              <BaseFormInputLogo
+                className={"extendedInput"}
+                src={getTokenLogoURL(
+                  pool?.poolName?.toUpperCase() === "XDC"
+                    ? "WXDC"
+                    : pool?.poolName
+                )}
+              />
+              <BaseFormSetMaxButton
+                onClick={() =>
+                  totalFathomToken
+                    ? setCollateralSafeMax()
+                    : setCollateralMax(balance)
+                }
+              >
+                {totalFathomToken ? "Safe Max" : "Max"}
+              </BaseFormSetMaxButton>
+            </BaseFormInputWrapper>
+          )}
         />
       </TopUpForm>
     </BaseDialogFormWrapper>

@@ -13,8 +13,8 @@ export const StableSwapPaper = styled(AppPaper)`
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
-  background: #131f35;
-  border: 1px solid #253656;
+  background: #132340;
+  border: 1px solid #2c4066;
   border-radius: 16px;
 `;
 

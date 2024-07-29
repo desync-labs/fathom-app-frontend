@@ -1,3 +1,5 @@
+import { FC } from "react";
+import { ICollateralPool } from "fathom-sdk";
 import {
   Accordion,
   AccordionDetails,
@@ -13,8 +15,7 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 
 import { formatNumber, formatPercentage } from "utils/format";
-import useOpenPositionContext from "context/openPosition";
-import useOpenPositionAiAssist from "hooks/Positions/useOpenPositionAiAssist";
+import usePositionFormAiAssist from "hooks/Positions/usePositionFormAiAssist";
 
 import BaseDateRangePicker from "components/Base/Form/PeriodInput";
 import { BaseSummary } from "components/Base/Typography/StyledTypography";
@@ -68,10 +69,30 @@ const ShowAiSuggestionButton = styled(AccordionSummary)`
   }
 `;
 
-const OpenPositionAiAssist = () => {
-  const { pool, fathomToken, setAiPredictionCollateral, collateral } =
-    useOpenPositionContext();
+const InfoListItemCollateral = styled(InfoListItem)`
+  &.insufficient {
+    & .MuiListItemSecondaryAction-root {
+      color: #f76e6e;
+    }
+  }
+  & .MuiListItemSecondaryAction-root {
+    color: #4dcc33;
+  }
+`;
 
+interface PositionFormAiAssistProps {
+  pool: ICollateralPool;
+  borrowInput: string;
+  setAiPredictionCollateral: (value: string) => void;
+  lockedCollateral?: number;
+}
+
+const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
+  pool,
+  borrowInput,
+  setAiPredictionCollateral,
+  lockedCollateral,
+}) => {
   const {
     isAiSuggestionOpen,
     range,
@@ -82,7 +103,7 @@ const OpenPositionAiAssist = () => {
     handleChangeRange,
     handleAiSuggestionOpen,
     handleApplyAiRecommendation,
-  } = useOpenPositionAiAssist(pool, fathomToken, setAiPredictionCollateral);
+  } = usePositionFormAiAssist(pool, borrowInput, setAiPredictionCollateral);
 
   return (
     <ShowAiAccordion
@@ -259,8 +280,42 @@ const OpenPositionAiAssist = () => {
                 }
               />
             </InfoListItem>
+            {lockedCollateral && (
+              <InfoListItemCollateral
+                alignItems="flex-start"
+                secondaryAction={
+                  <>
+                    {loadingPricePrediction ||
+                    recommendCollateralAmount === null ? (
+                      <CustomSkeleton
+                        animation={"wave"}
+                        height={20}
+                        width={60}
+                      />
+                    ) : (
+                      `${formatNumber(
+                        BigNumber(lockedCollateral).toNumber()
+                      )} ${pool?.poolName}`
+                    )}
+                  </>
+                }
+                className={
+                  BigNumber(recommendCollateralAmount || "0").isLessThan(
+                    lockedCollateral
+                  )
+                    ? ""
+                    : "insufficient"
+                }
+              >
+                <ListItemText
+                  primary={
+                    <ListTitleWrapper>Current Collateral</ListTitleWrapper>
+                  }
+                />
+              </InfoListItemCollateral>
+            )}
           </BaseFormInfoList>
-          {BigNumber(fathomToken || "0").isLessThanOrEqualTo("0") && (
+          {BigNumber(borrowInput || "0").isLessThanOrEqualTo("0") && (
             <BaseWarningBox mb={2}>
               <InfoIcon
                 sx={{ width: "16px", color: "#F5953D", height: "16px" }}
@@ -272,15 +327,16 @@ const OpenPositionAiAssist = () => {
           )}
           {BigNumber(minPricePrediction as number).isLessThan(
             pool.collateralPrice
-          ) &&
-          BigNumber(Number(collateral)).isLessThan(
-            recommendCollateralAmount as string
           ) ? (
             <BaseButtonSecondary
               disabled={
                 loadingPricePrediction ||
                 recommendCollateralAmount === null ||
                 BigNumber(recommendCollateralAmount).isLessThanOrEqualTo(0) ||
+                (lockedCollateral &&
+                  BigNumber(recommendCollateralAmount).isLessThan(
+                    lockedCollateral
+                  )) ||
                 range <= 0
               }
               onClick={handleApplyAiRecommendation}
@@ -294,4 +350,4 @@ const OpenPositionAiAssist = () => {
     </ShowAiAccordion>
   );
 };
-export default OpenPositionAiAssist;
+export default PositionFormAiAssist;

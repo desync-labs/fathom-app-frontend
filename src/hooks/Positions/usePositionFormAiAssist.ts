@@ -18,7 +18,7 @@ const PERIODS_RELATIONS = {
   "6m": 180,
 };
 
-const useOpenPositionAiAssist = (
+const usePositionFormAiAssist = (
   pool: ICollateralPool,
   borrowInput: string,
   setAiPredictionCollateral: (value: string) => void
@@ -58,7 +58,10 @@ const useOpenPositionAiAssist = (
   }, [minPricePrediction, loadingPricePrediction, borrowInput]);
 
   useEffect(() => {
-    const values: number[] = [Number(pool.collateralPrice)];
+    const values = [
+      Number(pool.collateralPrice),
+      pricesPrediction["1m"] as number,
+    ];
 
     for (const item of Object.entries(PERIODS_RELATIONS)) {
       const [period, days] = item;
@@ -132,13 +135,7 @@ const useOpenPositionAiAssist = (
        * SAFE MIN COLLATERAL
        */
       const collateral = BigNumber(borrowInput)
-        .dividedBy(
-          BigNumber(priceWithSafetyMargin).multipliedBy(
-            BigNumber(100)
-              .minus(DANGER_SAFETY_BUFFER * 100)
-              .dividedBy(100)
-          )
-        )
+        .dividedBy(priceWithSafetyMargin.multipliedBy(1 - DANGER_SAFETY_BUFFER))
         .toString();
 
       setRecommendCollateralAmount(collateral);
@@ -146,9 +143,12 @@ const useOpenPositionAiAssist = (
     [pool, setRecommendCollateralAmount, minPricePrediction]
   );
 
-  const handleChangeRange = (range: number) => {
-    setRange(range);
-  };
+  const handleChangeRange = useCallback(
+    (range: number) => {
+      setRange(range);
+    },
+    [setRange]
+  );
 
   const handleAiSuggestionOpen = useCallback(
     (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
@@ -159,7 +159,7 @@ const useOpenPositionAiAssist = (
 
   const handleApplyAiRecommendation = useCallback(() => {
     setAiPredictionCollateral(
-      recommendCollateralAmount === null ? "0" : recommendCollateralAmount
+      !recommendCollateralAmount ? "0" : recommendCollateralAmount
     );
     setIsAiSuggestionOpen(false);
   }, [setIsAiSuggestionOpen, recommendCollateralAmount]);
@@ -177,4 +177,4 @@ const useOpenPositionAiAssist = (
   };
 };
 
-export default useOpenPositionAiAssist;
+export default usePositionFormAiAssist;
