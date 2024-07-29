@@ -487,10 +487,13 @@ const useTopUpPosition = (
   const setAiPredictionCollateral = (recomendedCollateral: string) => {
     const collateralAmount = BigNumber(recomendedCollateral)
       .minus(position.lockedCollateral)
+      .decimalPlaces(6, BigNumber.ROUND_UP)
       .toString();
 
     BigNumber(collateralAmount).isGreaterThan(0) &&
-      setValue("collateral", collateralAmount, { shouldValidate: true });
+      setValue("collateral", collateralAmount, {
+        shouldValidate: true,
+      });
   };
 
   return {
