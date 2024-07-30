@@ -149,7 +149,13 @@ const Transactions: FC = () => {
   }, [sortedRecentTransactions]);
 
   const filteredTransactionList = useMemo(
-    () => transactionList?.filter((tx) => !pending.includes(tx.hash)),
+    () =>
+      transactionList
+        ?.filter((tx) => !pending.includes(tx.hash))
+        .map((tx) => ({
+          ...tx,
+          pending: false,
+        })),
     [transactionList, pending]
   );
 
@@ -173,7 +179,10 @@ const Transactions: FC = () => {
 
   const pendingTransactions = pending.map(
     (hash: string) =>
-      storageTransactions?.[hash] as unknown as FormattedTransaction
+      ({
+        ...storageTransactions?.[hash],
+        pending: true,
+      } as unknown as FormattedTransaction)
   );
 
   const mergedTransactions = [

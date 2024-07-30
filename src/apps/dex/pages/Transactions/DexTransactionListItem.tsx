@@ -10,7 +10,14 @@ import {
   ExtLinkIcon,
 } from "components/Base/Buttons/StyledButtons";
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
-import { FormattedTransaction } from "apps/dex/components/Transactions/Transaction";
+import {
+  FormattedTransaction,
+  IconWrapper,
+} from "apps/dex/components/Transactions/Transaction";
+import { getTransactionType } from "apps/charts/components/TxnList";
+import { formattedNum, formatTime } from "apps/charts/utils";
+import Loader from "apps/dex/components/Loader";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
 const PositionActivityListItemWrapper = styled(BaseListItem)`
   justify-content: space-between;
@@ -58,9 +65,11 @@ const TxListItemContent = styled(BaseFlexBox)`
   }
 `;
 
-const TxListItemText = styled(ListItemText)`
+const TxListItemText = styled(ListItemText, {
+  shouldForwardProp: (prop) => prop !== "width",
+})<{ width?: string }>`
   &.MuiListItemText-multiline {
-    width: 200px;
+    width: ${({ width = "200px" }) => width};
 
     ${({ theme }) => theme.breakpoints.down("sm")} {
       width: 100%;
@@ -94,10 +103,6 @@ const PositionActivityListItem: FC<{ transaction: FormattedTransaction }> = ({
   const { chainId } = useConnector();
   const { isMobile } = useSharedContext();
 
-  console.log({
-    transaction,
-  });
-
   return (
     <PositionActivityListItemWrapper
       secondaryAction={
@@ -112,10 +117,31 @@ const PositionActivityListItem: FC<{ transaction: FormattedTransaction }> = ({
     >
       <TxListItemContent>
         <TxListItemText
-          primary={transaction.hash}
+          width={"400px"}
+          primary={getTransactionType(
+            transaction.type,
+            transaction.token0Symbol,
+            transaction.token1Symbol,
+            formattedNum(transaction.token0Amount),
+            formattedNum(transaction.token1Amount),
+            formatTime(transaction.addedTime / 1000)
+          )}
           secondary={dayjs(transaction.addedTime).format("DD/MM/YYYY HH:mm:ss")}
         />
-        <ListItemText primary={null} />
+        <ListItemText
+          primary={
+            <IconWrapper
+              pending={transaction.pending as boolean}
+              success={!transaction.pending}
+            >
+              {transaction.pending ? (
+                <Loader stroke={"white"} />
+              ) : (
+                <TaskAltIcon sx={{ width: "16px", height: "16px" }} />
+              )}
+            </IconWrapper>
+          }
+        />
       </TxListItemContent>
     </PositionActivityListItemWrapper>
   );

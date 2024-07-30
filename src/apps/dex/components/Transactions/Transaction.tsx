@@ -6,11 +6,13 @@ import { getBlockScanLink } from "apps/dex/utils";
 import { ExternalLink } from "apps/dex/theme";
 import { RowFixed } from "apps/dex/components/Row";
 import Loader from "apps/dex/components/Loader";
-import { formatTime } from "apps/charts/utils";
+import { formattedNum, formatTime } from "apps/charts/utils";
+import { getTransactionType } from "apps/charts/components/TxnList";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import useConnector from "context/connector";
 import { ExtLinkIcon } from "components/AppComponents/AppButton/AppButton";
 
 const TransactionStatusText = styled(Box)`
@@ -37,7 +39,7 @@ const TransactionState = styled(ExternalLink)<{
   color: #fff;
 `;
 
-const IconWrapper = styled(Box)<{ pending: boolean; success?: boolean }>`
+export const IconWrapper = styled(Box)<{ pending: boolean; success?: boolean }>`
   color: ${({ pending, success }) =>
     pending ? "#253656" : success ? "#27AE60" : "#FD4040"};
 `;
@@ -62,12 +64,14 @@ export type SwapTransactionItem = TransactionItem & {
 export type FormattedTransaction = {
   hash: string;
   addedTime: number;
+  type: string;
   token0Amount: number;
   token1Amount: number;
   account?: string;
   token0Symbol: string;
   token1Symbol: string;
   amountUSD?: number;
+  pending?: boolean;
 };
 
 export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
@@ -107,6 +111,39 @@ export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
           ) : (
             <WarningAmberIcon sx={{ width: "16px", height: "16px" }} />
           )}
+        </IconWrapper>
+      </TransactionState>
+    </Box>
+  );
+};
+
+export const PreviousTransaction: FC<{ item: FormattedTransaction }> = ({
+  item,
+}) => {
+  const { chainId } = useConnector();
+
+  return (
+    <Box>
+      <TransactionState
+        href={getBlockScanLink(chainId, item.hash, "transaction")}
+        pending={false}
+        success={true}
+      >
+        <RowFixed>
+          <TransactionStatusText>
+            {getTransactionType(
+              item.type,
+              item.token0Symbol,
+              item.token1Symbol,
+              formattedNum(item.token0Amount),
+              formattedNum(item.token1Amount),
+              formatTime(item.addedTime / 1000)
+            )}{" "}
+            <ExtLinkIcon />
+          </TransactionStatusText>
+        </RowFixed>
+        <IconWrapper pending={false} success={true}>
+          <TaskAltIcon sx={{ width: "16px", height: "16px" }} />
         </IconWrapper>
       </TransactionState>
     </Box>
