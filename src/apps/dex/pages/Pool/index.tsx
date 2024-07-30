@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Pair } from "into-the-fathom-swap-sdk";
-import { Box, styled, Typography } from "@mui/material";
+import { Box, CircularProgress, styled, Typography } from "@mui/material";
 
 import { SwapPoolTabs } from "apps/dex/components/NavigationTabs";
 import FullPositionCard from "apps/dex/components/PositionCard";
@@ -16,13 +16,13 @@ import {
   toV2LiquidityToken,
   useTrackedTokenPairs,
 } from "apps/dex/state/user/hooks";
-import { Dots } from "apps/dex/components/swap/styleds";
 import {
   CardBGImage,
   CardNoise,
   CardSection,
   DataCard,
 } from "apps/dex/components/earn/styled";
+import { CircleWrapper } from "components/AppComponents/AppBox/AppBox";
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -181,9 +181,9 @@ const Pool = () => {
               </Card>
             ) : v2IsLoading ? (
               <EmptyProposals>
-                <TYPE.body textAlign="center">
-                  <Dots>Loading</Dots>
-                </TYPE.body>
+                <CircleWrapper>
+                  <CircularProgress size={28} />
+                </CircleWrapper>
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 ? (
               <>
