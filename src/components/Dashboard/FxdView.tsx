@@ -6,7 +6,6 @@ import {
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
-import useConnector from "context/connector";
 
 const FXDNestedRouteContainer = styled("div")`
   width: 100%;
@@ -16,7 +15,6 @@ const FXDNestedRouteContainer = styled("div")`
 
 const FXDView: FC = () => {
   const location = useLocation();
-  const { account } = useConnector();
 
   const isFXDActive = useMemo(
     () => ["/fxd"].includes(location.pathname),
@@ -29,21 +27,24 @@ const FXDView: FC = () => {
 
   return (
     <>
-      {process.env.REACT_APP_FXD_TRANSACTIONS_ENABLED === "true" && account && (
-        <NestedRouteNav>
-          <NestedRouteLink className={isFXDActive ? "active" : ""} to="/fxd">
-            <DashboardIcon isactive={isFXDActive ? "true" : ""} />
-            Overview
-          </NestedRouteLink>
-          <NestedRouteLink
-            className={isTransactionsActive ? "active" : ""}
-            to="/fxd/transactions"
-          >
-            <TransactionsIcon isactive={isTransactionsActive ? "active" : ""} />
-            Transactions
-          </NestedRouteLink>
-        </NestedRouteNav>
-      )}
+      {process.env.REACT_APP_FXD_TRANSACTIONS_ENABLED === "true" &&
+        localStorage.getItem("isConnected") && (
+          <NestedRouteNav>
+            <NestedRouteLink className={isFXDActive ? "active" : ""} to="/fxd">
+              <DashboardIcon isactive={isFXDActive ? "true" : ""} />
+              Overview
+            </NestedRouteLink>
+            <NestedRouteLink
+              className={isTransactionsActive ? "active" : ""}
+              to="/fxd/transactions"
+            >
+              <TransactionsIcon
+                isactive={isTransactionsActive ? "active" : ""}
+              />
+              Transactions
+            </NestedRouteLink>
+          </NestedRouteNav>
+        )}
       <FXDNestedRouteContainer>
         <Outlet />
       </FXDNestedRouteContainer>
