@@ -40,9 +40,10 @@ export const RowFixed = styled(Row)`
 `;
 
 export const TableHeaderBox = styled(Box)`
-  color: #5977a0;
+  color: #8ea4cc;
   text-transform: uppercase;
   font-size: 11px;
+  font-weight: 600;
 `;
 
 export default Row;

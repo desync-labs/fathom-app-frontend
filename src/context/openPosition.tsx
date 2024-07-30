@@ -14,7 +14,7 @@ export type OpenPositionContextType = {
 };
 
 export type UseOpenPositionContextReturnType = {
-  safeMax: string;
+  safeMinCollateral: string;
   approveBtn: boolean;
   approve: () => void;
   approvalPending: boolean;
@@ -30,8 +30,9 @@ export type UseOpenPositionContextReturnType = {
   collateral: string;
   fathomToken: string;
   openPositionLoading: boolean;
-  setMax: (balance: string) => void;
-  setSafeMax: () => void;
+  setCollateralMax: (balance: string) => void;
+  setCollateralSafeMax: () => void;
+  setBorrowMax: (collateral?: number) => void;
   onSubmit: (values: Record<string, any>) => void;
   control: Control<typeof defaultValues>;
   handleSubmit: UseFormHandleSubmit<typeof defaultValues>;
@@ -44,6 +45,8 @@ export type UseOpenPositionContextReturnType = {
   proxyWalletExists: boolean;
   minCollateralAmount: number;
   validateMaxBorrowAmount: () => boolean | string;
+  priceOfCollateral: string;
+  setAiPredictionCollateral: (value: string) => void;
 };
 
 export const OpenPositionContext =

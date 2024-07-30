@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import { Box, styled, Typography } from "@mui/material";
 
 const PageHeaderWrapper = styled(Box)`
-  padding-top: 36px;
+  padding-top: 6px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding-top: 9px;
   }
@@ -14,7 +14,7 @@ const PageTitle = styled(Typography)`
   }
 `;
 
-const PageDescription = styled("p")`
+const PageDescription = styled(Box)`
   color: #fff;
   font-size: 14px;
   font-weight: 400;
@@ -30,16 +30,20 @@ const PageDescription = styled("p")`
 
 type PageHeaderType = {
   title: string;
-  description: string;
+  description?: string;
 };
 
-const VaultPageHeader: FC<PageHeaderType> = ({ title, description }) => {
+const BasePageHeader: FC<PageHeaderType> = ({ title, description }) => {
   return (
     <PageHeaderWrapper>
       <PageTitle variant={"h1"}>{title}</PageTitle>
-      <PageDescription>{description}</PageDescription>
+      {description && (
+        <PageDescription
+          dangerouslySetInnerHTML={{ __html: description }}
+        ></PageDescription>
+      )}
     </PageHeaderWrapper>
   );
 };
 
-export default memo(VaultPageHeader);
+export default memo(BasePageHeader);

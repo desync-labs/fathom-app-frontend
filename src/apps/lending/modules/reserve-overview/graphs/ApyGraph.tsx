@@ -89,17 +89,14 @@ export const ApyGraph = withTooltip<AreaProps, TooltipData>(
       theme.palette.mode === "light" ? "#383D511F" : "#a5a8b647";
     const tooltipStyles = {
       ...defaultStyles,
-      padding: "8px 12px",
-      boxShadow:
-        "0px 0px 2px rgba(0, 0, 0, 0.2), 0px 2px 10px rgba(0, 0, 0, 0.1)",
-      borderRadius: "4px",
+      padding: "10px",
+      background: "#2a3e5a",
+      boxShadow: "0 12px 32px 0 rgba(0, 7, 21, 0.5)",
+      borderRadius: "8px",
       fontSize: "12px",
       lineHeight: "16px",
       letterSpacing: "0.15px",
-    };
-    const tooltipStylesDark = {
-      ...tooltipStyles,
-      background: theme.palette.background.default,
+      color: "#fff",
     };
 
     // bounds
@@ -271,15 +268,11 @@ export const ApyGraph = withTooltip<AreaProps, TooltipData>(
             <TooltipWithBounds
               top={20}
               left={tooltipLeft + 40}
-              style={
-                theme.palette.mode === "light"
-                  ? tooltipStyles
-                  : tooltipStylesDark
-              }
+              style={tooltipStyles}
             >
               <Typography
                 variant="secondary12"
-                color="text.secondary"
+                color="#b7c8e5"
                 sx={{ mb: 1, mr: 1, fontWeight: 400 }}
               >
                 {formatDate(getDate(tooltipData), selectedTimeRange)}
@@ -291,14 +284,10 @@ export const ApyGraph = withTooltip<AreaProps, TooltipData>(
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <Typography
-                    variant="caption"
-                    color="text.secondary"
-                    sx={{ mr: 1 }}
-                  >
+                  <Typography variant="caption" color="#b7c8e5" sx={{ mr: 1 }}>
                     {field.text}
                   </Typography>
-                  <Typography variant="main12" color="text.light">
+                  <Typography variant="main12" color="#fff">
                     {getData(tooltipData, field.name).toFixed(2)}%
                   </Typography>
                 </Box>

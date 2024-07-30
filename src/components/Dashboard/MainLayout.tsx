@@ -134,6 +134,7 @@ import {
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
 import { FxdProvider } from "context/fxd";
+import useVH from "../../hooks/General/useVH";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -142,8 +143,9 @@ const Drawer = styled(MuiDrawer, {
     position: "sticky",
     height: "100vh",
     whiteSpace: "nowrap",
-    background: "#101D32",
+    background: "#132340",
     border: "none",
+    borderRadius: 0,
     overflowY: "visible",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -166,13 +168,13 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const MenuWrapper = styled("nav")<{ open: boolean }>`
-  padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
+  padding: ${({ open }) => (open ? "24px 12px" : "20px 8px")};
   height: 100vh;
   position: relative;
-  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  border-right: 1px solid #2c4066;
 `;
 
 const AccountInfoWrapper = styled(Box)`
@@ -313,6 +315,8 @@ const MainLayout = () => {
    */
   useGlobalData();
   useGlobalChartData();
+
+  useVH();
 
   /**
    * Google Analytics

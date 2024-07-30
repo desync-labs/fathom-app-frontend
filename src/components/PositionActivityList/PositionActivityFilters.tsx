@@ -1,27 +1,22 @@
 import { FC } from "react";
 import { SelectChangeEvent } from "@mui/material/Select";
-import { Grid, MenuItem } from "@mui/material";
+import { Box, MenuItem } from "@mui/material";
 import { styled } from "@mui/material/styles";
-
 import {
   FilterTxType,
   FilterTxTypeKeys,
 } from "hooks/Pools/usePositionsTransactionList";
+import useSharedContext from "context/shared";
+import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import {
-  AppFormInputLogo,
-  AppFormInputWrapper,
-  AppSelect,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
-import SearchSrc from "assets/svg/search.svg";
+  BaseSearchTextField,
+  BaseSortSelect,
+  SearchFieldLogo,
+} from "components/Base/Form/Filters";
 
-const FilterLabel = styled("div")`
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 16px;
-  color: #6d86b2;
-  text-transform: uppercase;
-  padding-bottom: 5px;
+const SearchFieldWrapper = styled(Box)`
+  position: relative;
+  width: 100%;
 `;
 
 type PositionsTransactionFiltersProps = {
@@ -39,37 +34,41 @@ const PositionActivityFilters: FC<PositionsTransactionFiltersProps> = ({
 }) => {
   const filterOptions = Object.values(FilterTxType);
   const filterValues = Object.keys(FilterTxType);
+  const { isMobile } = useSharedContext();
 
   return (
-    <Grid container spacing={2} py={3}>
-      <Grid item xs={6} md={3}>
-        <FilterLabel>Filter by tx type</FilterLabel>
-        <AppSelect value={filterByType} onChange={handleFilterByType}>
-          {filterOptions.map((option, index) => (
-            <MenuItem key={option} value={filterValues[index]}>
-              {option}
-            </MenuItem>
-          ))}
-        </AppSelect>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <FilterLabel>Search</FilterLabel>
-        <AppFormInputWrapper sx={{ margin: 0 }}>
-          <AppTextField
-            id="outlined-helperText"
-            placeholder="Search"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            sx={{ color: "#566E99" }}
-          />
-          <AppFormInputLogo
-            sx={{ top: "10px", left: "9px" }}
-            src={SearchSrc}
-            alt="search"
-          />
-        </AppFormInputWrapper>
-      </Grid>
-    </Grid>
+    <BaseFlexBox
+      sx={{
+        justifyContent: "stretch",
+        marginBottom: isMobile ? "-10px" : "-24px",
+      }}
+    >
+      <SearchFieldWrapper>
+        <BaseSearchTextField
+          id="outlined-helperText"
+          placeholder={
+            isMobile
+              ? "Search"
+              : "Search by Pool symbol, collateral address or transaction hash"
+          }
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        <SearchFieldLogo />
+      </SearchFieldWrapper>
+      <BaseSortSelect
+        autoWidth
+        value={filterByType}
+        onChange={handleFilterByType}
+        sx={{ minWidth: isMobile ? "40%" : "210px" }}
+      >
+        {filterOptions.map((option, index) => (
+          <MenuItem key={option} value={filterValues[index]}>
+            {option}
+          </MenuItem>
+        ))}
+      </BaseSortSelect>
+    </BaseFlexBox>
   );
 };
 

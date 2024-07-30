@@ -199,13 +199,13 @@ export const getDesignTokens = () => {
       },
       background: {
         default: "#071028",
-        paper: "#131F35",
+        paper: "#132340",
         surface: "#1d2d49",
         surface2: "#1d2d49",
         header: "#101d32",
         disabled: "#EBEBEF14",
       },
-      divider: "#1d2d49",
+      divider: "#2c4066",
       action: {
         active: "#EBEBEF8F",
         hover: "#2a3e5a",
@@ -377,7 +377,7 @@ export const getDesignTokens = () => {
         fontWeight: 500,
         letterSpacing: pxToRem(0.15),
         lineHeight: pxToRem(20),
-        fontSize: pxToRem(14),
+        fontSize: "14px",
       },
       main12: {
         fontFamily: FONT,
@@ -517,7 +517,7 @@ export function getThemedComponents(theme: Theme) {
             style: {
               color: theme.palette.other.fathomAccent,
               background: "transparent",
-              border: "0.7px solid " + theme.palette.other.fathomAccent,
+              border: "1px solid " + theme.palette.other.fathomAccent,
               "&:hover, &.Mui-focusVisible": {
                 background: "transparent",
                 color: theme.palette.other.fathomAccentLight,

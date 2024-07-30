@@ -17,7 +17,7 @@ import {
   VaultContractAddress,
   VaultDescriptionWrapper,
 } from "components/Vaults/VaultDetail/VaultDetailInfoTabAbout";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 import { getDefaultVaultDescription } from "utils/Vaults/getVaultTitleAndDescription";
 
 const FeesItemWrapper = styled(Box)`
@@ -104,7 +104,7 @@ const VaultAboutTabContent = () => {
               primary={
                 <FeesItemWrapper>
                   Protocol fee
-                  <AppPopover
+                  <BasePopover
                     id={"protocol-fee"}
                     text={
                       "Taken from the performance fee as a percentage of it."
@@ -126,7 +126,7 @@ const VaultAboutTabContent = () => {
               primary={
                 <FeesItemWrapper>
                   Total fee
-                  <AppPopover
+                  <BasePopover
                     id={"total-fee"}
                     text={
                       "The fee is charged from the gain (performance fee) and shared between the manager and protocol."

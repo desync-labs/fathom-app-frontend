@@ -7,8 +7,8 @@ import VaultHistoryChart, {
   HistoryChartDataType,
 } from "components/Vaults/VaultDetail/VaultHistoryChart";
 import useVaultContext from "context/vault";
-import { VaultAboutSkeleton } from "components/AppComponents/AppSkeleton/AppSkeleton";
 import VaultAboutTabContent from "components/Vaults/VaultDetail/VaultAboutTabContent";
+import { VaultAboutSkeleton } from "components/Base/Skeletons/VaultSkeletons";
 
 export const VaultInfoWrapper = styled(Box)`
   display: flex;

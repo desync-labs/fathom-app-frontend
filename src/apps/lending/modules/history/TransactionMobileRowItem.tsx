@@ -55,79 +55,80 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
   });
 
   return (
-    <Box>
-      <ListItem
-        px={2}
+    <ListItem
+      px={2}
+      minHeight={35}
+      sx={{
+        borderWidth: `1px 0 0 0`,
+        borderStyle: `solid`,
+        borderColor: `${theme.palette.divider}`,
+      }}
+    >
+      <Box
         sx={{
-          borderWidth: `1px 0 0 0`,
-          borderStyle: `solid`,
-          borderColor: `${theme.palette.divider}`,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "left",
+          width: "100%",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "left",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
             width: "100%",
+            pt: "4px",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              width: "100%",
-              pt: "14px",
-            }}
-          >
-            <Box sx={{ display: "flex", gap: 1 }}>
-              <ActionTitle action={transaction.action} />
-            </Box>
-
-            <Box sx={{ display: "inline-flex", alignItems: "center" }}>
-              {" "}
-              <Typography variant="caption" color="text.muted">
-                {unixTimestampToFormattedTime({
-                  unixTimestamp: transaction.timestamp,
-                })}
-              </Typography>
-              <Button
-                sx={{
-                  display: "flex",
-                  ml: 1.5,
-                  mr: 0.5,
-                  width: "69px",
-                  height: "20px",
-                  fontSize: "0.6rem",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "5px",
-                  pl: 0.5,
-                  pr: 0.5,
-                }}
-                variant="outlined"
-                href={explorerLink}
-                target="_blank"
-                onClick={() =>
-                  trackEvent(GENERAL.EXTERNAL_LINK, {
-                    funnel: "TxHistoy",
-                    Link: "Etherscan",
-                  })
-                }
-              >
-                VIEW TX <ExtLinkIcon width={"10px"} height={"10px"} />
-              </Button>
-            </Box>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <ActionTitle action={transaction.action} />
           </Box>
-          <Box sx={{ py: "28px" }}>
-            <ActionDetails transaction={transaction} iconSize="24px" />
+
+          <Box sx={{ display: "inline-flex", alignItems: "center" }}>
+            {" "}
+            <Typography variant="caption" color="text.muted">
+              {unixTimestampToFormattedTime({
+                unixTimestamp: transaction.timestamp,
+              })}
+            </Typography>
+            <Button
+              sx={{
+                display: "flex",
+                ml: 1.5,
+                mr: 0.5,
+                width: "69px",
+                height: "20px",
+                fontSize: "0.6rem",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "5px",
+                pl: 0.5,
+                pr: 0.5,
+                mt: transaction.action !== "ClaimRewardsCall" ? 0.5 : 0,
+              }}
+              variant="outlined"
+              href={explorerLink}
+              target="_blank"
+              onClick={() =>
+                trackEvent(GENERAL.EXTERNAL_LINK, {
+                  funnel: "TxHistoy",
+                  Link: "Etherscan",
+                })
+              }
+            >
+              VIEW TX <ExtLinkIcon width={"10px"} height={"10px"} />
+            </Button>
           </Box>
         </Box>
-      </ListItem>
-    </Box>
+
+        <Box sx={{ py: "4px" }}>
+          <ActionDetails transaction={transaction} iconSize="24px" />
+        </Box>
+      </Box>
+    </ListItem>
   );
 };
 

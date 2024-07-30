@@ -6,7 +6,6 @@ import {
   DialogContent,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
 
 import { IVault, IVaultPosition } from "fathom-sdk";
@@ -16,54 +15,26 @@ import useVaultManageDeposit, {
 import useConnector from "context/connector";
 
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import ManageVaultForm from "components/Vaults/VaultList/ManageVaultModal/ManageVaultForm";
 import ManageVaultInfo from "components/Vaults/VaultList/ManageVaultModal/ManageVaultInfo";
-import {
-  AppNavItem,
-  AppNavWrapper,
-} from "components/AppComponents/AppTabs/AppTabs";
+import { AppNavItem } from "components/AppComponents/AppTabs/AppTabs";
 import {
   ButtonPrimary,
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
-import {
-  ErrorBox,
-  InfoBoxV2,
-  WarningBox,
-} from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
 import VaultModalLockingBar from "components/Vaults/VaultList/DepositVaultModal/VaultModalLockingBar";
-
-const VaultManageGridDialogWrapper = styled(AppDialog)`
-  & .MuiDialog-paper {
-    border-radius: 16px;
-    border: 1px solid #2c4066;
-    background: #132340;
-
-    & .MuiDialogContent-root {
-      padding: 0 24px 24px;
-    }
-  }
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    & .MuiDialog-paper {
-      height: fit-content;
-    }
-  }
-`;
-
-const ModalNavWrapper = styled(AppNavWrapper)`
-    margin-top: -10px;
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-     width: fit-content;
-      
-      & button {
-        font-size: 16px;
-      }
-  }
-}`;
+import {
+  BaseDialogNavWrapper,
+  BaseDialogWrapper,
+} from "components/Base/Dialog/StyledDialog";
+import {
+  BaseErrorBox,
+  BaseInfoBox,
+  BaseWarningBox,
+} from "components/Base/Boxes/StyledBoxes";
 
 export type VaultManageProps = {
   vaultItemData: IVault;
@@ -119,7 +90,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
   const { shutdown } = vaultItemData;
 
   return (
-    <VaultManageGridDialogWrapper
+    <BaseDialogWrapper
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
@@ -137,7 +108,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
         {shutdown ? (
           "Withdrawing"
         ) : (
-          <ModalNavWrapper>
+          <BaseDialogNavWrapper>
             <AppNavItem
               onClick={() => setFormType(FormType.DEPOSIT)}
               className={formType === FormType.DEPOSIT ? "active" : ""}
@@ -152,86 +123,89 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             >
               Withdraw
             </AppNavItem>
-          </ModalNavWrapper>
+          </BaseDialogNavWrapper>
         )}
       </AppDialogTitle>
 
       <DialogContent>
-        {isTfVaultType && (
-          <VaultModalLockingBar
-            tfVaultLockEndDate={tfVaultLockEndDate}
-            tfVaultDepositEndDate={tfVaultDepositEndDate}
-            activeTfPeriod={activeTfPeriod}
-          />
-        )}
         <FormProvider {...methods}>
-          <ManageVaultForm
-            balanceToken={balancePosition}
-            vaultItemData={vaultItemData}
-            vaultPosition={vaultPosition}
-            walletBalance={walletBalance}
-            control={control}
-            formType={formType}
-            setMax={setMax}
-            validateMaxValue={validateMaxValue}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            depositLimitExceeded={depositLimitExceeded}
-            dataTestIdPrefix="vault-listItemManageModal"
-          />
-          <ManageVaultInfo
-            formType={formType}
-            vaultItemData={vaultItemData}
-            vaultPosition={vaultPosition}
-            formToken={formToken}
-            formSharedToken={formSharedToken}
-            performanceFee={performanceFee}
-          />
-          {isWalletFetching &&
-            formType === FormType.DEPOSIT &&
-            (BigNumber(walletBalance)
-              .dividedBy(10 ** 18)
-              .isLessThan(BigNumber(formToken)) ||
-              walletBalance == "0") && (
-              <ErrorBox sx={{ marginBottom: 0 }}>
-                <InfoIcon />
-                <Typography>
-                  Wallet balance is not enough to deposit.
-                </Typography>
-              </ErrorBox>
-            )}
-          {formType === FormType.WITHDRAW &&
-            withdrawLimitExceeded(formToken) && (
-              <ErrorBox sx={{ marginBottom: 0 }}>
-                <InfoIcon />
-                <Typography>{withdrawLimitExceeded(formToken)}</Typography>
-              </ErrorBox>
-            )}
-          {activeTfPeriod === 1 && (
-            <WarningBox>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+          <Box>
+            {isTfVaultType && (
+              <VaultModalLockingBar
+                tfVaultLockEndDate={tfVaultLockEndDate}
+                tfVaultDepositEndDate={tfVaultDepositEndDate}
+                activeTfPeriod={activeTfPeriod}
               />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Deposit period has been completed.
-                </Typography>
-              </Box>
-            </WarningBox>
-          )}
-          {approveBtn &&
-            formType === FormType.DEPOSIT &&
-            walletBalance !== "0" && (
-              <InfoBoxV2>
-                <InfoIcon />
+            )}
+
+            <ManageVaultForm
+              balanceToken={balancePosition}
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              walletBalance={walletBalance}
+              control={control}
+              formType={formType}
+              setMax={setMax}
+              validateMaxValue={validateMaxValue}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              depositLimitExceeded={depositLimitExceeded}
+              dataTestIdPrefix="vault-listItemManageModal"
+            />
+            <ManageVaultInfo
+              formType={formType}
+              vaultItemData={vaultItemData}
+              vaultPosition={vaultPosition}
+              formToken={formToken}
+              formSharedToken={formSharedToken}
+              performanceFee={performanceFee}
+            />
+            {isWalletFetching &&
+              formType === FormType.DEPOSIT &&
+              (BigNumber(walletBalance)
+                .dividedBy(10 ** 18)
+                .isLessThan(BigNumber(formToken)) ||
+                walletBalance == "0") && (
+                <BaseErrorBox sx={{ marginBottom: 0 }}>
+                  <InfoIcon />
+                  <Typography>
+                    Wallet balance is not enough to deposit.
+                  </Typography>
+                </BaseErrorBox>
+              )}
+            {formType === FormType.WITHDRAW &&
+              withdrawLimitExceeded(formToken) && (
+                <BaseErrorBox sx={{ marginBottom: 0 }}>
+                  <InfoIcon />
+                  <Typography>{withdrawLimitExceeded(formToken)}</Typography>
+                </BaseErrorBox>
+              )}
+            {activeTfPeriod === 1 && (
+              <BaseWarningBox>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
                 <Box flexDirection="column">
                   <Typography width="100%">
-                    First-time connect? Please allow token approval in your
-                    MetaMask
+                    Deposit period has been completed.
                   </Typography>
                 </Box>
-              </InfoBoxV2>
+              </BaseWarningBox>
             )}
+            {approveBtn &&
+              formType === FormType.DEPOSIT &&
+              walletBalance !== "0" && (
+                <BaseInfoBox>
+                  <InfoIcon />
+                  <Box flexDirection="column">
+                    <Typography width="100%">
+                      First-time connect? Please allow token approval in your
+                      MetaMask
+                    </Typography>
+                  </Box>
+                </BaseInfoBox>
+              )}
+          </Box>
           <ModalButtonWrapper>
             <ButtonSecondary
               onClick={onClose}
@@ -292,7 +266,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
           </ModalButtonWrapper>
         </FormProvider>
       </DialogContent>
-    </VaultManageGridDialogWrapper>
+    </BaseDialogWrapper>
   );
 };
 

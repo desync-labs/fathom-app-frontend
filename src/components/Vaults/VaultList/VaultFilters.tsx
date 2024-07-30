@@ -1,55 +1,19 @@
 import { Dispatch, FC, memo, SetStateAction } from "react";
-import { MenuItem, Box, Select } from "@mui/material";
+import { MenuItem, Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { SelectChangeEvent } from "@mui/material/Select";
 import { SortType } from "hooks/Vaults/useVaultList";
+import useSharedContext from "context/shared";
 import {
-  AppFormInputLogo,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
-import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
-
-import SearchSrc from "assets/svg/search.svg";
+  BaseSearchTextField,
+  BaseSortSelect,
+  SearchFieldLogo,
+} from "components/Base/Form/Filters";
+import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 
 const SearchFieldWrapper = styled(Box)`
   position: relative;
   width: 50%;
-`;
-
-const SearchTextField = styled(AppTextField)`
-  input {
-    background: #091433;
-    height: 38px;
-    color: #8ea4cc;
-    border: 1px solid #3d5580;
-  }
-`;
-
-const SortSelect = styled(Select)`
-  width: auto;
-  height: 40px;
-  min-width: 100px;
-  background: #091433;
-  border: 1px solid #3d5580 !important;
-  border-radius: 8px;
-
-  & .MuiSelect-select {
-    background-color: transparent !important;
-  }
-
-  &:hover,
-  &:focus {
-    border: 1px solid #5a81ff;
-    box-shadow: 0 0 8px #003cff;
-  }
-  &.Mui-focused .MuiOutlinedInput-notchedOutline {
-    border: 1px solid #5a81ff !important;
-    box-shadow: 0 0 8px #003cff !important;
-  }
-  fieldset {
-    border: none !important;
-    outline: none !important;
-  }
 `;
 
 export type VaultFiltersPropsType = {
@@ -69,22 +33,24 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
   setSearch,
   setSortBy,
 }) => {
+  const { isMobile } = useSharedContext();
   return (
-    <AppFlexBox sx={{ justifyContent: "flex-start", marginBottom: "16px" }}>
+    <BaseFlexBox
+      sx={{
+        justifyContent: "flex-start",
+        marginBottom: isMobile ? "0" : "-24px",
+      }}
+    >
       <SearchFieldWrapper>
-        <SearchTextField
+        <BaseSearchTextField
           id="outlined-helperText"
           placeholder="Search by Vault, token name or token address"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <AppFormInputLogo
-          sx={{ top: "10px", left: "9px" }}
-          src={SearchSrc}
-          alt="search"
-        />
+        <SearchFieldLogo />
       </SearchFieldWrapper>
-      <SortSelect
+      <BaseSortSelect
         value={isShutdown ? "finished" : "live"}
         onChange={(event: SelectChangeEvent<unknown>) => {
           handleIsShutdown(event.target.value !== "live");
@@ -92,8 +58,8 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
       >
         <MenuItem value={"live"}>Live Now</MenuItem>
         <MenuItem value={"finished"}>Finished</MenuItem>
-      </SortSelect>
-      <SortSelect
+      </BaseSortSelect>
+      <BaseSortSelect
         value={sortBy}
         onChange={(event: SelectChangeEvent<unknown>) => {
           setSortBy(event.target.value as SortType);
@@ -102,8 +68,8 @@ const VaultFilters: FC<VaultFiltersPropsType> = ({
         <MenuItem value="tvl">TVL</MenuItem>
         <MenuItem value="earned">Earned</MenuItem>
         <MenuItem value="staked">Staked</MenuItem>
-      </SortSelect>
-    </AppFlexBox>
+      </BaseSortSelect>
+    </BaseFlexBox>
   );
 };
 

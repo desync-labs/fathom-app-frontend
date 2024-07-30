@@ -5,7 +5,7 @@ import {
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
 import { TutorialIcon, VaultManagement } from "components/Common/MenuIcons";
-import { Container } from "@mui/material";
+import BasePageContainer from "components/Base/PageContainer";
 
 const VaultsView = () => {
   const location = useLocation();
@@ -42,15 +42,9 @@ const VaultsView = () => {
           </NestedRouteLink>
         </NestedRouteNav>
       )}
-      <Container
-        maxWidth="lg"
-        sx={{
-          mt: 4,
-          mb: 4,
-        }}
-      >
+      <BasePageContainer>
         <Outlet />
-      </Container>
+      </BasePageContainer>
     </>
   );
 };

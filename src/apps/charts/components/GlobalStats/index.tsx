@@ -31,7 +31,8 @@ const GridStats = styled(Box)`
 `;
 
 const GridStatsItem = styled(Box)`
-  background-color: #131f35;
+  border: 1px solid #2c4066;
+  background: #132340;
   height: auto;
   max-height: 68px;
   display: flex;

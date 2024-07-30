@@ -3,24 +3,27 @@ import { Popover, Typography } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
-const AppPopoverWrapper = styled(Popover)<{ type: PopoverType }>`
+const PopoverWrapper = styled(Popover)<{ type: PopoverType }>`
   .MuiPaper-root {
     background: ${({ type }) =>
       type === PopoverType.Error ? "#FF6767" : "rgba(255, 255, 255, 0.9)"};
-    border-radius: 8px;
-    padding: 8px 12px;
     color: #000c24;
     max-width: 400px;
+    border-radius: 12px;
+    padding: 12px 16px;
 
     p {
-      font-size: 13px;
-      line-height: 16px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
     }
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     .MuiPaper-root {
       max-width: 350px;
+      border-radius: 8px;
+      padding: 8px 12px;
       p {
         font-size: 12px;
         line-height: 15px;
@@ -40,14 +43,16 @@ type AppPopoverProps = {
   element?: ReactElement;
   type?: PopoverType;
   iconSize?: string;
+  iconColor?: string;
 };
 
-const AppPopover: FC<AppPopoverProps> = ({
+const BasePopover: FC<AppPopoverProps> = ({
   id,
   text,
   element,
   type = PopoverType.Info,
-  iconSize = "18px",
+  iconSize = "16px",
+  iconColor = "#6379A1",
 }) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -78,10 +83,10 @@ const AppPopover: FC<AppPopoverProps> = ({
           onMouseEnter={handlePopoverOpen}
           onMouseLeave={handlePopoverClose}
         >
-          <InfoIcon sx={{ fontSize: iconSize }} />
+          <InfoIcon sx={{ fontSize: iconSize, color: iconColor }} />
         </span>
       )}
-      <AppPopoverWrapper
+      <PopoverWrapper
         id={id}
         sx={{
           pointerEvents: "none",
@@ -101,9 +106,9 @@ const AppPopover: FC<AppPopoverProps> = ({
         disableRestoreFocus
       >
         <Typography>{text}</Typography>
-      </AppPopoverWrapper>
+      </PopoverWrapper>
     </>
   );
 };
 
-export default AppPopover;
+export default BasePopover;

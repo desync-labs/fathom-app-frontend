@@ -26,7 +26,7 @@ test.describe("Fathom App Test Suite: FXD Positions Operations", () => {
       });
     });
 
-    test("Fully closing a newly created position is successful", async ({
+    test("Fully repaying a newly created position is successful", async ({
       fxdPage,
     }) => {
       await fxdPage.navigate();
@@ -85,7 +85,7 @@ test.describe("Fathom App Test Suite: FXD Positions Operations", () => {
   });
 
   test.describe.serial("Scenario 3", () => {
-    test("Creating a position with 85.5 collateral and 1.5 borrow amount is successful", async ({
+    test("Creating a position with 105.5 collateral and 1.5 borrow amount is successful", async ({
       fxdPage,
     }) => {
       await fxdPage.navigate();

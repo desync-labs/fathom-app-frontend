@@ -1,25 +1,52 @@
-import { Divider, Grid, ListItemText } from "@mui/material";
-
-import { AppListItem } from "components/AppComponents/AppList/AppList";
-import { AppList } from "components/AppComponents/AppList/AppList";
+import BigNumber from "bignumber.js";
+import { Divider, ListItemText } from "@mui/material";
+import { styled } from "@mui/material/styles";
 
 import useOpenPositionContext from "context/openPosition";
-import { styled } from "@mui/material/styles";
 import { formatNumber, formatPercentage } from "utils/format";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
-import BigNumber from "bignumber.js";
+
+import { BaseSummary } from "components/Base/Typography/StyledTypography";
+import BasePopover from "components/Base/Popover/BasePopover";
+import { BaseListItem } from "components/Base/List/StyledList";
+import {
+  BaseDialogFormInfoWrapper,
+  BaseFormInfoList,
+} from "components/Base/Form/StyledForm";
 
 const ListDivider = styled(Divider)`
-  margin: 20px 20px 20px 5px;
+  margin: 4px 0 8px 0;
+`;
+
+export const InfoListItem = styled(BaseListItem)`
+  & .MuiListItemText-root {
+    margin-top: 1px;
+    margin-bottom: 1px;
+  }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin: 20px 0 20px 0;
+    & .MuiListItemText-root {
+      margin-top: 2px;
+      margin-bottom: 2px;
+
+      & span {
+        font-size: 11px;
+      }
+    }
+
+    & .MuiListItemSecondaryAction-root {
+      font-size: 11px;
+
+      & span {
+        font-size: 11px;
+      }
+    }
   }
 `;
 
 export const ListTitleWrapper = styled("div")`
   display: flex;
-  gap: 7px;
+  gap: 8px;
+  align-items: center;
 `;
 
 const OpenPositionInfo = () => {
@@ -35,9 +62,11 @@ const OpenPositionInfo = () => {
   } = useOpenPositionContext();
 
   return (
-    <Grid item xs={12} sm={6}>
-      <AppList>
-        <AppListItem
+    <BaseDialogFormInfoWrapper>
+      <BaseSummary>Summary</BaseSummary>
+      <Divider />
+      <BaseFormInfoList>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatNumber(Number(collateralToBeLocked))} ${
             pool.poolName
@@ -47,7 +76,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Collateral to be Locked
-                <AppPopover
+                <BasePopover
                   id={"collateral-locked"}
                   text={
                     <>
@@ -59,8 +88,8 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatNumber(
             Number(collateralAvailableToWithdraw)
@@ -70,7 +99,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Safety Buffer
-                <AppPopover
+                <BasePopover
                   id={"safety-buffer"}
                   text={
                     <>
@@ -98,8 +127,8 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(Number(fxdToBeBorrowed))} FXD`}
         >
@@ -107,7 +136,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Max FXD can be Borrowed
-                <AppPopover
+                <BasePopover
                   id={"max-fxd-borrowed"}
                   text={
                     <>
@@ -119,16 +148,16 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(
             Number(fxdAvailableToBorrow)
           )} FXD`}
         >
           <ListItemText primary="Safety Buffer (FXD)" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems={"flex-start"}
           secondaryAction={`${formatNumber(Number(overCollateral))} %`}
         >
@@ -136,7 +165,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Collateralization Ratio
-                <AppPopover
+                <BasePopover
                   id={"collateralization-ratio"}
                   text={
                     <>
@@ -152,16 +181,16 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`${formatPercentage(
             BigNumber(safetyBuffer).multipliedBy(100).toNumber()
           )} %`}
         >
           <ListItemText primary="Safety Buffer (%)" />
-        </AppListItem>
-        <AppListItem
+        </InfoListItem>
+        <InfoListItem
           alignItems="flex-start"
           secondaryAction={`$${formatPercentage(Number(liquidationPrice))}`}
         >
@@ -169,7 +198,7 @@ const OpenPositionInfo = () => {
             primary={
               <ListTitleWrapper>
                 Liquidation Price of {pool?.poolName}
-                <AppPopover
+                <BasePopover
                   id={"liquidation-price"}
                   text={
                     <>
@@ -186,14 +215,14 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
+        </InfoListItem>
         <ListDivider />
-        <AppListItem alignItems="flex-start" secondaryAction={`2%`}>
+        <InfoListItem alignItems="flex-start" secondaryAction={`2%`}>
           <ListItemText
             primary={
               <ListTitleWrapper>
                 Stability Fee
-                <AppPopover
+                <BasePopover
                   id={"stability-fee"}
                   text={
                     <>
@@ -207,9 +236,9 @@ const OpenPositionInfo = () => {
               </ListTitleWrapper>
             }
           />
-        </AppListItem>
-      </AppList>
-    </Grid>
+        </InfoListItem>
+      </BaseFormInfoList>
+    </BaseDialogFormInfoWrapper>
   );
 };
 

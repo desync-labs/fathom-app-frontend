@@ -230,4 +230,7 @@ strategyTitle["0xb2f928bfd9d2107a7c5b8a2208de4a017cdf1bfc"] =
 strategyTitle["0x676a616d4fa846c6699437a4f1209c5808e5b1ab"] =
   "TradeFlow strategy #1";
 
+strategyTitle["0x00587ac51a5bf897bc8b253e4d49fbea5e62a5cb"] =
+  "TradeFlow strategy #1";
+
 export { strategyTitle, strategyDescription };

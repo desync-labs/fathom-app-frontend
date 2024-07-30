@@ -53,7 +53,7 @@ export default class FxdPage extends BasePage {
 
     // Locators
     this.dialogOpenNewPosition = this.page.locator(
-      '//h2[text()="Open New Position"]/parent::div'
+      '//h2[text()="Open Position"]/parent::div'
     );
     this.dialogTopUpPosition = this.page.locator(
       '//h2[text()="Top Up Position"]/parent::div'
@@ -68,15 +68,15 @@ export default class FxdPage extends BasePage {
       '//button[text()="Open this position"]'
     );
     this.inputCollateral = this.page.locator(
-      '//label[contains(text(), "Collateral")]/parent::div//input'
+      '//label[contains(text(), "Collateral")]/parent::div/parent::div//input'
     );
     this.inputBorrowAmount = this.page.locator(
-      '//label[contains(text(), "Borrow Amount")]/parent::div//input'
+      '//label[contains(text(), "Borrow Amount")]/parent::div/parent::div//input'
     );
     this.btnMax = this.page.getByText("Max");
     this.btnSafeMax = this.page.getByText("Safe Max");
     this.tableYourPositions = this.page.locator(
-      '//h2[text()="Your Positions"]/parent::div/following-sibling::div/table'
+      '//h2[text()="Your Positions"]/following-sibling::div/table'
     );
     this.rowLatestPosition = this.tableYourPositions.locator(
       "tbody > tr:nth-child(1)"
@@ -96,7 +96,7 @@ export default class FxdPage extends BasePage {
       '//button[text()="Repay Position"]'
     );
     this.inputRepaying = this.page.locator(
-      '//label[contains(text(), "Repaying")]/parent::div//input'
+      '//label[contains(text(), "Repaying")]/parent::div/parent::div//input'
     );
     this.btnConfirmRepayPosition = this.page.locator(
       '//button[text()="Repay this position"]'
@@ -492,18 +492,19 @@ export default class FxdPage extends BasePage {
       this.borrowAmountLatestPositionRow;
     const borrowAmountActual = extractNumericValue(
       (await borrowAmountLatestPositionDisplayed.textContent()) as string
-    );
+    ) as number;
     expect
-      .soft(borrowAmountActual)
+      .soft(Math.round(borrowAmountActual * 100) / 100)
       .toEqual(Math.round(borrowAmountExpected * 100) / 100);
     expect.soft(borrowAmountLatestPositionDisplayed).toContainText("FXD");
     const collateralAmountLatestPositionDisplayed =
       this.collateralAmountLatestPositionRow;
+    const collateralAmounActual = extractNumericValue(
+      (await collateralAmountLatestPositionDisplayed.textContent()) as string
+    ) as number;
     expect
-      .soft(collateralAmountLatestPositionDisplayed)
-      .toContainText(
-        (Math.round(collateralAmountExpected * 10000) / 10000).toString()
-      );
+      .soft(Math.round(collateralAmounActual * 100) / 100)
+      .toEqual(Math.round(collateralAmountExpected * 100) / 100);
     expect.soft(collateralAmountLatestPositionDisplayed).toContainText("XDC");
     const safetyBufferPercentageLatestPositionDisplayed =
       this.safetyBufferLatestPositionRow;

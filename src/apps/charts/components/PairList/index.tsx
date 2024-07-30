@@ -18,7 +18,7 @@ import FormattedName from "apps/charts/components/FormattedName";
 import { PAIR_BLACKLIST } from "apps/charts/constants";
 import { AutoColumn } from "apps/charts/components/Column";
 import { TableHeaderBox } from "apps/charts/components/Row";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 dayjs.extend(utc);
 
@@ -73,7 +73,7 @@ const DashGrid = styled(Box)<{ fade?: boolean }>`
 `;
 
 export const HeaderWrapper = styled(DashGrid)`
-  background: #131f35;
+  background: #2c4066;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
@@ -445,7 +445,7 @@ const PairList: FC<PairListProps> = (props) => {
                   : ""}
               </TableHeaderBox>
             </ClickableText>
-            <AppPopover
+            <BasePopover
               id="pairs_sorting"
               text="Based on 24hr volume annualized"
             />

@@ -68,12 +68,12 @@ const Input = styled("input")<{ large: boolean }>`
   white-space: nowrap;
   outline: none;
   width: 100%;
-  color: #ffffff;
-  border: 1px solid #253656;
+  color: #8ea4cc;
+  border: 1px solid #3d5580;
   font-size: ${({ large }) => (large ? "20px" : "14px")};
   border-radius: 8px;
   padding: 10px 10px 10px 28px;
-  background-color: #0e1d34;
+  background-color: #091433;
 
   :hover,
   :focus {
@@ -131,8 +131,8 @@ const Menu = styled(Box)<{ hide?: boolean }>`
   overflow: auto;
   left: 0;
   padding-bottom: 20px;
-  background: #0e1d34;
-  border: 1px solid #253656;
+  background: #091433;
+  border: 1px solid #3d5580;
   border-bottom-right-radius: 8px;
   border-bottom-left-radius: 8px;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 4px 8px rgba(0, 0, 0, 0.04),

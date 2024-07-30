@@ -14,8 +14,7 @@ import { formatNumber } from "utils/format";
 export const defaultValues = {
   collateral: "",
   fathomToken: "",
-  safeMax: "0",
-  dangerSafeMax: "0",
+  safeMinCollateral: "0",
 };
 
 const useOpenPosition = (
@@ -42,8 +41,7 @@ const useOpenPosition = (
 
   const collateral = watch("collateral");
   const fathomToken = watch("fathomToken");
-  const safeMax = watch("safeMax");
-  const dangerSafeMax = watch("dangerSafeMax");
+  const safeMinCollateral = watch("safeMinCollateral");
 
   const [balance, setBalance] = useState<string>("0");
 
@@ -73,6 +71,8 @@ const useOpenPosition = (
 
   const [approveBtn, setApproveBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
+
+  const [priceOfCollateral, setPriceOfCollateral] = useState<string>("0");
 
   const proxyWalletExists = useMemo(
     () => proxyWallet !== ZERO_ADDRESS,
@@ -147,7 +147,6 @@ const useOpenPosition = (
 
   const dangerSafetyBuffer = useMemo(() => {
     return (
-      !Object.keys(errors).length &&
       isTouched &&
       isDirty &&
       BigNumber(safetyBuffer).isGreaterThanOrEqualTo(0) &&
@@ -180,20 +179,21 @@ const useOpenPosition = (
         .toString();
 
       /**
-       * DANGER_SAFE_MAX
+       * SAFE MIN COLLATERAL
        */
-      const dangerSafeMax = BigNumber(collateralInput)
-        .multipliedBy(
-          BigNumber(priceWithSafetyMargin)
-            .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
-            .dividedBy(100)
+      const safeMinCollateral = BigNumber(fathomTokenInput)
+        .dividedBy(
+          BigNumber(priceWithSafetyMargin).multipliedBy(
+            BigNumber(100).minus(pool.stabilityFeeRate).dividedBy(100)
+          )
         )
-        .decimalPlaces(6, BigNumber.ROUND_DOWN)
+        .decimalPlaces(6, BigNumber.ROUND_UP)
         .toString();
 
       setFxdToBeBorrowed(safeMax);
-      setValue("safeMax", safeMax, { shouldValidate: false });
-      setValue("dangerSafeMax", dangerSafeMax, { shouldValidate: false });
+      setValue("safeMinCollateral", safeMinCollateral, {
+        shouldValidate: false,
+      });
 
       const collateralAvailableToWithdraw = (
         BigNumber(priceWithSafetyMargin).isGreaterThan(0)
@@ -248,6 +248,7 @@ const useOpenPosition = (
         .multipliedBy(100)
         .toString();
 
+      setPriceOfCollateral(priceOfCollateralFromDex.toString());
       setOverCollateral(overCollateral);
       setDebtRatio(debtRatio);
 
@@ -267,7 +268,11 @@ const useOpenPosition = (
         .dividedBy(collateralInput)
         .precision(10, BigNumber.ROUND_FLOOR);
 
-      setSafetyBuffer(safetyBuffer.isNaN() ? "0" : safetyBuffer.toString());
+      setSafetyBuffer(
+        safetyBuffer.isNaN() || !isFinite(safetyBuffer.toNumber())
+          ? "0"
+          : safetyBuffer.toString()
+      );
 
       /**
        * LIQUIDATION PRICE
@@ -277,7 +282,9 @@ const useOpenPosition = (
         .multipliedBy(pool.liquidationRatio);
 
       setLiquidationPrice(
-        liquidationPrice.isNaN() ? "0" : liquidationPrice.toString()
+        liquidationPrice.isNaN() || !isFinite(liquidationPrice.toNumber())
+          ? "0"
+          : liquidationPrice.toString()
       );
 
       /**
@@ -304,9 +311,66 @@ const useOpenPosition = (
     ]
   );
 
-  const setSafeMax = useCallback(() => {
-    setValue("fathomToken", dangerSafeMax.toString(), { shouldValidate: true });
-  }, [dangerSafeMax, setValue]);
+  /**
+   * Max borrow amount, wallet balance or collateral amount by price with safety margin and 25% overcollateralization.
+   */
+  const setBorrowMax = useCallback(
+    (collateralAmount?: number) => {
+      const { priceWithSafetyMargin } = pool;
+
+      const formattedBalance = BigNumber(balance).dividedBy(10 ** 18);
+
+      let borrow: BigNumber | string = BigNumber(
+        collateralAmount || formattedBalance
+      ).multipliedBy(
+        BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
+      );
+
+      borrow = (
+        borrow.isGreaterThan(maxBorrowAmount)
+          ? BigNumber(maxBorrowAmount).minus(0.01)
+          : borrow
+      )
+        .decimalPlaces(2, BigNumber.ROUND_DOWN)
+        .toString();
+
+      setValue("fathomToken", borrow, { shouldValidate: true });
+    },
+    [pool, balance, maxBorrowAmount, setValue]
+  );
+
+  /**
+   * Safe max collateral input, price with safety margin and 25% overcollateralization.
+   */
+  const setCollateralSafeMax = useCallback(() => {
+    const { priceWithSafetyMargin } = pool;
+
+    let collateral: BigNumber | string = BigNumber(fathomToken).dividedBy(
+      BigNumber(priceWithSafetyMargin).multipliedBy(1 - DANGER_SAFETY_BUFFER)
+    );
+    const formattedBalance = BigNumber(balance).dividedBy(10 ** 18);
+
+    if (collateral.isGreaterThan(formattedBalance)) {
+      collateral = formattedBalance
+        .decimalPlaces(6, BigNumber.ROUND_DOWN)
+        .toString();
+    } else {
+      collateral = collateral.decimalPlaces(6, BigNumber.ROUND_UP).toString();
+    }
+
+    setValue("collateral", collateral, { shouldValidate: true });
+  }, [fathomToken, pool, setValue, balance]);
+
+  /**
+   * Set wallet balance to collateral input.
+   */
+  const setCollateralMax = useCallback(
+    (balance: string) => {
+      const max = BigNumber(balance).dividedBy(10 ** 18);
+      setValue("collateral", max.toString(), { shouldValidate: true });
+    },
+    [setValue]
+  );
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
@@ -382,14 +446,6 @@ const useOpenPosition = (
     setApproveBtn,
   ]);
 
-  const setMax = useCallback(
-    (balance: string) => {
-      const max = BigNumber(balance).dividedBy(10 ** 18);
-      setValue("collateral", max.toString(), { shouldValidate: true });
-    },
-    [setValue]
-  );
-
   const validateMaxBorrowAmount = useCallback(() => {
     if (BigNumber(fathomToken).isGreaterThanOrEqualTo(maxBorrowAmount)) {
       return `Borrow amount should be less than ${formatNumber(
@@ -436,9 +492,19 @@ const useOpenPosition = (
     }
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
+  const setAiPredictionCollateral = (recommendedCollateral: string) => {
+    const formattedRecommendedCollateral = BigNumber(recommendedCollateral)
+      .decimalPlaces(6, BigNumber.ROUND_UP)
+      .toString();
+
+    setValue("collateral", formattedRecommendedCollateral, {
+      shouldValidate: true,
+    });
+  };
+
   return {
     proxyWalletExists,
-    safeMax,
+    safeMinCollateral,
     approveBtn,
     approve,
     approvalPending,
@@ -454,8 +520,9 @@ const useOpenPosition = (
     collateral,
     fathomToken,
     openPositionLoading,
-    setMax,
-    setSafeMax,
+    setCollateralMax,
+    setCollateralSafeMax,
+    setBorrowMax,
     onSubmit,
     control,
     handleSubmit,
@@ -467,6 +534,8 @@ const useOpenPosition = (
     maxBorrowAmount,
     minCollateralAmount,
     validateMaxBorrowAmount,
+    priceOfCollateral,
+    setAiPredictionCollateral,
   };
 };
 

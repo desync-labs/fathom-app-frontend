@@ -1,59 +1,35 @@
 import { FC } from "react";
 import BigNumber from "bignumber.js";
 import { Controller } from "react-hook-form";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import {
-  ApproveBox,
-  ApproveBoxTypography,
-  ErrorBox,
-  Summary,
-  WalletBalance,
-  WarningBox,
-} from "components/AppComponents/AppBox/AppBox";
-
-import {
-  AppFormInputLogo,
-  AppFormInputWrapper,
-  AppFormLabel,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
+import { Box } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
-import { getTokenLogoURL } from "utils/tokenLogo";
-import {
-  ApproveButton,
-  ButtonPrimary,
-  ButtonSecondary,
-  ButtonsWrapper,
-  ManagePositionRepayTypeWrapper,
-  ManageTypeButton,
-  MaxButton,
-} from "components/AppComponents/AppButton/AppButton";
-
-import useTopUpPositionContext from "context/topUpPosition";
 import { styled } from "@mui/material/styles";
-import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
+
+import usePricesContext from "context/prices";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import useTopUpPositionContext from "context/topUpPosition";
+import { FXD_MINIMUM_BORROW_AMOUNT } from "utils/Constants";
+import { formatNumber, formatPercentage } from "utils/format";
 
 import {
-  FXD_MINIMUM_BORROW_AMOUNT,
-  DANGER_SAFETY_BUFFER,
-} from "utils/Constants";
-import { formatPercentage } from "utils/format";
-import useSharedContext from "context/shared";
+  BaseDialogFormWrapper,
+  BaseFormInputErrorWrapper,
+  BaseFormInputLabel,
+  BaseFormInputLogo,
+  BaseFormInputUsdIndicator,
+  BaseFormInputWrapper,
+  BaseFormLabelRow,
+  BaseFormSetMaxButton,
+  BaseFormTextField,
+  BaseFormWalletBalance,
+} from "components/Base/Form/StyledForm";
+import { ClosePositionDialogPropsType } from "components/Positions/RepayPositionDialog";
+import {
+  BaseButtonsSwitcherGroup,
+  BaseSwitcherButton,
+} from "components/Base/Buttons/StyledButtons";
 
-const TopUpPositionFormWrapper = styled(Grid)`
-  padding-left: 20px;
-  width: calc(50% - 3px);
-  position: relative;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: 100%;
-    padding: 0;
-  }
-`;
-
-const TopUpForm = styled("form")`
-  padding-bottom: 45px;
-`;
+const TopUpForm = styled("form")``;
 
 const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   topUpPosition,
@@ -62,133 +38,53 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
   setTopUpPosition,
 }) => {
   const {
-    collateral,
+    totalCollateral,
+    totalFathomToken,
     pool,
-    approveBtn,
-    approve,
-    approvalPending,
     balance,
-    safeMax,
-    openPositionLoading,
-    setMax,
-    setSafeMax,
+    safeMinCollateral,
     onSubmit,
     control,
     handleSubmit,
-    onClose,
     switchPosition,
-    safetyBuffer,
     maxBorrowAmount,
     availableFathomInPool,
-    errorAtLeastOneField,
     validateMaxBorrowAmount,
+    priceOfCollateral,
+    setCollateralMax,
+    setCollateralSafeMax,
+    setBorrowMax,
   } = useTopUpPositionContext();
-  const { isMobile } = useSharedContext();
+  const { fxdPrice } = usePricesContext();
 
   return (
-    <TopUpPositionFormWrapper item>
+    <BaseDialogFormWrapper>
       <TopUpForm
         onSubmit={handleSubmit(onSubmit)}
         noValidate
         autoComplete="off"
       >
-        <Summary>Summary</Summary>
-        <ManagePositionRepayTypeWrapper>
-          <ManageTypeButton
-            sx={{ marginRight: "5px" }}
+        <BaseButtonsSwitcherGroup>
+          <BaseSwitcherButton
             className={`${topUpPosition ? "active" : null}`}
             onClick={() => !topUpPosition && switchPosition(setTopUpPosition)}
           >
             Top Up Position
-          </ManageTypeButton>
-          <ManageTypeButton
+          </BaseSwitcherButton>
+          <BaseSwitcherButton
             className={`${closePosition ? "active" : null}`}
             onClick={() => !closePosition && switchPosition(setClosePosition)}
           >
             Repay Position
-          </ManageTypeButton>
-        </ManagePositionRepayTypeWrapper>
+          </BaseSwitcherButton>
+        </BaseButtonsSwitcherGroup>
         <Controller
-          control={control}
-          name="collateral"
-          rules={{
-            required: false,
-            min: 0,
-            max: BigNumber(balance)
-              .dividedBy(10 ** 18)
-              .toNumber(),
-          }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <AppFormInputWrapper>
-              <AppFormLabel>Collateral</AppFormLabel>
-              {balance ? (
-                <WalletBalance>
-                  Wallet Available:{" "}
-                  {formatPercentage(
-                    BigNumber(balance)
-                      .dividedBy(10 ** 18)
-                      .toNumber()
-                  )}{" "}
-                  {pool?.poolName}
-                </WalletBalance>
-              ) : null}
-              <AppTextField
-                error={!!error}
-                id="outlined-helperText"
-                placeholder={"0"}
-                helperText={
-                  <>
-                    {error && error.type === "max" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          You do not have enough {pool?.poolName}
-                        </Box>
-                      </>
-                    )}
-                    {error && error.type === "min" && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box
-                          component={"span"}
-                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
-                        >
-                          Collateral amount should be positive.
-                        </Box>
-                      </>
-                    )}
-                  </>
-                }
-                value={value}
-                type="number"
-                onChange={onChange}
-              />
-              <AppFormInputLogo
-                src={getTokenLogoURL(
-                  pool?.poolName?.toUpperCase() === "XDC"
-                    ? "WXDC"
-                    : pool?.poolName
-                )}
-              />
-              <MaxButton onClick={() => setMax(balance)}>Max</MaxButton>
-            </AppFormInputWrapper>
-          )}
-        />
-        <Controller
-          key={safeMax}
           control={control}
           name="fathomToken"
           rules={{
             validate: (value) => {
               if (BigNumber(value).isGreaterThan(availableFathomInPool)) {
                 return "Not enough FXD in pool";
-              }
-
-              if (BigNumber(value).isGreaterThan(safeMax)) {
-                return `You can't borrow more than ${safeMax}`;
               }
 
               if (validateMaxBorrowAmount()) {
@@ -201,19 +97,21 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => {
             return (
-              <AppFormInputWrapper>
-                <AppFormLabel>Borrow Amount</AppFormLabel>
-                <AppTextField
+              <BaseFormInputWrapper>
+                <BaseFormLabelRow>
+                  <BaseFormInputLabel>Borrow Amount</BaseFormInputLabel>
+                </BaseFormLabelRow>
+                <BaseFormTextField
                   error={!!error}
                   id="outlined-helperText"
                   helperText={
                     <>
                       {error && error.type === "validate" && (
-                        <>
+                        <BaseFormInputErrorWrapper>
                           <InfoIcon
                             sx={{
                               float: "left",
-                              fontSize: "18px",
+                              fontSize: "14px",
                             }}
                           />
                           <Box
@@ -222,11 +120,11 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                           >
                             {error?.message}
                           </Box>
-                        </>
+                        </BaseFormInputErrorWrapper>
                       )}
                       {error && error.type === "min" && (
-                        <>
-                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                        <BaseFormInputErrorWrapper>
+                          <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
                           <Box
                             component={"span"}
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
@@ -234,21 +132,30 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                             Minimum borrow amount is {FXD_MINIMUM_BORROW_AMOUNT}
                             .
                           </Box>
-                        </>
+                        </BaseFormInputErrorWrapper>
                       )}
                       {error && error.type === "max" && (
-                        <>
-                          <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
+                        <BaseFormInputErrorWrapper>
+                          <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
                           <Box
                             component={"span"}
                             sx={{ fontSize: "12px", paddingLeft: "6px" }}
                           >
                             Maximum borrow amount is {maxBorrowAmount}.
                           </Box>
-                        </>
+                        </BaseFormInputErrorWrapper>
                       )}
-                      {(!error || error.type === "required") &&
-                        "Enter the desired FXD."}
+                      {(!error || error.type === "required") && (
+                        <BaseFormInputErrorWrapper>
+                          <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                          <Box
+                            component={"span"}
+                            sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          >
+                            Enter the desired FXD.
+                          </Box>
+                        </BaseFormInputErrorWrapper>
+                      )}
                     </>
                   }
                   value={value}
@@ -256,80 +163,140 @@ const TopUpPositionForm: FC<ClosePositionDialogPropsType> = ({
                   placeholder={"0"}
                   onChange={onChange}
                 />
-                <AppFormInputLogo src={getTokenLogoURL("FXD")} />
-                {safeMax > 0 ? (
-                  <MaxButton onClick={setSafeMax}>Safe Max</MaxButton>
-                ) : null}
-              </AppFormInputWrapper>
+                <BaseFormInputUsdIndicator>{`$${formatNumber(
+                  BigNumber(value || 0)
+                    .multipliedBy(fxdPrice)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}`}</BaseFormInputUsdIndicator>
+                <BaseFormInputLogo
+                  className={"extendedInput"}
+                  src={getTokenLogoURL("FXD")}
+                />
+                <BaseFormSetMaxButton
+                  onClick={() =>
+                    totalCollateral
+                      ? setBorrowMax(Number(totalCollateral))
+                      : setBorrowMax()
+                  }
+                >
+                  {totalCollateral ? "Safe Max" : "Max"}
+                </BaseFormSetMaxButton>
+              </BaseFormInputWrapper>
             );
           }}
         />
-        {approveBtn && !!balance && (
-          <ApproveBox sx={{ marginBottom: "25px" }}>
-            <InfoIcon
-              sx={{
-                color: "#7D91B5",
-                float: "left",
-                marginRight: "10px",
-              }}
-            />
-            <ApproveBoxTypography>
-              First-time connect? Please allow token approval in your MetaMask
-            </ApproveBoxTypography>
-            <ApproveButton onClick={approve} disabled={approvalPending}>
-              {" "}
-              {approvalPending ? (
-                <CircularProgress size={20} sx={{ color: "#0D1526" }} />
-              ) : (
-                "Approve"
-              )}{" "}
-            </ApproveButton>
-          </ApproveBox>
-        )}
-        {BigNumber(safetyBuffer).isLessThan(DANGER_SAFETY_BUFFER) && (
-          <WarningBox>
-            <InfoIcon />
-            <Typography>
-              Resulting in lowering safety buffer - consider provide more
-              collateral or borrow less FXD.
-            </Typography>
-          </WarningBox>
-        )}
-        {BigNumber(collateral).isLessThanOrEqualTo(0) && (
-          <WarningBox>
-            <InfoIcon />
-            <Typography>
-              Providing 0 collateral you are making your position unsafer.
-            </Typography>
-          </WarningBox>
-        )}
-        {errorAtLeastOneField && (
-          <ErrorBox>
-            <InfoIcon />
-            <Typography>Please fill at least one field</Typography>
-          </ErrorBox>
-        )}
-        <ButtonsWrapper>
-          {!isMobile && (
-            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
+        <Controller
+          control={control}
+          name="collateral"
+          rules={{
+            required: false,
+            min: 0,
+            max: BigNumber(balance)
+              .dividedBy(10 ** 18)
+              .toNumber(),
+            validate: (value) => {
+              if (BigNumber(value || "0").isLessThan(safeMinCollateral)) {
+                return `You need at least ${safeMinCollateral} collateral for the desired amount of borrowing`;
+              }
+
+              return true;
+            },
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <BaseFormInputWrapper>
+              <BaseFormLabelRow>
+                <BaseFormInputLabel>Collateral</BaseFormInputLabel>
+                {balance ? (
+                  <BaseFormWalletBalance>
+                    Balance:{" "}
+                    {formatPercentage(
+                      BigNumber(balance)
+                        .dividedBy(10 ** 18)
+                        .toNumber()
+                    )}{" "}
+                    {pool?.poolName}
+                  </BaseFormWalletBalance>
+                ) : null}
+              </BaseFormLabelRow>
+              <BaseFormTextField
+                error={!!error}
+                id="outlined-helperText"
+                placeholder={"0"}
+                helperText={
+                  <>
+                    {error && error.type === "validate" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon
+                          sx={{
+                            float: "left",
+                            fontSize: "14px",
+                          }}
+                        />
+                        <Box
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                          component={"span"}
+                        >
+                          {error?.message}
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                    {error && error.type === "max" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          You do not have enough {pool?.poolName}
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                    {error && error.type === "min" && (
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Collateral amount should be positive.
+                        </Box>
+                      </BaseFormInputErrorWrapper>
+                    )}
+                  </>
+                }
+                value={value}
+                type="number"
+                onChange={onChange}
+              />
+              <BaseFormInputUsdIndicator>{`$${formatNumber(
+                BigNumber(value || 0)
+                  .multipliedBy(priceOfCollateral)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}`}</BaseFormInputUsdIndicator>
+              <BaseFormInputLogo
+                className={"extendedInput"}
+                src={getTokenLogoURL(
+                  pool?.poolName?.toUpperCase() === "XDC"
+                    ? "WXDC"
+                    : pool?.poolName
+                )}
+              />
+              <BaseFormSetMaxButton
+                onClick={() =>
+                  totalFathomToken
+                    ? setCollateralSafeMax()
+                    : setCollateralMax(balance)
+                }
+              >
+                {totalFathomToken ? "Safe Max" : "Max"}
+              </BaseFormSetMaxButton>
+            </BaseFormInputWrapper>
           )}
-          <ButtonPrimary
-            type="submit"
-            disabled={approveBtn || openPositionLoading}
-            isLoading={openPositionLoading}
-          >
-            {openPositionLoading ? (
-              <CircularProgress sx={{ color: "#0D1526" }} size={20} />
-            ) : (
-              "Top Up this position"
-            )}
-          </ButtonPrimary>
-          {isMobile && (
-            <ButtonSecondary onClick={onClose}>Close</ButtonSecondary>
-          )}
-        </ButtonsWrapper>
+        />
       </TopUpForm>
-    </TopUpPositionFormWrapper>
+    </BaseDialogFormWrapper>
   );
 };
 

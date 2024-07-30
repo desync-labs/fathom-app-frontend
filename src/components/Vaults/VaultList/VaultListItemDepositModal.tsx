@@ -6,14 +6,12 @@ import {
   DialogContent,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import BigNumber from "bignumber.js";
 
 import { IVault } from "fathom-sdk";
 import useVaultOpenDeposit from "hooks/Vaults/useVaultOpenDeposit";
 import useConnector from "context/connector";
 
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import DepositVaultInfo from "components/Vaults/VaultList/DepositVaultModal/DepositVaultInfo";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
 import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
@@ -22,31 +20,15 @@ import {
   ButtonSecondary,
   ModalButtonWrapper,
 } from "components/AppComponents/AppButton/AppButton";
-import {
-  ErrorBox,
-  InfoBoxV2,
-  WarningBox,
-} from "components/AppComponents/AppBox/AppBox";
 import { InfoIcon } from "components/Governance/Propose";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import VaultModalLockingBar from "components/Vaults/VaultList/DepositVaultModal/VaultModalLockingBar";
-
-const VaultManageGridDialogWrapper = styled(AppDialog)`
-  & .MuiDialog-paper {
-    border-radius: 16px;
-    border: 1px solid #2c4066;
-    background: #132340;
-
-    & .MuiDialogContent-root {
-      padding: 0 24px 24px;
-    }
-  }
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    & .MuiDialog-paper {
-      height: fit-content;
-    }
-  }
-`;
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
+import {
+  BaseInfoBox,
+  BaseWarningBox,
+  BaseErrorBox,
+} from "components/Base/Boxes/StyledBoxes";
 
 export type VaultDepositProps = {
   vaultItemData: IVault;
@@ -92,7 +74,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
   const { account } = useConnector();
 
   return (
-    <VaultManageGridDialogWrapper
+    <BaseDialogWrapper
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
@@ -111,86 +93,90 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       </AppDialogTitle>
 
       <DialogContent>
-        {isTfVaultType && (
-          <VaultModalLockingBar
-            tfVaultLockEndDate={tfVaultLockEndDate}
-            tfVaultDepositEndDate={tfVaultDepositEndDate}
-            activeTfPeriod={activeTfPeriod}
-          />
-        )}
         <FormProvider {...methods}>
-          <DepositVaultForm
-            vaultItemData={vaultItemData}
-            walletBalance={walletBalance}
-            control={control}
-            setMax={setMax}
-            validateMaxDepositValue={validateMaxDepositValue}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            minimumDeposit={minimumDeposit}
-            depositLimitExceeded={depositLimitExceeded}
-            dataTestIdPrefix="vault-listItemDepositModal"
-          />
-          <DepositVaultInfo
-            vaultItemData={vaultItemData}
-            deposit={deposit}
-            sharedToken={sharedToken}
-            performanceFee={performanceFee}
-          />
-          {isWalletFetching &&
-            (BigNumber(walletBalance)
-              .dividedBy(10 ** 18)
-              .isLessThan(BigNumber(deposit)) ||
-              walletBalance == "0") && (
-              <ErrorBox sx={{ marginBottom: 0 }}>
-                <InfoIcon />
-                <Typography>
-                  Wallet balance is not enough to deposit.
-                </Typography>
-              </ErrorBox>
+          <Box>
+            {isTfVaultType && (
+              <VaultModalLockingBar
+                tfVaultLockEndDate={tfVaultLockEndDate}
+                tfVaultDepositEndDate={tfVaultDepositEndDate}
+                activeTfPeriod={activeTfPeriod}
+              />
             )}
-          {isTfVaultType && !isUserKycPassed && activeTfPeriod === 0 && (
-            <WarningBox>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
-              />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Only KYC-verified users can deposit. Please completing KYC at{" "}
-                  <a
-                    href={"https://kyc.tradeflow.network/"}
-                    target={"_blank"}
-                    rel={"noreferrer"}
-                  >
-                    https://kyc.tradeflow.network/
-                  </a>
-                </Typography>
-              </Box>
-            </WarningBox>
-          )}
-          {activeTfPeriod === 1 && (
-            <WarningBox>
-              <InfoIcon
-                sx={{ width: "20px", color: "#F5953D", height: "20px" }}
-              />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  Deposit period has been completed.
-                </Typography>
-              </Box>
-            </WarningBox>
-          )}
-          {approveBtn && walletBalance !== "0" && (
-            <InfoBoxV2>
-              <InfoIcon />
-              <Box flexDirection="column">
-                <Typography width="100%">
-                  First-time connect? Please allow token approval in your
-                  MetaMask
-                </Typography>
-              </Box>
-            </InfoBoxV2>
-          )}
+
+            <DepositVaultForm
+              vaultItemData={vaultItemData}
+              walletBalance={walletBalance}
+              control={control}
+              setMax={setMax}
+              validateMaxDepositValue={validateMaxDepositValue}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              minimumDeposit={minimumDeposit}
+              depositLimitExceeded={depositLimitExceeded}
+              dataTestIdPrefix="vault-listItemDepositModal"
+            />
+            <DepositVaultInfo
+              vaultItemData={vaultItemData}
+              deposit={deposit}
+              sharedToken={sharedToken}
+              performanceFee={performanceFee}
+            />
+            {isWalletFetching &&
+              (BigNumber(walletBalance)
+                .dividedBy(10 ** 18)
+                .isLessThan(BigNumber(deposit)) ||
+                walletBalance == "0") && (
+                <BaseErrorBox sx={{ marginBottom: 0 }}>
+                  <InfoIcon />
+                  <Typography>
+                    Wallet balance is not enough to deposit.
+                  </Typography>
+                </BaseErrorBox>
+              )}
+            {isTfVaultType && !isUserKycPassed && activeTfPeriod === 0 && (
+              <BaseWarningBox>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    Only KYC-verified users can deposit. Please completing KYC
+                    at{" "}
+                    <a
+                      href={"https://kyc.tradeflow.network/"}
+                      target={"_blank"}
+                      rel={"noreferrer"}
+                    >
+                      https://kyc.tradeflow.network/
+                    </a>
+                  </Typography>
+                </Box>
+              </BaseWarningBox>
+            )}
+            {activeTfPeriod === 1 && (
+              <BaseWarningBox>
+                <InfoIcon
+                  sx={{ width: "20px", color: "#F5953D", height: "20px" }}
+                />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    Deposit period has been completed.
+                  </Typography>
+                </Box>
+              </BaseWarningBox>
+            )}
+            {approveBtn && walletBalance !== "0" && (
+              <BaseInfoBox>
+                <InfoIcon />
+                <Box flexDirection="column">
+                  <Typography width="100%">
+                    First-time connect? Please allow token approval in your
+                    MetaMask
+                  </Typography>
+                </Box>
+              </BaseInfoBox>
+            )}
+          </Box>
           <ModalButtonWrapper>
             <ButtonSecondary
               onClick={onClose}
@@ -243,7 +229,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
           </ModalButtonWrapper>
         </FormProvider>
       </DialogContent>
-    </VaultManageGridDialogWrapper>
+    </BaseDialogWrapper>
   );
 };
 

@@ -3,7 +3,7 @@ import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import { VaultListItemImageWrapper } from "components/Vaults/VaultList/VaultListItem";
 import { VaultListItemImageWrapper as VaultListItemImageWrapperMobile } from "components/Vaults/VaultList/VaultListItemMobile";
 import { VaultItemTableRow } from "components/Vaults/VaultList/VaultListItemMobile";
-import { VaultItemTableRow as VaultItemTableRowDesktop } from "components/Vaults/VaultList/VaultListItem";
+import { BaseTableItemRow } from "components/Base/Table/StyledTable";
 
 const CustomSkeleton = styled(Skeleton)`
   background-color: #2536564a;
@@ -11,7 +11,7 @@ const CustomSkeleton = styled(Skeleton)`
 
 export const VaultListItemSkeleton = () => {
   return (
-    <VaultItemTableRowDesktop>
+    <BaseTableItemRow>
       <TableCell colSpan={2} sx={{ width: "20%" }}>
         <AppFlexBox sx={{ justifyContent: "flex-start", gap: "11px" }}>
           <VaultListItemImageWrapper>
@@ -55,7 +55,7 @@ export const VaultListItemSkeleton = () => {
           <CustomSkeleton animation={"wave"} width={100} height={36} />
         </AppFlexBox>
       </TableCell>
-    </VaultItemTableRowDesktop>
+    </BaseTableItemRow>
   );
 };
 

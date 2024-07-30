@@ -1,6 +1,7 @@
-import { Box, BoxProps, Skeleton } from "@mui/material";
+import { Box, BoxProps } from "@mui/material";
 import { FC, ReactNode } from "react";
 import useSharedContext from "context/shared";
+import { CustomSkeleton } from "../Base/Skeletons/StyledSkeleton";
 
 interface ListItemProps extends BoxProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ interface ListColumnProps {
   overFlow?: "hidden" | "visible";
   flex?: string | number;
   p?: string | number;
+  gap?: number;
 }
 
 export const ListColumn: FC<ListColumnProps> = ({
@@ -29,6 +31,7 @@ export const ListColumn: FC<ListColumnProps> = ({
   overFlow = "visible",
   flex = 1,
   p = 0.5,
+  gap = 0,
 }) => {
   return (
     <Box
@@ -48,6 +51,7 @@ export const ListColumn: FC<ListColumnProps> = ({
         maxWidth,
         overflow: overFlow,
         padding: p,
+        gap,
       }}
     >
       {children}
@@ -72,7 +76,7 @@ export const ListItem: FC<ListItemProps> = ({
         px,
         "&:not(:last-child)": {
           borderBottom: "1px solid",
-          borderColor: "divider",
+          borderColor: "#3d5580",
         },
         ...(button ? { "&:hover": { bgcolor: "action.hover" } } : {}),
         ...rest.sx,
@@ -83,71 +87,52 @@ export const ListItem: FC<ListItemProps> = ({
   );
 };
 
-const PostionListActivityRowItem = () => {
+const PositionListActivityRowItem = () => {
   const { isMobile } = useSharedContext();
 
   return (
-    <ListItem px={isMobile ? 0 : 3} minHeight={68}>
-      <ListColumn isRow maxWidth={230}>
-        <Skeleton
-          variant="rounded"
-          animation={"wave"}
-          width={isMobile ? 80 : 200}
-          height={28}
+    <ListItem
+      minHeight={isMobile ? 68 : 85}
+      sx={{ padding: isMobile ? "12px 16px" : "16px 24px 16px 48px" }}
+    >
+      <ListColumn maxWidth={200} align="left" p={isMobile ? 0 : 0.5} gap={1}>
+        <CustomSkeleton
+          width={isMobile ? 240 : 180}
+          height={isMobile ? 16 : 20}
         />
+        <CustomSkeleton width={isMobile ? 180 : 150} height={18} />
       </ListColumn>
-      <ListColumn maxWidth={50}></ListColumn>
-
-      <ListColumn isRow align="center">
-        <Box sx={{ pl: 2.5, display: "flex", gap: 1, alignItems: "center" }}>
-          {!isMobile && (
-            <Skeleton
-              variant="rounded"
-              animation={"wave"}
-              width={140}
-              height={28}
-            />
-          )}
-          <Skeleton
-            variant="rounded"
-            animation={"wave"}
-            width={isMobile ? 80 : 140}
-            height={28}
-          />
-        </Box>
-      </ListColumn>
-
+      {!isMobile && (
+        <ListColumn isRow align="center">
+          <CustomSkeleton width={isMobile ? 80 : 230} height={24} />
+        </ListColumn>
+      )}
       <ListColumn align="right">
-        <Box sx={{ display: "flex", gap: 1 }}>
-          <Skeleton
-            variant="rounded"
-            animation={"wave"}
-            width={isMobile ? 40 : 120}
-            height={28}
-          />
-        </Box>
+        <CustomSkeleton
+          width={isMobile ? 44 : 77}
+          height={isMobile ? 28 : 32}
+        />
       </ListColumn>
     </ListItem>
   );
 };
 
-export const PositionActivityListLoader = () => {
+export const PositionActivityListLoader = ({
+  txAmount = 1,
+}: {
+  txAmount?: number;
+}) => {
+  const { isMobile } = useSharedContext();
   return (
     <>
-      <ListItem px={0} minHeight={68}>
+      <ListItem minHeight={56}>
         <ListColumn align="left">
-          <Skeleton
-            variant="rounded"
-            animation={"wave"}
-            width={140}
-            height={28}
-            sx={{ transform: "translateY(8px)" }}
-          />
+          <CustomSkeleton width={100} height={isMobile ? 22 : 24} />
         </ListColumn>
       </ListItem>
-      <PostionListActivityRowItem />
-      <PostionListActivityRowItem />
-      <PostionListActivityRowItem />
+      {Array.from({ length: txAmount }).map((_, index) => (
+        <PositionListActivityRowItem key={index} />
+      ))}
     </>
   );
 };

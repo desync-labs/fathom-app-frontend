@@ -1,21 +1,36 @@
 import { FC, memo } from "react";
+import BigNumber from "bignumber.js";
+import { Box, styled } from "@mui/material";
+import ArrowForwardRoundedIcon from "@mui/icons-material/ArrowForwardRounded";
 import {
   IFxdTransaction,
   PositionActivityState,
 } from "hooks/Pools/usePositionsTransactionList";
-import { Box, styled } from "@mui/material";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatNumber } from "utils/format";
-import KeyboardDoubleArrowRightRoundedIcon from "@mui/icons-material/KeyboardDoubleArrowRightRounded";
-import BigNumber from "bignumber.js";
+
+const ArrowIcon = styled(ArrowForwardRoundedIcon)`
+  color: #6d86b2;
+  width: 20px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+const BirnIcon = styled("span")`
+  font-size: 20px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 18px;
+  }
+`;
 
 const PositionActivityListItemAmountsWrapper = styled(Box)`
   display: flex;
-  align-items: start;
+  align-items: center;
   gap: 7px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    flex-direction: column;
-    justify-content: space-between;
     gap: 2px;
   }
 `;
@@ -29,9 +44,16 @@ const PositionActivityListItemAmountsItemWrapper = styled(Box)`
   display: flex;
   align-items: center;
   gap: 5px;
-  padding-top: 2px;
+  & img {
+    border-radius: 50%;
+  }
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: 100%;
+    width: auto;
+
+    & img {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
@@ -57,7 +79,7 @@ const PositionActivityListItemAmounts: FC<{
           </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
 
-        <KeyboardDoubleArrowRightRoundedIcon width={20} />
+        <ArrowIcon />
 
         <PositionActivityListItemAmountsItemWrapper>
           <img
@@ -100,7 +122,7 @@ const PositionActivityListItemAmounts: FC<{
           </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
 
-        <KeyboardDoubleArrowRightRoundedIcon width={20} />
+        <ArrowIcon />
 
         <PositionActivityListItemAmountsItemWrapper>
           <img
@@ -111,6 +133,44 @@ const PositionActivityListItemAmounts: FC<{
           />
           <TokenAmount>
             +{formatNumber(Number(transaction.debtAmount))} FXD
+          </TokenAmount>
+        </PositionActivityListItemAmountsItemWrapper>
+      </PositionActivityListItemAmountsWrapper>
+    );
+  } else if (
+    [PositionActivityState.LIQUIDATION].includes(transaction.activityState)
+  ) {
+    return (
+      <PositionActivityListItemAmountsWrapper>
+        <PositionActivityListItemAmountsItemWrapper>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL(
+              transaction.position?.collateralPoolName?.toUpperCase() === "XDC"
+                ? "WXDC"
+                : transaction.position?.collateralPoolName?.toUpperCase()
+            )}
+            alt={"logo"}
+          />
+          <TokenAmount>
+            -{formatNumber(Number(transaction.collateralAmount))}{" "}
+            {transaction.position?.collateralPoolName?.toUpperCase()}
+          </TokenAmount>
+        </PositionActivityListItemAmountsItemWrapper>
+
+        <ArrowIcon />
+
+        <PositionActivityListItemAmountsItemWrapper>
+          <BirnIcon>🔥</BirnIcon>
+          <img
+            width={20}
+            height={20}
+            src={getTokenLogoURL("FXD")}
+            alt={"logo"}
+          />
+          <TokenAmount>
+            {formatNumber(Number(transaction.debtAmount))} FXD
           </TokenAmount>
         </PositionActivityListItemAmountsItemWrapper>
       </PositionActivityListItemAmountsWrapper>
@@ -135,7 +195,7 @@ const PositionActivityListItemAmounts: FC<{
         </TokenAmount>
       </PositionActivityListItemAmountsItemWrapper>
 
-      <KeyboardDoubleArrowRightRoundedIcon width={20} />
+      <ArrowIcon />
 
       <PositionActivityListItemAmountsItemWrapper>
         <img width={20} height={20} src={getTokenLogoURL("FXD")} alt={"logo"} />

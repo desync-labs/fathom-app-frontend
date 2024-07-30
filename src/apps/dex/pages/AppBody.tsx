@@ -5,8 +5,8 @@ export const BodyWrapper = styled(Box)`
   position: relative;
   max-width: 600px;
   width: 100%;
-  background: #131f35;
-  border: 1px solid #253656;
+  background: #132340;
+  border: 1px solid #2c4066;
   border-radius: 16px;
   padding-bottom: 1rem;
 `;

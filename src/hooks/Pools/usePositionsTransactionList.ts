@@ -75,6 +75,7 @@ const usePositionsTransactionList = () => {
       orderBy: "blockNumber",
       orderDirection: "desc",
     },
+    fetchPolicy: "network-only",
   });
 
   const { data: pools, loading: poolsLoading } = useQuery(FXD_POOLS, {
@@ -194,6 +195,12 @@ const usePositionsTransactionList = () => {
       clearTimeout(timeout);
     };
   }, [poolsLoading, activitiesLoading]);
+
+  useEffect(() => {
+    if (account) {
+      setIsLoading(true);
+    }
+  }, [account, setIsLoading]);
 
   return {
     fxdActivities: filteredActivities,

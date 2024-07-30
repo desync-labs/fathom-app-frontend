@@ -94,16 +94,15 @@ export const ButtonDark = styled(Base)`
 export const ButtonFaded = styled(Base)`
   height: auto;
   width: 100%;
-  background-color: #0e1d34;
-  color: rgba(255, 255, 255, 0.5);
+  background-color: #091433;
+  color: #8ea4cc;
   white-space: nowrap;
-  border: 1px solid #253656;
+  border: 1px solid #3d5580;
   border-radius: 8px;
   padding: 6px 12px;
   :hover {
-    border: 1px solid rgb(90, 129, 255);
     box-shadow: rgb(0, 60, 255) 0 0 8px;
-    background-color: #0e1d34;
+    background-color: #091433;
   }
   &.expanded {
     border-radius: 8px 8px 0 0;

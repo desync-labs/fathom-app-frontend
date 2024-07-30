@@ -57,10 +57,10 @@ import { TableHeaderBox } from "apps/charts/components/Row";
 import LocalLoader from "apps/charts/components/LocalLoader";
 import { isAddress } from "apps/charts/utils";
 import { LayoutWrapper } from "apps/charts/App";
-import AppPopover from "components/AppComponents/AppPopover/AppPopover";
 
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import useSharedContext from "context/shared";
+import BasePopover from "components/Base/Popover/BasePopover";
 
 const DashboardWrapper = styled(Box)`
   width: 100%;
@@ -118,6 +118,8 @@ const TokenDetailsLayout = styled(Box)`
 
 const FixedPanel = styled(Panel)`
   width: fit-content;
+  border: 1px solid #2c4066;
+  background: #132340;
   padding: 8px 12px;
 
   :hover {
@@ -139,7 +141,7 @@ const WarningGrouping = styled(Box)<{ disabled?: boolean }>`
   overflow: hidden;
 `;
 const HeaderWrapper = styled(Box)`
-  background: #131f35;
+  background: #2c4066;
   border-radius: 8px;
   padding-top: 7px !important;
   padding-bottom: 7px !important;
@@ -458,7 +460,7 @@ const PairPage: FC<{ pairAddress: string }> = memo(({ pairAddress }) => {
                     Pair Stats
                   </TYPE.main>
                   {showUSDWaning ? (
-                    <AppPopover id={"pair_stats"} text={UNTRACKED_COPY} />
+                    <BasePopover id={"pair_stats"} text={UNTRACKED_COPY} />
                   ) : null}
                 </RowFixed>
               )}
