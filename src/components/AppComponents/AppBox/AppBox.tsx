@@ -20,9 +20,7 @@ export const NoResults = styled(Typography)`
   color: #6379a1;
   font-size: 14px;
   line-height: 20px;
-  border-bottom: 1px solid #131f35;
   padding: 8px 10px;
-  background: #131f35;
   border-radius: 8px;
 `;
 

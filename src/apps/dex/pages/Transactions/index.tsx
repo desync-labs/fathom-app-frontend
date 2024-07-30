@@ -214,7 +214,9 @@ const Transactions: FC = () => {
     }
   }, [account, getTransactions, chainId]);
 
-  if (!account) {
+  const isConnect = localStorage.getItem("isConnected");
+
+  if (!isConnect) {
     return <Navigate to={"/swap"} />;
   }
 
