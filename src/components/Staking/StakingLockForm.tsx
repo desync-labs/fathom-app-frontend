@@ -32,7 +32,8 @@ import {
   BaseFormSetMaxButton,
   BaseFormTextField,
   BaseFormWalletBalance,
-} from "../Base/Form/StyledForm";
+} from "components/Base/Form/StyledForm";
+import PeriodLockInput from "components/Base/Form/PeriodLockInput";
 
 const StakingLabelWhite = styled("div")`
   color: #fff;
@@ -193,6 +194,11 @@ const StakingLockForm: FC = () => {
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
             <>
+              <PeriodLockInput
+                range={value}
+                minLockPeriod={minLockPeriod}
+                handleChangeRange={onChange}
+              />
               <AppFormInputWrapper>
                 <AppFormLabel>Lock period</AppFormLabel>
                 <AppTextField
