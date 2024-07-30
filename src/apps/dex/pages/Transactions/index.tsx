@@ -1,66 +1,38 @@
 import { useEffect, useState, memo, useMemo, FC, useCallback } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { Navigate } from "react-router-dom";
-import { Box, CircularProgress, styled } from "@mui/material";
+import { Table, TableBody, TableHead, Typography } from "@mui/material";
 
-import AppBody from "apps/dex/pages/AppBody";
-import { Wrapper } from "apps/dex/pages/Pool/styleds";
 import { USER_TRANSACTIONS } from "apps/charts/apollo/queries";
 import { TXN_TYPE } from "apps/charts/components/TxnList";
 import {
   isTransactionRecent,
   useAllTransactions,
 } from "apps/dex/state/transactions/hooks";
-import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 import {
-  Transaction,
-  PreviousTransaction,
   FormattedTransaction,
   TransactionItem,
   SwapTransactionItem,
 } from "apps/dex/components/Transactions/Transaction";
-import { TYPE } from "apps/dex/theme";
 import { useActiveWeb3React } from "apps/dex/hooks";
-import {
-  CircleWrapper,
-  NoResults,
-} from "components/AppComponents/AppBox/AppBox";
 import useSyncContext from "context/sync";
-
-const TransactionListWrapper = styled(Box)`
-  display: flex;
-  flex-flow: column nowrap;
-`;
-
-const TransactionsHeaderRow = styled(Box)`
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
-  padding: 1rem 0 0.5rem;
-  color: #fafafa;
-`;
-
-const EmptyTransactionsRow = styled(Box)`
-  display: flex;
-  justify-content: center;
-  font-weight: 400;
-  font-size: 15px;
-  line-height: 24px;
-  padding: 16px 0;
-`;
-
-function newTransactionsFirst(
-  a: TransactionDetails | FormattedTransaction,
-  b: TransactionDetails | FormattedTransaction
-) {
-  return b.addedTime - a.addedTime;
-}
-
-export enum TransactionType {
-  STORAGE,
-  GRAPH,
-}
-
+import BasePageContainer from "components/Base/PageContainer";
+import BasePageHeader from "components/Base/PageHeader";
+import {
+  BaseTableCell,
+  BaseTableContainer,
+  BaseTableHeaderRow,
+} from "components/Base/Table/StyledTable";
+import { PositionActivityListLoader } from "components/PositionActivityList/PositionActivityListLoader";
+import {
+  BaseAccordion,
+  BaseAccordionTxGroupDate,
+  BaseAccordionTxGroupDetails,
+  BaseAccordionTxGroupSummary,
+} from "components/Base/Accordion/StyledAccordion";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import { dexGroupByDate } from "utils/Dex/dexGroupByDate";
+import DexTransactionListItem from "./DexTransactionListItem";
 const Transactions: FC = () => {
   const [transactionList, setTransactionList] = useState<
     FormattedTransaction[]
@@ -89,7 +61,6 @@ const Transactions: FC = () => {
               token1Amount: mint.amount1,
               token0Symbol: mint.pair.token0.symbol,
               token1Symbol: mint.pair.token1.symbol,
-              transactionType: TransactionType.GRAPH,
             };
             return newTxns.push(newTxn);
           });
@@ -104,7 +75,6 @@ const Transactions: FC = () => {
               token1Amount: burn.amount1,
               token0Symbol: burn.pair.token0.symbol,
               token1Symbol: burn.pair.token1.symbol,
-              transactionType: TransactionType.GRAPH,
             };
             return newTxns.push(newTxn);
           });
@@ -122,7 +92,6 @@ const Transactions: FC = () => {
               hash: swap.transaction.id,
               addedTime: Number(swap.transaction.timestamp) * 1000,
               type: TXN_TYPE.SWAP,
-              transactionType: TransactionType.GRAPH,
             };
 
             newTxn.token0Symbol = swap.pair.token1.symbol;
@@ -170,9 +139,7 @@ const Transactions: FC = () => {
    */
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(storageFilteredTransactions);
-    return txs
-      .filter((tx) => isTransactionRecent(tx, 7))
-      .sort(newTransactionsFirst);
+    return txs.filter((tx) => isTransactionRecent(tx, 7));
   }, [storageFilteredTransactions]);
 
   const pending = useMemo(() => {
@@ -185,20 +152,6 @@ const Transactions: FC = () => {
     () => transactionList?.filter((tx) => !pending.includes(tx.hash)),
     [transactionList, pending]
   );
-
-  const filteredTransactionListHashes = useMemo(() => {
-    return filteredTransactionList?.map((tx) => tx.hash) || [];
-  }, [filteredTransactionList]);
-
-  const confirmed = useMemo(() => {
-    return sortedRecentTransactions
-      .filter((tx) => tx.receipt)
-      .filter((tx) => !filteredTransactionListHashes.includes(tx.hash))
-      .map((tx) => ({
-        ...tx,
-        transactionType: TransactionType.STORAGE,
-      }));
-  }, [sortedRecentTransactions, filteredTransactionListHashes]);
 
   useEffect(() => {
     if (syncDex && !prevSyncDex) {
@@ -214,61 +167,91 @@ const Transactions: FC = () => {
     }
   }, [account, getTransactions, chainId]);
 
-  const isConnect = localStorage.getItem("isConnected");
-
-  if (!isConnect) {
+  if (!localStorage.getItem("isConnected")) {
     return <Navigate to={"/swap"} />;
   }
 
+  const pendingTransactions = pending.map(
+    (hash: string) =>
+      storageTransactions?.[hash] as unknown as FormattedTransaction
+  );
+
+  const mergedTransactions = [
+    ...pendingTransactions,
+    ...filteredTransactionList,
+  ];
+
   return (
-    <AppBody>
-      <Wrapper id={"transaction-list"}>
-        <TransactionsHeaderRow>
-          <TYPE.white fontSize={20}>Transactions</TYPE.white>
-        </TransactionsHeaderRow>
-        {pending.length || transactionList.length ? (
-          <>
-            <TransactionListWrapper>
-              {pending.map((hash) => {
-                return (
-                  <Transaction
-                    key={hash}
-                    tx={storageFilteredTransactions?.[hash]}
-                  />
-                );
-              })}
-            </TransactionListWrapper>
-            <TransactionListWrapper>
-              {[...confirmed, ...filteredTransactionList]
-                .sort(newTransactionsFirst)
-                .map((item) => {
-                  return item?.transactionType === TransactionType.GRAPH ? (
-                    <PreviousTransaction
-                      item={item as FormattedTransaction}
-                      key={item.hash}
-                    />
-                  ) : (
-                    <Transaction
-                      tx={item as unknown as TransactionDetails}
-                      key={item.hash}
-                    />
-                  );
-                })}
-            </TransactionListWrapper>
-          </>
-        ) : loading ? (
-          <NoResults mt={3}>
-            <CircleWrapper>
-              <CircularProgress size={30} />
-            </CircleWrapper>
-          </NoResults>
-        ) : (
-          <EmptyTransactionsRow>
-            <TYPE.body>There are no transactions yet</TYPE.body>
-          </EmptyTransactionsRow>
-        )}
-      </Wrapper>
-    </AppBody>
+    <BasePageContainer sx={{ mt: 0 }}>
+      <BasePageHeader title={"Transaction history"} />
+      <BaseTableContainer>
+        <Table aria-label="pools table">
+          <TableHead>
+            <BaseTableHeaderRow>
+              <BaseTableCell>Date</BaseTableCell>
+            </BaseTableHeaderRow>
+          </TableHead>
+
+          <TableBody>
+            {loading ? (
+              <>
+                <PositionActivityListLoader />
+                <PositionActivityListLoader txAmount={3} />
+              </>
+            ) : (
+              <>
+                {mergedTransactions && mergedTransactions.length > 0 && (
+                  <>
+                    {Object.entries(dexGroupByDate(mergedTransactions)).map(
+                      ([date, txns], groupIndex) => (
+                        <BaseAccordion
+                          key={groupIndex}
+                          defaultExpanded={groupIndex < 3}
+                        >
+                          <BaseAccordionTxGroupSummary
+                            expandIcon={
+                              <KeyboardArrowDownRoundedIcon
+                                sx={{ color: "#fff" }}
+                              />
+                            }
+                            aria-controls={`panel${groupIndex}-content`}
+                            id={`panel${groupIndex}-header`}
+                          >
+                            <BaseAccordionTxGroupDate>
+                              {date}
+                            </BaseAccordionTxGroupDate>
+                          </BaseAccordionTxGroupSummary>
+                          <BaseAccordionTxGroupDetails>
+                            {txns.map((transaction: FormattedTransaction) => {
+                              return (
+                                <DexTransactionListItem
+                                  key={transaction.hash}
+                                  transaction={transaction}
+                                />
+                              );
+                            })}
+                          </BaseAccordionTxGroupDetails>
+                        </BaseAccordion>
+                      )
+                    )}
+                  </>
+                )}
+                {mergedTransactions && !mergedTransactions.length ? (
+                  <Typography
+                    sx={{ my: 12 }}
+                    textAlign={"center"}
+                    variant="h3"
+                    color="text.light"
+                  >
+                    No transactions yet.
+                  </Typography>
+                ) : null}
+              </>
+            )}
+          </TableBody>
+        </Table>
+      </BaseTableContainer>
+    </BasePageContainer>
   );
 };
 
