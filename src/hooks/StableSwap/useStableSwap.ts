@@ -85,7 +85,7 @@ const useStableSwap = (options: string[]) => {
       }
 
       oppositeValue = oppositeValue.isGreaterThan(0.0001)
-        ? oppositeValue.decimalPlaces(18).toString()
+        ? oppositeValue.decimalPlaces(6, BigNumber.ROUND_UP).toString()
         : "0";
 
       type === "input"
