@@ -32,7 +32,16 @@ import {
 } from "components/Base/Accordion/StyledAccordion";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { dexGroupByDate } from "utils/Dex/dexGroupByDate";
-import DexTransactionListItem from "./DexTransactionListItem";
+import DexTransactionListItem from "apps/dex/pages/Transactions/DexTransactionListItem";
+import { TransactionDetails } from "apps/dex/state/transactions/reducer";
+
+function newTransactionsFirst(
+  a: TransactionDetails | FormattedTransaction,
+  b: TransactionDetails | FormattedTransaction
+) {
+  return b.addedTime - a.addedTime;
+}
+
 const Transactions: FC = () => {
   const [transactionList, setTransactionList] = useState<
     FormattedTransaction[]
@@ -40,6 +49,10 @@ const Transactions: FC = () => {
 
   const { account, chainId } = useActiveWeb3React();
   const { syncDex, prevSyncDex } = useSyncContext();
+
+  if (!localStorage.getItem("isConnected")) {
+    return <Navigate to={"/swap"} />;
+  }
 
   const onCompleted = useCallback(
     (response: any) => {
@@ -148,10 +161,17 @@ const Transactions: FC = () => {
       .map((tx) => tx.hash);
   }, [sortedRecentTransactions]);
 
+  const confirmed = useMemo(() => {
+    return sortedRecentTransactions
+      .filter((tx) => tx.receipt)
+      .map((tx) => tx.hash);
+  }, [sortedRecentTransactions]);
+
   const filteredTransactionList = useMemo(
     () =>
       transactionList
         ?.filter((tx) => !pending.includes(tx.hash))
+        ?.filter((tx) => !confirmed.includes(tx.hash))
         .map((tx) => ({
           ...tx,
           pending: false,
@@ -173,22 +193,23 @@ const Transactions: FC = () => {
     }
   }, [account, getTransactions, chainId]);
 
-  if (!localStorage.getItem("isConnected")) {
-    return <Navigate to={"/swap"} />;
-  }
+  const pendingTransactions = pending.map((hash: string) => ({
+    ...storageTransactions?.[hash],
+    pending: true,
+  }));
 
-  const pendingTransactions = pending.map(
-    (hash: string) =>
-      ({
-        ...storageTransactions?.[hash],
-        pending: true,
-      } as unknown as FormattedTransaction)
-  );
+  const confirmedTransactions = confirmed.map((hash: string) => ({
+    ...storageTransactions?.[hash],
+    pending: false,
+  }));
 
-  const mergedTransactions = [
-    ...pendingTransactions,
-    ...filteredTransactionList,
-  ];
+  const mergedTransactions = useMemo(() => {
+    return [
+      ...filteredTransactionList,
+      ...pendingTransactions,
+      ...confirmedTransactions,
+    ].sort(newTransactionsFirst);
+  }, [pendingTransactions, confirmedTransactions, filteredTransactionList]);
 
   return (
     <BasePageContainer sx={{ mt: 0 }}>
@@ -231,14 +252,20 @@ const Transactions: FC = () => {
                             </BaseAccordionTxGroupDate>
                           </BaseAccordionTxGroupSummary>
                           <BaseAccordionTxGroupDetails>
-                            {txns.map((transaction: FormattedTransaction) => {
-                              return (
-                                <DexTransactionListItem
-                                  key={transaction.hash}
-                                  transaction={transaction}
-                                />
-                              );
-                            })}
+                            {txns.map(
+                              (
+                                transaction:
+                                  | FormattedTransaction
+                                  | TransactionDetails
+                              ) => {
+                                return (
+                                  <DexTransactionListItem
+                                    key={transaction.hash}
+                                    transaction={transaction}
+                                  />
+                                );
+                              }
+                            )}
                           </BaseAccordionTxGroupDetails>
                         </BaseAccordion>
                       )

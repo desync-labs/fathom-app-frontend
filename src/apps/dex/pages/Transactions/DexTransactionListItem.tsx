@@ -18,6 +18,7 @@ import { getTransactionType } from "apps/charts/components/TxnList";
 import { formattedNum, formatTime } from "apps/charts/utils";
 import Loader from "apps/dex/components/Loader";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
 const PositionActivityListItemWrapper = styled(BaseListItem)`
   justify-content: space-between;
@@ -97,11 +98,22 @@ const TxListItemViewBtn = styled(BaseButtonSecondaryLink)`
   font-size: 13px;
 `;
 
-const PositionActivityListItem: FC<{ transaction: FormattedTransaction }> = ({
-  transaction,
-}) => {
+const PositionActivityListItem: FC<{
+  transaction: FormattedTransaction | TransactionDetails;
+}> = ({ transaction }) => {
   const { chainId } = useConnector();
   const { isMobile } = useSharedContext();
+
+  const summary = (transaction as any)?.summary
+    ? (transaction as TransactionDetails)?.summary
+    : getTransactionType(
+        (transaction as FormattedTransaction).type,
+        (transaction as FormattedTransaction).token0Symbol,
+        (transaction as FormattedTransaction).token1Symbol,
+        formattedNum((transaction as FormattedTransaction).token0Amount),
+        formattedNum((transaction as FormattedTransaction).token1Amount),
+        formatTime(transaction.addedTime / 1000)
+      );
 
   return (
     <PositionActivityListItemWrapper
@@ -118,14 +130,7 @@ const PositionActivityListItem: FC<{ transaction: FormattedTransaction }> = ({
       <TxListItemContent>
         <TxListItemText
           width={"400px"}
-          primary={getTransactionType(
-            transaction.type,
-            transaction.token0Symbol,
-            transaction.token1Symbol,
-            formattedNum(transaction.token0Amount),
-            formattedNum(transaction.token1Amount),
-            formatTime(transaction.addedTime / 1000)
-          )}
+          primary={summary}
           secondary={dayjs(transaction.addedTime).format("DD/MM/YYYY HH:mm:ss")}
         />
         <ListItemText
