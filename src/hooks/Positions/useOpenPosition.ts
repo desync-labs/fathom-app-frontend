@@ -137,9 +137,9 @@ const useOpenPosition = (
   const minCollateralAmount = useMemo(() => {
     return BigNumber(1)
       .dividedBy(
-        BigNumber(pool.priceWithSafetyMargin)
-          .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
-          .dividedBy(100)
+        BigNumber(pool.priceWithSafetyMargin).multipliedBy(
+          1 - DANGER_SAFETY_BUFFER
+        )
       )
       .decimalPlaces(6, BigNumber.ROUND_UP)
       .toNumber();
