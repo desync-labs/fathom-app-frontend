@@ -1,20 +1,11 @@
 import { FC, useMemo } from "react";
 import { Controller } from "react-hook-form";
-import { Box, Slider, Grid, Typography, CircularProgress } from "@mui/material";
+import { Box, Grid, Typography, CircularProgress } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
-import {
-  AppFormInputWrapper,
-  AppFormLabel,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
 import { ErrorBox } from "components/AppComponents/AppBox/AppBox";
-import {
-  ButtonPrimary,
-  MaxButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import useStakingLockForm from "hooks/Staking/useStakingLockForm";
-import Period from "components/Staking/Components/Period";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
 
@@ -101,7 +92,6 @@ const StakingLockForm: FC = () => {
     onSubmit,
     setMax,
     approveFTHM,
-    setPeriod,
     unlockDate,
     fthmBalance,
     fxdBalance,
@@ -193,76 +183,13 @@ const StakingLockForm: FC = () => {
             },
           }}
           render={({ field: { onChange, value }, fieldState: { error } }) => (
-            <>
-              <PeriodLockInput
-                range={value}
-                minLockPeriod={minLockPeriod}
-                handleChangeRange={onChange}
-              />
-              <AppFormInputWrapper>
-                <AppFormLabel>Lock period</AppFormLabel>
-                <AppTextField
-                  error={!!error}
-                  sx={{
-                    input: {
-                      paddingLeft: "10px",
-                    },
-                  }}
-                  helperText={
-                    <>
-                      {error && error.type === "min" && (
-                        <Box component="span" sx={{ fontSize: "12px" }}>
-                          Minimum period is {minLockPeriod} days
-                        </Box>
-                      )}
-                      {error && error.type === "max" && (
-                        <Box component="span" sx={{ fontSize: "12px" }}>
-                          Maximum period is 365 days
-                        </Box>
-                      )}
-                      {error && error.type === "pattern" && (
-                        <Box component="span" sx={{ fontSize: "12px" }}>
-                          {error.message}
-                        </Box>
-                      )}
-                      {error && error.type === "required" && (
-                        <Box component={"span"} sx={{ fontSize: "12px" }}>
-                          Field is required
-                        </Box>
-                      )}
-                    </>
-                  }
-                  id="outlined-helperText"
-                  value={value}
-                  type="number"
-                  onChange={onChange}
-                  data-testid="dao-lockPeriod-input"
-                />
-                <MaxButton sx={{ color: "#6379A1", background: "none" }}>
-                  Days
-                </MaxButton>
-              </AppFormInputWrapper>
-
-              <Box>
-                <Slider
-                  valueLabelDisplay="auto"
-                  step={1}
-                  min={minLockPeriod}
-                  max={365}
-                  value={Number(value)}
-                  onChange={onChange}
-                  data-testid="dao-lockPeriod-slider"
-                />
-              </Box>
-            </>
+            <PeriodLockInput
+              range={value}
+              minLockPeriod={minLockPeriod}
+              handleChangeRange={onChange}
+            />
           )}
         />
-
-        <StakingLabelWhite sx={{ mt: "25px", mb: "12px" }}>
-          Recommended period
-        </StakingLabelWhite>
-
-        <Period lockDays={lockDays} setPeriod={setPeriod} />
 
         {useMemo(() => {
           return (

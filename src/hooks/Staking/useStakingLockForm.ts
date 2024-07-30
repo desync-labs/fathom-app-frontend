@@ -189,13 +189,6 @@ const useStakingLockForm = () => {
     [setValue]
   );
 
-  const setPeriod = useCallback(
-    (period: number) => {
-      setValue("lockDays", period);
-    },
-    [setValue]
-  );
-
   const unlockDate = useMemo(() => {
     const now = new Date();
     now.setDate(now.getDate() + Number(lockDays));
@@ -217,7 +210,6 @@ const useStakingLockForm = () => {
     handleSubmit,
     onSubmit,
     setMax,
-    setPeriod,
     fthmBalance,
     fxdBalance,
     xdcBalance,

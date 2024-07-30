@@ -109,6 +109,12 @@ export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
   gap: 8px;
   width: 100%;
 
+  & .MuiToggleButtonGroup-middleButton,
+  & .MuiToggleButtonGroup-lastButton {
+    border-left: 1px solid #2c4066 !important;
+    margin-left: 0 !important;
+  }
+
   & .MuiToggleButton-root {
     height: 36px;
     font-size: 14px;
@@ -119,7 +125,15 @@ export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
     width: 25%;
 
     &.Mui-selected {
-      font-weight: 600;
+      background: transparent;
+
+      &:hover {
+        background: rgba(79, 101, 140, 0.1);
+      }
+    }
+
+    &:hover {
+      background: rgba(79, 101, 140, 0.1);
     }
   }
 `;

@@ -157,7 +157,7 @@ const PeriodLockInput: FC<PeriodLockInputProps> = ({
           <ToggleButton selected={range > 60 && range <= 90} value={90}>
             3-Month
           </ToggleButton>
-          <ToggleButton selected={range > 90} value={180}>
+          <ToggleButton selected={range > 90 && range <= 180} value={180}>
             Half-Year
           </ToggleButton>
           <ToggleButton selected={range > 180} value={365}>
