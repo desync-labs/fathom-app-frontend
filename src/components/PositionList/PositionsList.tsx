@@ -151,8 +151,6 @@ const PositionsList: FC<PositionsListProps> = ({
                   <>
                     <PositionListItemSkeleton />
                     <PositionListItemSkeleton />
-                    <PositionListItemSkeleton />
-                    <PositionListItemSkeleton />
                   </>
                 ) : (
                   positions.map((position: IOpenPosition) => (
@@ -182,8 +180,6 @@ const PositionsList: FC<PositionsListProps> = ({
           <>
             {listLoading ? (
               <>
-                <PositionListItemMobileSkeleton />
-                <PositionListItemMobileSkeleton />
                 <PositionListItemMobileSkeleton />
                 <PositionListItemMobileSkeleton />
               </>
