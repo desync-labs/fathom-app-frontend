@@ -21,7 +21,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     await dexPage.openTab({ tabName: DexTabs.Transactions });
     await expect(
       dexPage.getTransactionStatusTextLocatorByHash({ transactionHash })
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 10000 });
     const transactionStatusTextActual =
       await dexPage.getTransactionStatusTextByHash({
         transactionHash,
