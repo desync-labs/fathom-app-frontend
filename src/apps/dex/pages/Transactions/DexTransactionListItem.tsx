@@ -18,7 +18,6 @@ import { getTransactionType } from "apps/charts/components/TxnList";
 import { formattedNum, formatTime } from "apps/charts/utils";
 import Loader from "apps/dex/components/Loader";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
 const PositionActivityListItemWrapper = styled(BaseListItem)`
   justify-content: space-between;
@@ -99,13 +98,13 @@ const TxListItemViewBtn = styled(BaseButtonSecondaryLink)`
 `;
 
 const PositionActivityListItem: FC<{
-  transaction: FormattedTransaction | TransactionDetails;
+  transaction: FormattedTransaction;
 }> = ({ transaction }) => {
   const { chainId } = useConnector();
   const { isMobile } = useSharedContext();
 
   const summary = (transaction as any)?.summary
-    ? (transaction as TransactionDetails)?.summary
+    ? transaction?.summary
     : getTransactionType(
         (transaction as FormattedTransaction).type,
         (transaction as FormattedTransaction).token0Symbol,

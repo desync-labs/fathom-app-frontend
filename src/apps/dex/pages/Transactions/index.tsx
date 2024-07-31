@@ -1,10 +1,15 @@
 import { useEffect, useState, memo, useMemo, FC, useCallback } from "react";
 import { useLazyQuery } from "@apollo/client";
-import { Navigate } from "react-router-dom";
-import { Table, TableBody, TableHead, Typography } from "@mui/material";
+import {
+  SelectChangeEvent,
+  Table,
+  TableBody,
+  TableHead,
+  Typography,
+} from "@mui/material";
 
 import { USER_TRANSACTIONS } from "apps/charts/apollo/queries";
-import { TXN_TYPE } from "apps/charts/components/TxnList";
+import { getTransactionType, TXN_TYPE } from "apps/charts/components/TxnList";
 import {
   isTransactionRecent,
   useAllTransactions,
@@ -34,6 +39,8 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import { dexGroupByDate } from "utils/Dex/dexGroupByDate";
 import DexTransactionListItem from "apps/dex/pages/Transactions/DexTransactionListItem";
 import { TransactionDetails } from "apps/dex/state/transactions/reducer";
+import { formattedNum, formatTime } from "apps/charts/utils";
+import DexTransactionListFilters from "apps/dex/pages/Transactions/DexTransactionListFilters";
 
 function newTransactionsFirst(
   a: TransactionDetails | FormattedTransaction,
@@ -42,17 +49,24 @@ function newTransactionsFirst(
   return b.addedTime - a.addedTime;
 }
 
+export type TXN_KEYS_TYPE = keyof typeof TXN_TYPE;
+
 const Transactions: FC = () => {
   const [transactionList, setTransactionList] = useState<
     FormattedTransaction[]
   >([]);
+  const [filterByType, setFilterByType] = useState<TXN_KEYS_TYPE>("ALL");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const { account, chainId } = useActiveWeb3React();
   const { syncDex, prevSyncDex } = useSyncContext();
 
-  if (!localStorage.getItem("isConnected")) {
-    return <Navigate to={"/swap"} />;
-  }
+  const handleFilterByType = useCallback(
+    (event: SelectChangeEvent<unknown>) => {
+      setFilterByType(event.target.value as TXN_KEYS_TYPE);
+    },
+    [setFilterByType]
+  );
 
   const onCompleted = useCallback(
     (response: any) => {
@@ -74,7 +88,17 @@ const Transactions: FC = () => {
               token1Amount: mint.amount1,
               token0Symbol: mint.pair.token0.symbol,
               token1Symbol: mint.pair.token1.symbol,
+              summary: "",
             };
+            const summary = getTransactionType(
+              newTxn.type,
+              newTxn.token0Symbol,
+              newTxn.token1Symbol,
+              formattedNum(newTxn.token0Amount),
+              formattedNum(newTxn.token1Amount),
+              formatTime(newTxn.addedTime / 1000)
+            );
+            newTxn.summary = summary;
             return newTxns.push(newTxn);
           });
         }
@@ -88,7 +112,17 @@ const Transactions: FC = () => {
               token1Amount: burn.amount1,
               token0Symbol: burn.pair.token0.symbol,
               token1Symbol: burn.pair.token1.symbol,
+              summary: "",
             };
+            const summary = getTransactionType(
+              newTxn.type,
+              newTxn.token0Symbol,
+              newTxn.token1Symbol,
+              formattedNum(newTxn.token0Amount),
+              formattedNum(newTxn.token1Amount),
+              formatTime(newTxn.addedTime / 1000)
+            );
+            newTxn.summary = summary;
             return newTxns.push(newTxn);
           });
         }
@@ -98,19 +132,25 @@ const Transactions: FC = () => {
             const netToken1 = swap.amount1In - swap.amount1Out;
 
             const newTxn = {
-              token0Symbol: "",
-              token1Symbol: "",
-              token0Amount: 0,
-              token1Amount: 0,
+              token0Symbol: swap.pair.token1.symbol,
+              token1Symbol: swap.pair.token0.symbol,
+              token0Amount: Math.abs(netToken1),
+              token1Amount: Math.abs(netToken0),
               hash: swap.transaction.id,
               addedTime: Number(swap.transaction.timestamp) * 1000,
               type: TXN_TYPE.SWAP,
+              summary: "",
             };
 
-            newTxn.token0Symbol = swap.pair.token1.symbol;
-            newTxn.token1Symbol = swap.pair.token0.symbol;
-            newTxn.token0Amount = Math.abs(netToken1);
-            newTxn.token1Amount = Math.abs(netToken0);
+            const summary = getTransactionType(
+              newTxn.type,
+              newTxn.token0Symbol,
+              newTxn.token1Symbol,
+              formattedNum(newTxn.token0Amount),
+              formattedNum(newTxn.token1Amount),
+              formatTime(newTxn.addedTime / 1000)
+            );
+            newTxn.summary = summary;
 
             return newTxns.push(newTxn);
           });
@@ -161,17 +201,10 @@ const Transactions: FC = () => {
       .map((tx) => tx.hash);
   }, [sortedRecentTransactions]);
 
-  const confirmed = useMemo(() => {
-    return sortedRecentTransactions
-      .filter((tx) => tx.receipt)
-      .map((tx) => tx.hash);
-  }, [sortedRecentTransactions]);
-
   const filteredTransactionList = useMemo(
     () =>
       transactionList
         ?.filter((tx) => !pending.includes(tx.hash))
-        ?.filter((tx) => !confirmed.includes(tx.hash))
         .map((tx) => ({
           ...tx,
           pending: false,
@@ -181,39 +214,55 @@ const Transactions: FC = () => {
 
   useEffect(() => {
     if (syncDex && !prevSyncDex) {
-      refetchTransactions({ user: account }).then(onCompleted);
+      refetchTransactions({ user: account, first: 1000 }).then(onCompleted);
     }
   }, [syncDex, prevSyncDex, refetchTransactions, onCompleted]);
 
   useEffect(() => {
     if (account && chainId) {
       getTransactions({
-        variables: { user: account },
+        variables: { user: account, first: 1000 },
       });
     }
   }, [account, getTransactions, chainId]);
 
-  const pendingTransactions = pending.map((hash: string) => ({
-    ...storageTransactions?.[hash],
-    pending: true,
-  }));
-
-  const confirmedTransactions = confirmed.map((hash: string) => ({
-    ...storageTransactions?.[hash],
-    pending: false,
-  }));
+  const pendingTransactions = pending.map(
+    (hash: string) =>
+      ({
+        ...storageTransactions?.[hash],
+        pending: true,
+      } as unknown as FormattedTransaction)
+  );
 
   const mergedTransactions = useMemo(() => {
-    return [
-      ...filteredTransactionList,
-      ...pendingTransactions,
-      ...confirmedTransactions,
-    ].sort(newTransactionsFirst);
-  }, [pendingTransactions, confirmedTransactions, filteredTransactionList]);
+    return [...filteredTransactionList, ...pendingTransactions]
+      .sort(newTransactionsFirst)
+      .filter((item) => {
+        if (searchValue) {
+          return (
+            item.hash.toLowerCase().includes(searchValue.toLowerCase()) ||
+            item.summary.toLowerCase().includes(searchValue.toLowerCase())
+          );
+        }
+        return true;
+      })
+      .filter((item) => {
+        if (filterByType === "ALL") {
+          return true;
+        }
+        return item.type === TXN_TYPE[filterByType];
+      });
+  }, [pendingTransactions, filteredTransactionList, searchValue, filterByType]);
 
   return (
-    <BasePageContainer sx={{ mt: 0 }}>
+    <BasePageContainer sx={{ mt: 0, padding: 0 }}>
       <BasePageHeader title={"Transaction history"} />
+      <DexTransactionListFilters
+        filterByType={filterByType}
+        handleFilterByType={handleFilterByType}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+      />
       <BaseTableContainer>
         <Table aria-label="pools table">
           <TableHead>
@@ -252,20 +301,14 @@ const Transactions: FC = () => {
                             </BaseAccordionTxGroupDate>
                           </BaseAccordionTxGroupSummary>
                           <BaseAccordionTxGroupDetails>
-                            {txns.map(
-                              (
-                                transaction:
-                                  | FormattedTransaction
-                                  | TransactionDetails
-                              ) => {
-                                return (
-                                  <DexTransactionListItem
-                                    key={transaction.hash}
-                                    transaction={transaction}
-                                  />
-                                );
-                              }
-                            )}
+                            {txns.map((transaction: FormattedTransaction) => {
+                              return (
+                                <DexTransactionListItem
+                                  key={transaction.hash}
+                                  transaction={transaction}
+                                />
+                              );
+                            })}
                           </BaseAccordionTxGroupDetails>
                         </BaseAccordion>
                       )

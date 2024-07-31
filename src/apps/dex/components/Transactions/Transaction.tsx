@@ -67,6 +67,7 @@ export type FormattedTransaction = {
   type: string;
   token0Amount: number;
   token1Amount: number;
+  summary: string;
   account?: string;
   token0Symbol: string;
   token1Symbol: string;

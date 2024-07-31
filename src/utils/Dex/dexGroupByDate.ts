@@ -1,9 +1,8 @@
 import { FormattedTransaction } from "apps/dex/components/Transactions/Transaction";
-import { TransactionDetails } from "apps/dex/state/transactions/reducer";
 
 export const dexGroupByDate = (
-  transactions: (FormattedTransaction | TransactionDetails)[]
-): Record<string, (FormattedTransaction | TransactionDetails)[]> => {
+  transactions: FormattedTransaction[]
+): Record<string, FormattedTransaction[]> => {
   return transactions.reduce((grouped, transaction) => {
     const date = new Intl.DateTimeFormat(undefined, {
       year: "numeric",
@@ -15,5 +14,5 @@ export const dexGroupByDate = (
     }
     grouped[date].push(transaction);
     return grouped;
-  }, {} as Record<string, (FormattedTransaction | TransactionDetails)[]>);
+  }, {} as Record<string, FormattedTransaction[]>);
 };
