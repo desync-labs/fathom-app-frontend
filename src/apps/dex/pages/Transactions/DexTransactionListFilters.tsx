@@ -47,7 +47,7 @@ const DexTransactionListFilters: FC<PositionsTransactionFiltersProps> = ({
           placeholder={
             isMobile
               ? "Search"
-              : "Search by Pool symbol, collateral address or transaction hash"
+              : "Search by transaction description or transaction hash"
           }
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}

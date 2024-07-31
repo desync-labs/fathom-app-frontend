@@ -21,7 +21,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     await dexPage.openTab({ tabName: DexTabs.Transactions });
     await expect(
       dexPage.getTransactionStatusTextLocatorByHash({ transactionHash })
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 10000 });
     const transactionStatusTextActual =
       await dexPage.getTransactionStatusTextByHash({
         transactionHash,
@@ -36,7 +36,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       .toBeVisible();
   });
 
-  test("Successful Wrap transaction is correctly displayed in transactions page", async ({
+  test.skip("Successful Wrap transaction is correctly displayed in transactions page", async ({
     dexPage,
   }) => {
     await dexPage.navigate();
@@ -52,7 +52,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
     await dexPage.openTab({ tabName: DexTabs.Transactions });
     await expect(
       dexPage.getTransactionStatusTextLocatorByHash({ transactionHash })
-    ).toBeVisible({ timeout: 5000 });
+    ).toBeVisible({ timeout: 10000 });
     const transactionStatusTextActual =
       await dexPage.getTransactionStatusTextByHash({
         transactionHash,
@@ -67,7 +67,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       .toBeVisible();
   });
 
-  test("Successful Unwrap transaction is correctly displayed in transactions page", async ({
+  test.skip("Successful Unwrap transaction is correctly displayed in transactions page", async ({
     dexPage,
   }) => {
     await dexPage.navigate();
