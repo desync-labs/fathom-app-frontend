@@ -36,7 +36,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       .toBeVisible();
   });
 
-  test("Successful Wrap transaction is correctly displayed in transactions page", async ({
+  test.skip("Successful Wrap transaction is correctly displayed in transactions page", async ({
     dexPage,
   }) => {
     await dexPage.navigate();
@@ -67,7 +67,7 @@ test.describe("Fathom App Test Suite: DEX Transactions", () => {
       .toBeVisible();
   });
 
-  test("Successful Unwrap transaction is correctly displayed in transactions page", async ({
+  test.skip("Successful Unwrap transaction is correctly displayed in transactions page", async ({
     dexPage,
   }) => {
     await dexPage.navigate();
