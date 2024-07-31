@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Container, styled } from "@mui/material";
+import { Container, styled, SxProps } from "@mui/material";
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -12,13 +12,20 @@ const StyledContainer = styled(Container)`
   }
 `;
 
-const BasePageContainer = ({ children }: { children: ReactNode }) => {
+const BasePageContainer = ({
+  children,
+  sx,
+}: {
+  children: ReactNode;
+  sx?: SxProps;
+}) => {
   return (
     <StyledContainer
       maxWidth="lg"
       sx={{
         mt: 4,
         mb: 4,
+        ...sx,
       }}
     >
       {children}

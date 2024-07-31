@@ -20,6 +20,7 @@ export interface TransactionDetails {
   confirmedTime?: number;
   from: string;
   transactionType?: number;
+  pending?: boolean;
 }
 
 export interface TransactionState {

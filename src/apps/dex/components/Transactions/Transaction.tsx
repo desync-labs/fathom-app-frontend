@@ -39,7 +39,7 @@ const TransactionState = styled(ExternalLink)<{
   color: #fff;
 `;
 
-const IconWrapper = styled(Box)<{ pending: boolean; success?: boolean }>`
+export const IconWrapper = styled(Box)<{ pending: boolean; success?: boolean }>`
   color: ${({ pending, success }) =>
     pending ? "#253656" : success ? "#27AE60" : "#FD4040"};
 `;
@@ -67,11 +67,12 @@ export type FormattedTransaction = {
   type: string;
   token0Amount: number;
   token1Amount: number;
+  summary: string;
   account?: string;
   token0Symbol: string;
   token1Symbol: string;
   amountUSD?: number;
-  transactionType: number;
+  pending?: boolean;
 };
 
 export const Transaction: FC<{ tx: TransactionDetails }> = ({ tx }) => {
