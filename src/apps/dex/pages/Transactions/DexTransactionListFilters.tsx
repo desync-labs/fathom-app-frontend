@@ -10,7 +10,7 @@ import {
   SearchFieldLogo,
 } from "components/Base/Form/Filters";
 import { TXN_TYPE } from "apps/charts/components/TxnList";
-import { TXN_KEYS_TYPE } from "apps/dex/pages/Transactions";
+import { TXN_KEYS_TYPE } from "apps/dex/hooks/useDexTransactionList";
 
 const SearchFieldWrapper = styled(Box)`
   position: relative;
