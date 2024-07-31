@@ -602,7 +602,9 @@ const MainLayout = () => {
                       path="remove/:currencyIdA/:currencyIdB"
                       element={<RemoveLiquidity />}
                     />
-                    <Route path="transactions" element={<Transactions />} />
+                    {localStorage.getItem("isConnected") && (
+                      <Route path="transactions" element={<Transactions />} />
+                    )}
                     <Route element={<RedirectPathToSwapOnly />} />
                   </Route>
                 ) : null}
