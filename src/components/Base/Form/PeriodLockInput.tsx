@@ -1,30 +1,22 @@
-import { IconButton, Popover, styled, ToggleButton } from "@mui/material";
+import { FC, memo, useCallback, useEffect, useState } from "react";
+import dayjs from "dayjs";
+import DatePicker from "react-datepicker";
+import { FieldError } from "react-hook-form";
+import InfoIcon from "@mui/icons-material/Info";
+import { Box, IconButton, Popover, styled, ToggleButton } from "@mui/material";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import "react-datepicker/dist/react-datepicker.css";
 import {
+  BaseFormInputErrorWrapper,
   BaseFormInputLabel,
   BaseFormInputWrapper,
   BaseFormLabelRow,
-  BaseFormTextField,
-} from "./StyledForm";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { FC, memo, useCallback, useEffect, useState } from "react";
-
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import dayjs from "dayjs";
-import { BaseSlider } from "./Slider";
+  RangeTextFields,
+} from "components/Base/Form/StyledForm";
+import { BaseSlider } from "components/Base/Form/Slider";
 import { BaseToggleButtonGroup } from "components/Base/Buttons/StyledButtons";
 
 const DateRangePickerWrapper = styled("div")``;
-
-const RangeTextFields = styled(BaseFormTextField)`
-  input,
-  textarea {
-    height: 30px;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 8px 60px 8px 16px;
-  }
-`;
 
 const DatePickerButton = styled(IconButton)`
   position: absolute;
@@ -36,12 +28,14 @@ interface PeriodLockInputProps {
   range: number;
   minLockPeriod: number;
   handleChangeRange: (...event: any[]) => void;
+  error?: FieldError | undefined;
 }
 
 const PeriodLockInput: FC<PeriodLockInputProps> = ({
   range,
   minLockPeriod,
   handleChangeRange,
+  error,
 }) => {
   const [startDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>();
@@ -87,6 +81,7 @@ const PeriodLockInput: FC<PeriodLockInputProps> = ({
 
   const open = Boolean(anchorEl);
   const id = open ? "date-range-popover" : undefined;
+
   return (
     <DateRangePickerWrapper>
       <BaseFormLabelRow>
@@ -99,6 +94,55 @@ const PeriodLockInput: FC<PeriodLockInputProps> = ({
           inputProps={{ min: minLockPeriod, max: 365, step: 1 }}
           onChange={handleChangeRange}
           placeholder="Number of Days"
+          error={!!error}
+          helperText={
+            <>
+              {error && error.type === "max" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    The maximum staking period of 365 days has been exceeded
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+              {error && error.type === "required" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    Lock period is required
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+              {error && error.type === "min" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    Minimum lock period is {minLockPeriod} day.
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+              {error && error.type === "pattern" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    {error.message}
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+            </>
+          }
         />
         <DatePickerButton onClick={handleOpen}>
           <CalendarTodayOutlinedIcon
@@ -138,9 +182,11 @@ const PeriodLockInput: FC<PeriodLockInputProps> = ({
         onChange={handleChangeRange}
         aria-labelledby="input-slider"
       />
-      <BaseFormInputWrapper>
+      <BaseFormInputWrapper sx={{ marginTop: "8px" }}>
         <BaseFormLabelRow mb="8px">
-          <BaseFormInputLabel>Recommend period</BaseFormInputLabel>
+          <BaseFormInputLabel sx={{ color: "#fff" }}>
+            Recommend period
+          </BaseFormInputLabel>
         </BaseFormLabelRow>
         <BaseToggleButtonGroup
           value={range}

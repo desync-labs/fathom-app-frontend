@@ -1,20 +1,24 @@
 import { FC, useMemo } from "react";
 import { Controller } from "react-hook-form";
-import { Box, Grid, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
-import { ErrorBox } from "components/AppComponents/AppBox/AppBox";
-import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
+import BigNumber from "bignumber.js";
+
 import useStakingLockForm from "hooks/Staking/useStakingLockForm";
 import { getTokenLogoURL } from "utils/tokenLogo";
-import { formatCurrency, formatNumber, formatPercentage } from "utils/format";
-
+import { formatNumber, formatPercentage } from "utils/format";
 import usePricesContext from "context/prices";
 import useStakingContext from "context/staking";
-import BigNumber from "bignumber.js";
+
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
+import { StakingPaperTitle } from "components/Base/Typography/StyledTypography";
+import PeriodLockInput from "components/Base/Form/PeriodLockInput";
+import { BaseErrorBox } from "components/Base/Boxes/StyledBoxes";
+import { BaseButtonPrimary } from "components/Base/Buttons/StyledButtons";
 import {
+  BaseFormInputErrorWrapper,
   BaseFormInputLabel,
   BaseFormInputLogo,
   BaseFormInputUsdIndicator,
@@ -24,7 +28,10 @@ import {
   BaseFormTextField,
   BaseFormWalletBalance,
 } from "components/Base/Form/StyledForm";
-import PeriodLockInput from "components/Base/Form/PeriodLockInput";
+
+const StakingForm = styled("form")`
+  margin-top: 16px;
+`;
 
 const StakingLabelWhite = styled("div")`
   color: #fff;
@@ -33,48 +40,6 @@ const StakingLabelWhite = styled("div")`
   float: none;
   font-size: 11px;
   text-transform: uppercase;
-`;
-
-const WalletBalanceTypography = styled("h3")`
-  font-weight: 600;
-  font-size: 18px;
-  line-height: 22px;
-  margin-top: 30px;
-`;
-
-const WalletBalanceWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-`;
-
-const BalanceImg = styled("img")`
-  background: #000c24;
-  width: 24px;
-  height: 24px;
-  border-radius: 12px;
-`;
-
-const FTHMBalance = styled(Box)`
-  font-size: 16px;
-  strong {
-    font-size: 18px;
-  }
-`;
-
-const USDBalance = styled(Box)`
-  font-size: 14px;
-  color: #9fadc6;
-`;
-
-const StakingLockFormTitle = styled("h2")`
-  width: 100%;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 24px;
-  text-align: left;
-  padding: 6px 0;
-  margin: 0;
 `;
 
 const StakingLockForm: FC = () => {
@@ -94,18 +59,15 @@ const StakingLockForm: FC = () => {
     approveFTHM,
     unlockDate,
     fthmBalance,
-    fxdBalance,
-    xdcBalance,
   } = useStakingLockForm();
 
   const { isMaxLockPositionExceeded, maxLockPositions } = useStakingContext();
-
-  const { fthmPrice, xdcPrice, fxdPrice } = usePricesContext();
+  const { fthmPrice } = usePricesContext();
 
   return (
     <BasePaper>
-      <StakingLockFormTitle>New Stake</StakingLockFormTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <StakingPaperTitle>New Stake</StakingPaperTitle>
+      <StakingForm onSubmit={handleSubmit(onSubmit)}>
         <Controller
           control={control}
           name="stakePosition"
@@ -130,22 +92,37 @@ const StakingLockForm: FC = () => {
                 helperText={
                   <>
                     {lowInputAmountError && (
-                      <Box component={"span"} sx={{ fontSize: "12px" }}>
-                        Staking amount should be at least 1
-                      </Box>
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Staking amount should be at least 1
+                        </Box>
+                      </BaseFormInputErrorWrapper>
                     )}
                     {!lowInputAmountError && balanceError && (
-                      <>
-                        <InfoIcon sx={{ float: "left", fontSize: "18px" }} />
-                        <Box component={"span"} sx={{ fontSize: "12px" }}>
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
                           You do not have enough FTHM
                         </Box>
-                      </>
+                      </BaseFormInputErrorWrapper>
                     )}
                     {!balanceError && !lowInputAmountError && error && (
-                      <Box component={"span"} sx={{ fontSize: "12px" }}>
-                        Field is required
-                      </Box>
+                      <BaseFormInputErrorWrapper>
+                        <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                        <Box
+                          component={"span"}
+                          sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                        >
+                          Field is required
+                        </Box>
+                      </BaseFormInputErrorWrapper>
                     )}
                   </>
                 }
@@ -187,6 +164,7 @@ const StakingLockForm: FC = () => {
               range={value}
               minLockPeriod={minLockPeriod}
               handleChangeRange={onChange}
+              error={error}
             />
           )}
         />
@@ -195,7 +173,7 @@ const StakingLockForm: FC = () => {
           return (
             lockDays && (
               <>
-                <StakingLabelWhite sx={{ mt: "25px" }}>
+                <StakingLabelWhite sx={{ mt: "8px" }}>
                   Unlock date
                 </StakingLabelWhite>
                 <Typography fontSize={"12px"} component={"span"}>
@@ -207,127 +185,53 @@ const StakingLockForm: FC = () => {
         }, [lockDays, unlockDate])}
 
         {isMaxLockPositionExceeded && (
-          <ErrorBox sx={{ width: "100%" }}>
+          <BaseErrorBox sx={{ width: "100%" }}>
             <InfoIcon />
             <Typography>
               Limit of {maxLockPositions} open positions has been exceeded.
               Please close some positions to open new ones.
             </Typography>
-          </ErrorBox>
+          </BaseErrorBox>
         )}
 
-        {!account ? (
-          <WalletConnectBtn
-            fullwidth
-            sx={{ marginTop: 3 }}
-            testId="dao-connect-wallet-button"
-          />
-        ) : (
-          <Grid container mt={3}>
-            {approvedBtn ? (
-              <ButtonPrimary
-                onClick={approveFTHM}
-                isLoading={approvalPending}
-                disabled={approvalPending}
-                sx={{ width: "100%", height: "48px" }}
-                data-testid="dao-approve-button"
-              >
-                {approvalPending ? (
-                  <CircularProgress size={20} />
-                ) : (
-                  "Approve FTHM"
-                )}
-              </ButtonPrimary>
-            ) : (
-              <ButtonPrimary
-                isLoading={isLoading}
-                disabled={isLoading || isMaxLockPositionExceeded}
-                type="submit"
-                sx={{ width: "100%", height: "48px" }}
-                data-testid="dao-stake-button"
-              >
-                {isLoading ? <CircularProgress size={30} /> : "Stake"}
-              </ButtonPrimary>
-            )}
-
-            <Grid item xs={12}>
-              <WalletBalanceTypography>
-                My Wallet Balance
-              </WalletBalanceTypography>
-
-              <Grid container spacing={2}>
-                <Grid item xs={7}>
-                  <WalletBalanceWrapper>
-                    <BalanceImg
-                      src={getTokenLogoURL("FTHM")}
-                      alt={"fthm"}
-                      width={24}
-                    />
-                    <Box>
-                      <FTHMBalance data-testid="dao-FTHM-balance">
-                        <strong>{formatNumber(Number(fthmBalance))}</strong>{" "}
-                        FTHM
-                      </FTHMBalance>
-                      <USDBalance>
-                        {formatCurrency(
-                          BigNumber(fthmBalance)
-                            .multipliedBy(fthmPrice)
-                            .dividedBy(10 ** 18)
-                            .toNumber()
-                        )}
-                      </USDBalance>
-                    </Box>
-                  </WalletBalanceWrapper>
-                </Grid>
-                <Grid item xs={5}>
-                  <WalletBalanceWrapper>
-                    <BalanceImg
-                      src={getTokenLogoURL("FXD")}
-                      alt={"fxd"}
-                      width={24}
-                    />
-                    <Box>
-                      <FTHMBalance data-testid="dao-FXD-balance">
-                        <strong>{formatNumber(Number(fxdBalance))}</strong> FXD
-                      </FTHMBalance>
-                      <USDBalance>
-                        {formatCurrency(
-                          BigNumber(fxdBalance)
-                            .multipliedBy(fxdPrice)
-                            .dividedBy(10 ** 18)
-                            .toNumber()
-                        )}
-                      </USDBalance>
-                    </Box>
-                  </WalletBalanceWrapper>
-                </Grid>
-                <Grid item xs={6}>
-                  <WalletBalanceWrapper>
-                    <BalanceImg
-                      src={getTokenLogoURL("WXDC")}
-                      alt={"xdc"}
-                      width={24}
-                    />
-                    <Box>
-                      <FTHMBalance data-testid="dao-XDC-balance">
-                        <strong>{formatNumber(Number(xdcBalance))}</strong> XDC
-                      </FTHMBalance>
-                      <USDBalance>
-                        {formatCurrency(
-                          BigNumber(xdcBalance)
-                            .multipliedBy(xdcPrice)
-                            .dividedBy(10 ** 18)
-                            .toNumber()
-                        )}
-                      </USDBalance>
-                    </Box>
-                  </WalletBalanceWrapper>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
-      </form>
+        <Box mt={2}>
+          {!account ? (
+            <WalletConnectBtn
+              fullwidth
+              sx={{ height: "48px", fontSize: "17px" }}
+              testId="dao-connect-wallet-button"
+            />
+          ) : (
+            <>
+              {approvedBtn ? (
+                <BaseButtonPrimary
+                  onClick={approveFTHM}
+                  isLoading={approvalPending}
+                  disabled={approvalPending}
+                  sx={{ width: "100%", height: "48px", fontSize: "17px" }}
+                  data-testid="dao-approve-button"
+                >
+                  {approvalPending ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    "Approve FTHM"
+                  )}
+                </BaseButtonPrimary>
+              ) : (
+                <BaseButtonPrimary
+                  isLoading={isLoading}
+                  disabled={isLoading || isMaxLockPositionExceeded}
+                  type="submit"
+                  sx={{ width: "100%", height: "48px", fontSize: "17px" }}
+                  data-testid="dao-stake-button"
+                >
+                  {isLoading ? <CircularProgress size={30} /> : "Stake"}
+                </BaseButtonPrimary>
+              )}
+            </>
+          )}
+        </Box>
+      </StakingForm>
     </BasePaper>
   );
 };

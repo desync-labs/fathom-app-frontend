@@ -1,30 +1,19 @@
+import { FC, memo, useCallback, useEffect, useState } from "react";
 import { IconButton, Popover, styled, ToggleButton } from "@mui/material";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
+import dayjs from "dayjs";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import {
   BaseFormInputLabel,
   BaseFormInputWrapper,
   BaseFormLabelRow,
-  BaseFormTextField,
-} from "./StyledForm";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import { FC, memo, useCallback, useEffect, useState } from "react";
-
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
-import dayjs from "dayjs";
-import { BaseSlider } from "./Slider";
+  RangeTextFields,
+} from "components/Base/Form/StyledForm";
+import { BaseSlider } from "components/Base/Form/Slider";
 import { BaseToggleButtonGroup } from "components/Base/Buttons/StyledButtons";
 
 const DateRangePickerWrapper = styled("div")``;
-
-const RangeTextFields = styled(BaseFormTextField)`
-  input,
-  textarea {
-    height: 30px;
-    font-size: 14px;
-    font-weight: 400;
-    padding: 8px 60px 8px 16px;
-  }
-`;
 
 const DatePickerButton = styled(IconButton)`
   position: absolute;

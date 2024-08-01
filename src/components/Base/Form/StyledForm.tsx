@@ -289,6 +289,37 @@ export const BaseFormTextField = styled(MuiTextField)`
   }
 `;
 
+export const RangeTextFields = styled(BaseFormTextField)`
+  input,
+  textarea {
+    height: 30px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 8px 60px 8px 16px;
+  }
+
+  & .Mui-error input,
+  & .Mui-error textarea {
+    color: #f44336;
+    text-fill-color: #f44336;
+    border: 1px solid #f44336;
+  }
+
+  &.MuiFormHelperText-root {
+    margin-left: 0;
+    margin-top: 0;
+    color: #6379a1;
+
+    &.Mui-error {
+      color: #dd3c3c;
+    }
+
+    p {
+      padding-left: 0;
+    }
+  }
+`;
+
 export const BaseFormSetMaxButton = styled(MuiButton)`
   position: absolute;
   top: 35px;
