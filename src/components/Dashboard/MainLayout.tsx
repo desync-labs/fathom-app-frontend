@@ -133,8 +133,9 @@ import {
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
+import MaintenanceModeBanner from "components/Common/MaintenanceBanner";
 import { FxdProvider } from "context/fxd";
-import useVH from "../../hooks/General/useVH";
+import useVH from "hooks/General/useVH";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -740,6 +741,9 @@ const MainLayout = () => {
 
       {erc20TokenModalData && <TransactionErc20TokenModal />}
       <CookieConsent />
+      {process.env.REACT_APP_MAINTENANCE_MODE === "true" && (
+        <MaintenanceModeBanner />
+      )}
     </AppGlobalStyles>
   );
 };

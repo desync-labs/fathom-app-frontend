@@ -87,6 +87,16 @@ export const BaseErrorBox = styled(Box)`
   }
 `;
 
+export const BaseTagLabel = styled("span")`
+  color: #43fff1;
+  font-size: 11px;
+  line-height: 12px;
+  border: 1px solid #43fff1;
+  border-radius: 8px;
+  background: transparent;
+  padding: 4px 8px;
+`;
+
 export const BaseErrorMessage = styled(Typography)`
   font-size: 14px;
   line-height: 20px;

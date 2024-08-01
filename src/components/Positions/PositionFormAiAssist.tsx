@@ -29,7 +29,11 @@ import {
   InfoListItem,
   ListTitleWrapper,
 } from "components/Positions/OpenPosition/OpenPositionInfo";
-import { BaseWarningBox } from "components/Base/Boxes/StyledBoxes";
+import {
+  BaseFlexBox,
+  BaseTagLabel,
+  BaseWarningBox,
+} from "components/Base/Boxes/StyledBoxes";
 import { InfoIcon } from "components/Governance/Propose";
 
 const ShowAiAccordion = styled(Accordion)`
@@ -117,7 +121,10 @@ const PositionFormAiAssist: FC<PositionFormAiAssistProps> = ({
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        AI Suggestion
+        <BaseFlexBox>
+          <BaseTagLabel>New</BaseTagLabel>
+          AI Suggestion
+        </BaseFlexBox>
       </ShowAiSuggestionButton>
       <AccordionDetails>
         <BaseDialogFormInfoWrapper>
