@@ -139,4 +139,37 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       .soft(vaultPage.page.getByText("Minimum deposit is 10,000 Fathom USD"))
       .toHaveCSS("color", "rgb(221, 60, 60)");
   });
+
+  test("Deposit Period - Withdrawing amount that will result in more than or equal to required remaining amount is successful", async ({
+    vaultPage,
+  }) => {
+    const depositAmount = 10100;
+    const withdrawAmount = 100;
+    await vaultPage.depositFirstTimeVaultListItem({
+      id: tradeFintechVaultData.id,
+      shareTokenName: tradeFintechVaultData.shareTokenName,
+      depositAmount,
+    });
+    const vaultExpectedData =
+      await vaultPage.manageVaultListItemWithdrawPartially({
+        id: tradeFintechVaultData.id,
+        withdrawAmount,
+      });
+    await vaultPage.validateVaultDataListItemPage({
+      id: tradeFintechVaultData.id,
+      action: VaultAction.Withdraw,
+      amountChanged: withdrawAmount,
+      stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
+      stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+    });
+    await vaultPage.openVaultDetails(tradeFintechVaultData.id);
+    await vaultPage.validateVaultDataDetailManagePage({
+      id: tradeFintechVaultData.id,
+      action: VaultAction.Withdraw,
+      amountChanged: withdrawAmount,
+      stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
+      shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
+      poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
+    });
+  });
 });
