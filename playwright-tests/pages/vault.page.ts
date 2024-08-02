@@ -12,6 +12,9 @@ import {
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import { graphAPIEndpoints } from "../fixtures/api.data";
+import { APOTHEM_RPC_INTERNAL } from "../fixtures/global.data";
+import { ethers } from "fathom-ethers";
+import ITradeFintechStrategyMock from "../fixtures/abis/ITradeFintechStrategyMock.json";
 
 export default class VaultPage extends BasePage {
   readonly path: string;
@@ -1348,5 +1351,49 @@ export default class VaultPage extends BasePage {
     ]);
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
+  }
+
+  async startDepositPeriod({
+    strategyAddress,
+  }: {
+    strategyAddress: string;
+  }): Promise<void> {
+    const rpcUrl = APOTHEM_RPC_INTERNAL;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
+    const signer = wallet.connect(provider);
+    const tradeFintechStrategyMockContractAddress = strategyAddress;
+    const tradeFintechStrategyMockContractAbi = ITradeFintechStrategyMock.abi;
+    const tradeFintechStrategyMockContract = new ethers.Contract(
+      tradeFintechStrategyMockContractAddress,
+      tradeFintechStrategyMockContractAbi,
+      signer
+    );
+    const transaction =
+      await tradeFintechStrategyMockContract.startDepositPeriod();
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
+  }
+
+  async startLockPeriod({
+    strategyAddress,
+  }: {
+    strategyAddress: string;
+  }): Promise<void> {
+    const rpcUrl = APOTHEM_RPC_INTERNAL;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
+    const signer = wallet.connect(provider);
+    const tradeFintechStrategyMockContractAddress = strategyAddress;
+    const tradeFintechStrategyMockContractAbi = ITradeFintechStrategyMock.abi;
+    const tradeFintechStrategyMockContract = new ethers.Contract(
+      tradeFintechStrategyMockContractAddress,
+      tradeFintechStrategyMockContractAbi,
+      signer
+    );
+    const transaction =
+      await tradeFintechStrategyMockContract.startLockPeriod();
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
   }
 }

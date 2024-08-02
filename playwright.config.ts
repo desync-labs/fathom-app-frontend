@@ -66,8 +66,8 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
       },
-      testDir: "./playwright-tests/tests/",
-      testMatch: "vaults.spec.ts",
+      testDir: "./playwright-tests/tests/vault",
+      testMatch: "**.spec.ts",
     },
     {
       name: "dex-tests",
