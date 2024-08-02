@@ -285,6 +285,74 @@ vaultDescription["0x5a51e6d4c58f1585d74ce71cf709c4f939c3dac2".toLowerCase()] = (
   </>
 );
 
+vaultDescription["0x8802645792ee0b7495f285b6ab897e5acc78b112".toLowerCase()] = (
+  <>
+    <ul>
+      <li>
+        <strong>1. Sponsorship and Management:</strong> <br /> Fathom Vault is a
+        decentralized finance (DeFi) vault technology platform. The vault is
+        sponsored by TradeFlow Capital, a licensed asset manager responsible for
+        attracting stablecoin investors and reinvesting the funds in trade
+        finance deals. TradeFlow Capital manages all investment activities,
+        including the sourcing, evaluation, and execution of trade finance
+        deals.
+      </li>
+      <li>
+        <strong>2. Know Your Customer (KYC) and Terms Agreement: </strong>{" "}
+        <br />
+        All participants in the Fathom Vault must undergo and pass the KYC
+        process conducted by TradeFlow Capital. By participating, investors
+        agree to the terms and conditions set forth by TradeFlow Capital. Fathom
+        Vault is not involved in the KYC process and does not have access to or
+        control over the information provided by investors for KYC purposes.
+      </li>
+      <li>
+        <strong>3. Liability Disclaimer:</strong> <br /> Fathom Vault operates
+        solely as a technology platform facilitating the operation of the vault.
+        Fathom Vault does not manage, control, or influence the investment
+        decisions made by TradeFlow Capital. All investment activities,
+        including but not limited to the reinvestment in trade finance deals,
+        are conducted by TradeFlow Capital under their regulatory and compliance
+        framework.
+      </li>
+      <li>
+        <strong>4. Limitation of Liability:</strong> <br /> Fathom Vault, its
+        affiliates, and its technology partners shall not be liable for any
+        direct, indirect, incidental, special, or consequential damages arising
+        from or in connection with the use of the platform, including but not
+        limited to investment losses, loss of profits, or loss of data.
+        Investors acknowledge and agree that their participation in the vault is
+        at their own risk and that Fathom Vault provides no guarantees or
+        warranties regarding the performance of the investments managed by
+        TradeFlow Capital.
+      </li>
+      <li>
+        <strong>5. Indemnification:</strong> <br /> Investors agree to
+        indemnify, defend, and hold harmless Fathom Vault, its affiliates,
+        officers, directors, employees, and agents from and against any claims,
+        liabilities, damages, losses, and expenses, including reasonable
+        attorney's fees, arising out of or in any way connected with their use
+        of the platform, their investment decisions, or their breach of these
+        terms.
+      </li>
+      <li>
+        <strong>6. Jurisdiction and Governing Law:</strong> <br /> These terms
+        and any disputes arising out of or relating to these terms or the use of
+        the platform shall be governed by and construed in accordance with the
+        laws of the Marshall Islands. Any legal action or proceeding relating to
+        these terms shall be brought exclusively in the arbitration courts of
+        the Marshall Islands.
+      </li>
+      <li>
+        <strong>7. Severability:</strong> <br /> If any provision of these terms
+        is found to be invalid or unenforceable, the remaining provisions shall
+        continue to be valid and enforceable to the fullest extent permitted by
+        law.
+      </li>
+    </ul>
+  </>
+);
+
 vaultTitle["0x50d150069a0fce09e6ded55a75aec67d2be79037".toLowerCase()] =
   "Gold World ETF";
 vaultTitle["0xbf4adcc0a8f2c7e29f934314ce60cf5de38bfe8f".toLowerCase()] =
@@ -293,6 +361,8 @@ vaultTitle["0x3c8e9896933b374e638f9a5c309535409129aaa2".toLowerCase()] =
   "Education Vault";
 vaultTitle["0x5a51e6d4c58f1585d74ce71cf709c4f939c3dac2".toLowerCase()] =
   "TradeFi Vault (FXD) #1";
+vaultTitle["0x8802645792ee0b7495f285b6ab897e5acc78b112".toLowerCase()] =
+  "TradeFi Vault (FXD) #2";
 vaultTitle["0x7e5c3caD163963d7AFef7143a19919310243AC21".toLowerCase()] =
   "TradeFi Vault (AutoTest)";
 
