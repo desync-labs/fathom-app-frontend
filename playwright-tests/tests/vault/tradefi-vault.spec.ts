@@ -1,5 +1,5 @@
 import { contractAddresses } from "../../fixtures/global.data";
-import { test } from "../../fixtures/pomSynpressFixture";
+import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { tradeFintechVaultData } from "../../fixtures/vaults.data";
 import { VaultAction, WalletConnectOptions } from "../../types";
 import dotenv from "dotenv";
@@ -86,5 +86,57 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       shareTokensDialogAfter: vaultExpectedData.shareTokensDialogAfter,
       poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
     });
+  });
+
+  test("Deposit Period - Trying to deposit less than the required amount is not possible and returns corresponding error", async ({
+    vaultPage,
+  }) => {
+    const depositAmount = 9999;
+    const id = tradeFintechVaultData.id;
+    await expect
+      .soft(vaultPage.getDepositButtonRowLocatorById(id))
+      .toHaveText("Deposit");
+    await vaultPage.getDepositButtonRowLocatorById(id).click();
+    await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
+    await vaultPage.page.waitForTimeout(2000);
+    // Vault list item modal
+    await vaultPage.enterDepositAmountVaultListItemDepositModal(depositAmount);
+    await expect
+      .soft(vaultPage.btnConfirmDepositListItemDepositModal)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.btnConfirmDepositListItemDepositModal)
+      .toBeDisabled();
+    await expect
+      .soft(vaultPage.inputDepositAmountListItemDepositModal)
+      .toHaveCSS("border-color", "rgb(244, 67, 54)");
+    await expect
+      .soft(vaultPage.inputDepositAmountListItemDepositModal)
+      .toHaveCSS("color", "rgb(244, 67, 54)");
+    await expect
+      .soft(vaultPage.page.getByText("Minimum deposit is 10,000 Fathom USD"))
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.page.getByText("Minimum deposit is 10,000 Fathom USD"))
+      .toHaveCSS("color", "rgb(221, 60, 60)");
+    // Vault details
+    await vaultPage.btnCloseModal.click();
+    await expect(vaultPage.dialogListItemDepositModal).not.toBeVisible();
+    await vaultPage.openVaultDetails(id);
+    await vaultPage.enterDepositAmountVaultDetailDepositModal(depositAmount);
+    await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeVisible();
+    await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeDisabled();
+    await expect
+      .soft(vaultPage.inputDepositAmountDetailDepositModal)
+      .toHaveCSS("border-color", "rgb(244, 67, 54)");
+    await expect
+      .soft(vaultPage.inputDepositAmountDetailDepositModal)
+      .toHaveCSS("color", "rgb(244, 67, 54)");
+    await expect
+      .soft(vaultPage.page.getByText("Minimum deposit is 10,000 Fathom USD"))
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.page.getByText("Minimum deposit is 10,000 Fathom USD"))
+      .toHaveCSS("color", "rgb(221, 60, 60)");
   });
 });
