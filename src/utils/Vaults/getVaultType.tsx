@@ -26,5 +26,7 @@ vaultType["0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b".toLowerCase()] =
   VaultType.DEFI;
 vaultType["0x7e5c3caD163963d7AFef7143a19919310243AC21".toLowerCase()] =
   VaultType.TRADEFI;
+vaultType["0x8802645792ee0b7495f285b6ab897e5acc78b112".toLowerCase()] =
+  VaultType.TRADEFI;
 
 export { vaultType };
