@@ -172,4 +172,44 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       poolShareDialogAfter: vaultExpectedData.poolShareDialogAfter,
     });
   });
+
+  test("Deposit Period - Trying to withdraw amount that would result in less than required remaining amount is not possible and returns corresponding error", async ({
+    vaultPage,
+  }) => {
+    const depositAmount = 10100;
+    const withdrawAmount = 101;
+    const id = tradeFintechVaultData.id;
+    await vaultPage.depositFirstTimeVaultListItem({
+      id: tradeFintechVaultData.id,
+      shareTokenName: tradeFintechVaultData.shareTokenName,
+      depositAmount,
+    });
+    // Vault List Item Modal
+    await vaultPage.getManageVaultButtonRowLocatorById(id).click();
+    await expect(vaultPage.dialogListItemManageModal).toBeVisible();
+    await vaultPage.btnWithdrawNavItemListItemManageModal.click();
+    await vaultPage.enterWithdrawAmountVaultListItemManageModal(withdrawAmount);
+    await vaultPage.page.waitForTimeout(2000);
+    const errorTextLocator = vaultPage.page.getByText(
+      `After withdraw ${withdrawAmount} Fathom USD  you will have ${(
+        depositAmount - withdrawAmount
+      ).toLocaleString()} Fathom USD less then minimum allowed deposit 10k Fathom USD, you can do full withdraw instead.`
+    );
+    await expect.soft(errorTextLocator).toBeVisible();
+    await expect
+      .soft(vaultPage.btnConfirmWithdrawListItemManageModal)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.btnConfirmWithdrawListItemManageModal)
+      .toBeDisabled();
+    // Vault Details
+    await vaultPage.btnCloseModal.click();
+    await expect(vaultPage.dialogListItemDepositModal).not.toBeVisible();
+    await vaultPage.openVaultDetails(id);
+    await vaultPage.btnWithdrawNavItemDetailManageModal.click();
+    await vaultPage.enterWithdrawAmountVaultDetailManageModal(withdrawAmount);
+    await expect.soft(errorTextLocator).toBeVisible();
+    await expect.soft(vaultPage.btnWithdrawDetailManageModal).toBeVisible();
+    await expect.soft(vaultPage.btnWithdrawDetailManageModal).toBeDisabled();
+  });
 });
