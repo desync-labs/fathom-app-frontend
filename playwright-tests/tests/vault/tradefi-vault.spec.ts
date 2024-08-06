@@ -291,10 +291,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.startLockPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
-    await vaultPage.page.waitForTimeout(10000);
-    await vaultPage.navigate();
-    await vaultPage.page.waitForTimeout(5000);
-    await vaultPage.page.reload();
+    await vaultPage.page.waitForTimeout(20000);
     await expect
       .soft(vaultPage.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
