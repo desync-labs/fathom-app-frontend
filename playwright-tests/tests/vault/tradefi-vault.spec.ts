@@ -1,7 +1,7 @@
 import { contractAddresses } from "../../fixtures/global.data";
 import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { tradeFintechVaultData } from "../../fixtures/vaults.data";
-import { VaultAction, WalletConnectOptions } from "../../types";
+import { TradeFiPeriod, VaultAction, WalletConnectOptions } from "../../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
@@ -253,23 +253,17 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await expect
       .soft(vaultPage.btnConfirmDepositListItemDepositModal)
       .toBeDisabled();
+    await expect.soft(vaultPage.kycVerificationWarningText).toBeVisible();
     await expect
-      .soft(vaultPage.kycVerificationWarningTextLocator)
-      .toBeVisible();
-    await expect
-      .soft(vaultPage.kycVerificationWarningTextLocator)
+      .soft(vaultPage.kycVerificationWarningText)
       .toHaveCSS("color", "rgb(247, 176, 110)");
+    await expect.soft(vaultPage.kycVerificationWarningLink).toBeVisible();
     await expect
-      .soft(vaultPage.kycVerificationWarningLinkLocator)
-      .toBeVisible();
-    await expect
-      .soft(vaultPage.kycVerificationWarningLinkLocator)
+      .soft(vaultPage.kycVerificationWarningLink)
       .toHaveText("https://kyc.tradeflow.network/");
+    await expect.soft(vaultPage.kycVerificationWarningTextBox).toBeVisible();
     await expect
-      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
-      .toBeVisible();
-    await expect
-      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
+      .soft(vaultPage.kycVerificationWarningTextBox)
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
     // Vault details
     await vaultPage.btnCloseModal.click();
@@ -277,23 +271,74 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.openVaultDetails(id);
     await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeVisible();
     await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeDisabled();
+    await expect.soft(vaultPage.kycVerificationWarningText).toBeVisible();
     await expect
-      .soft(vaultPage.kycVerificationWarningTextLocator)
+      .soft(vaultPage.kycVerificationWarningText)
+      .toHaveCSS("color", "rgb(247, 176, 110)");
+    await expect.soft(vaultPage.kycVerificationWarningLink).toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningLink)
+      .toHaveText("https://kyc.tradeflow.network/");
+    await expect.soft(vaultPage.kycVerificationWarningTextBox).toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningTextBox)
+      .toHaveCSS("background-color", "rgb(69, 37, 8)");
+  });
+
+  test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available", async ({
+    vaultPage,
+  }) => {
+    await vaultPage.startLockPeriod({
+      strategyAddress: contractAddresses.tradeFintechStrategyMock,
+    });
+    await vaultPage.page.waitForTimeout(10000);
+    await vaultPage.navigate();
+    await vaultPage.page.waitForTimeout(5000);
+    await vaultPage.page.reload();
+    await expect
+      .soft(vaultPage.getDepositButtonRowLocatorById(id))
+      .toHaveText("Deposit");
+    await vaultPage.getDepositButtonRowLocatorById(id).click();
+    await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
+    await vaultPage.page.waitForTimeout(2000);
+    // Vault list item modal
+    await expect
+      .soft(vaultPage.btnConfirmDepositListItemDepositModal)
       .toBeVisible();
     await expect
-      .soft(vaultPage.kycVerificationWarningTextLocator)
+      .soft(vaultPage.btnConfirmDepositListItemDepositModal)
+      .toBeDisabled();
+    await expect
+      .soft(vaultPage.depositTimeCompletedWarningMessageText)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.depositTimeCompletedWarningMessageText)
       .toHaveCSS("color", "rgb(247, 176, 110)");
     await expect
-      .soft(vaultPage.kycVerificationWarningLinkLocator)
+      .soft(vaultPage.depositTimeCompletedWarningMessageTextBox)
       .toBeVisible();
     await expect
-      .soft(vaultPage.kycVerificationWarningLinkLocator)
-      .toHaveText("https://kyc.tradeflow.network/");
-    await expect
-      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
-      .toBeVisible();
-    await expect
-      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
+      .soft(vaultPage.depositTimeCompletedWarningMessageTextBox)
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
+    await vaultPage.validateLockingPeriodBoxTradefiVault({
+      period: TradeFiPeriod.Lock,
+    });
+    // Vault details
+    await vaultPage.btnCloseModal.click();
+    await expect(vaultPage.dialogListItemDepositModal).not.toBeVisible();
+    await vaultPage.openVaultDetails(id);
+    await expect.soft(vaultPage.btnWithdrawAllTradeFiVaultDetail).toBeVisible();
+    await expect
+      .soft(vaultPage.btnWithdrawAllTradeFiVaultDetail)
+      .toBeDisabled();
+    await expect
+      .soft(vaultPage.btnDepositNavItemDetailManageModal)
+      .not.toBeVisible();
+    await expect
+      .soft(vaultPage.btnWithdrawNavItemDetailManageModal)
+      .not.toBeVisible();
+    await vaultPage.validateLockingPeriodBoxTradefiVault({
+      period: TradeFiPeriod.Lock,
+    });
   });
 });

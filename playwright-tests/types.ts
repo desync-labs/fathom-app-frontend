@@ -94,3 +94,9 @@ export enum LendingAssets {
   EURS = "EURS",
   WXDC = "WXDC",
 }
+
+export enum TradeFiPeriod {
+  Deposit = "Deposit",
+  Lock = "Lock",
+  LockEnded = "Lock Ended",
+}

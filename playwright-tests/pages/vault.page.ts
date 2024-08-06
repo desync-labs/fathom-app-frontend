@@ -3,6 +3,7 @@ import BasePage from "./base.page";
 import { extractNumericValue } from "../utils/helpers";
 import {
   GraphOperationName,
+  TradeFiPeriod,
   ValidateVaultDataParams,
   VaultAction,
   VaultDepositData,
@@ -69,9 +70,22 @@ export default class VaultPage extends BasePage {
   readonly btnResetDetailDepositModal: Locator;
   readonly btnApproveDetailDepositModal: Locator;
   readonly earnedValueVaultDetails: Locator;
-  readonly kycVerificationWarningTextLocator: Locator;
-  readonly kycVerificationWarningLinkLocator: Locator;
-  readonly kycVerificationWarningTextBoxLocator: Locator;
+  readonly kycVerificationWarningText: Locator;
+  readonly kycVerificationWarningLink: Locator;
+  readonly kycVerificationWarningTextBox: Locator;
+  readonly lockIconActiveTradefiVault: Locator;
+  readonly lockTitleTradefiVault: Locator;
+  readonly depositTimeTextTradeFiVault: Locator;
+  readonly lockTimeTextTradeFiVault: Locator;
+  readonly stepIconDepositTimeTradefiVault: Locator;
+  readonly stepIconLockTimeTradefiVault: Locator;
+  readonly timerDepositTime: Locator;
+  readonly timerLockTime: Locator;
+  readonly depositTimeCompletedWarningMessageText: Locator;
+  readonly depositTimeCompletedWarningMessageTextBox: Locator;
+  readonly completedTimerDepositTime: Locator;
+  readonly completedTimerLockTime: Locator;
+  readonly btnWithdrawAllTradeFiVaultDetail: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -223,15 +237,51 @@ export default class VaultPage extends BasePage {
     this.btnApproveDetailDepositModal = this.page.getByTestId(
       "vault-detailDepositModal-approveButton"
     );
-    this.kycVerificationWarningTextLocator = this.page.getByText(
+    this.kycVerificationWarningText = this.page.getByText(
       "Only KYC-verified users can deposit. Please completing KYC at"
     );
-    this.kycVerificationWarningLinkLocator = this.page.locator(
+    this.kycVerificationWarningLink = this.page.locator(
       "a[href='https://kyc.tradeflow.network/']"
     );
-    this.kycVerificationWarningTextBoxLocator = this.page.locator(
+    this.kycVerificationWarningTextBox = this.page.locator(
       "//p[text()='Only KYC-verified users can deposit. Please completing KYC at']/parent::div/parent::div"
     );
+    this.lockIconActiveTradefiVault = this.page.locator(
+      "img[alt='locked-active']"
+    );
+    this.lockTitleTradefiVault =
+      this.lockIconActiveTradefiVault.locator("+ h3");
+    this.depositTimeTextTradeFiVault = this.page.locator(
+      "//div[text()='Deposit Time']"
+    );
+    this.lockTimeTextTradeFiVault = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]"
+    );
+    this.stepIconDepositTimeTradefiVault = this.page.locator(
+      "//div[text()='Deposit Time']//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/span[1]//img"
+    );
+    this.stepIconLockTimeTradefiVault = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/span[1]//img"
+    );
+    this.timerDepositTime = this.page.locator(
+      "//div[text()='Deposit Time']//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/following-sibling::div//div[contains(text(), '999')]"
+    );
+    this.timerLockTime = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/following-sibling::div//div[contains(text(), '999')]"
+    );
+    this.depositTimeCompletedWarningMessageText = this.page.locator(
+      "//p[text()='Deposit period has been completed.']"
+    );
+    this.depositTimeCompletedWarningMessageTextBox = this.page.locator(
+      "//p[text()='Deposit period has been completed.']/parent::div/parent::div"
+    );
+    this.completedTimerDepositTime = this.page.locator(
+      "//div[text()='Deposit Time']//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]//div[text()='Completed']"
+    );
+    this.completedTimerLockTime = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]//div[text()='Completed']"
+    );
+    this.btnWithdrawAllTradeFiVaultDetail = this.page.getByText("Withdraw all");
   }
 
   async navigate(): Promise<void> {
@@ -1407,5 +1457,67 @@ export default class VaultPage extends BasePage {
       await tradeFintechStrategyMockContract.startLockPeriod();
     const receipt = await transaction.wait();
     expect(receipt.status).toEqual(1);
+    console.log("Lock period started");
+  }
+
+  async validateLockingPeriodBoxTradefiVault({
+    period,
+  }: {
+    period: TradeFiPeriod;
+  }): Promise<void> {
+    if (period === TradeFiPeriod.Lock) {
+      await expect.soft(this.stepIconDepositTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconDepositTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon-active.");
+      await expect.soft(this.depositTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.completedTimerDepositTime).toBeVisible();
+      await expect
+        .soft(this.completedTimerDepositTime)
+        .toHaveCSS("color", "rgb(67, 255, 241)");
+      await expect.soft(this.stepIconLockTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconLockTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon.");
+      await expect.soft(this.lockTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.timerLockTime).toBeVisible();
+      await expect
+        .soft(this.timerLockTime)
+        .toHaveCSS("color", "rgb(245, 149, 61)");
+    } else if (period === TradeFiPeriod.Deposit) {
+      await expect.soft(this.stepIconDepositTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconDepositTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon.");
+      await expect.soft(this.depositTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.timerDepositTime).toBeVisible();
+      await expect
+        .soft(this.timerDepositTime)
+        .toHaveCSS("color", "rgb(245, 149, 61)");
+      await expect.soft(this.stepIconLockTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconLockTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon.");
+      await expect.soft(this.lockTimeTextTradeFiVault).toBeVisible();
+    } else if (period === TradeFiPeriod.LockEnded) {
+      await expect.soft(this.stepIconDepositTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconDepositTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon-active.");
+      await expect.soft(this.depositTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.completedTimerDepositTime).toBeVisible();
+      await expect
+        .soft(this.completedTimerDepositTime)
+        .toHaveCSS("color", "rgb(67, 255, 241)");
+      await expect.soft(this.stepIconLockTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconLockTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon-active.");
+      await expect.soft(this.lockTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.completedTimerLockTime).toBeVisible();
+      await expect
+        .soft(this.completedTimerLockTime)
+        .toHaveCSS("color", "rgb(67, 255, 241)");
+    }
   }
 }
