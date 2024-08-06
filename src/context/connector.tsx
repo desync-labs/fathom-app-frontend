@@ -23,6 +23,7 @@ import {
   supportedChainIds,
   NETWORK_SETTINGS,
   DISPLAY_STABLE_SWAP,
+  EXPLORERS,
 } from "connectors/networks";
 import { Web3Provider } from "@into-the-fathom/providers";
 import { useNavigate } from "react-router-dom";
@@ -295,6 +296,8 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
 
   const requestChangeNetwork = useCallback(
     async (chainId: number) => {
+      const chainParams = (NETWORK_SETTINGS as any)[chainId];
+
       if (provider && provider instanceof Web3Provider) {
         try {
           await provider.send("wallet_switchEthereumChain", [
@@ -305,7 +308,13 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
           if (switchError.code === 4902) {
             try {
               await provider.send("wallet_addEthereumChain", [
-                (NETWORK_SETTINGS as any)[chainId],
+                {
+                  chainId: chainParams.chainId,
+                  chainName: chainParams.chainName,
+                  nativeCurrency: chainParams.nativeCurrency,
+                  rpcUrls: chainParams.rpcUrls,
+                  blockExplorerUrls: [EXPLORERS[chainId as ChainId]],
+                },
               ]);
             } catch (addError) {
               console.error("Failed to add the XDC Network:", addError);
@@ -316,17 +325,28 @@ export const ConnectorProvider: FC<ConnectorProviderType> = ({ children }) => {
         }
       } else if (window && window.ethereum) {
         try {
-          window.ethereum.request?.({
+          await window.ethereum.request?.({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: `0x${chainId.toString(16)}` }],
           });
         } catch (err: any) {
-          console.log(err);
           if (err.code === 4902) {
-            window.ethereum.request?.({
-              method: "wallet_addEthereumChain",
-              params: [(NETWORK_SETTINGS as any)[chainId]],
-            });
+            try {
+              await window.ethereum.request?.({
+                method: "wallet_addEthereumChain",
+                params: [
+                  {
+                    chainId: chainParams.chainId,
+                    chainName: chainParams.chainName,
+                    nativeCurrency: chainParams.nativeCurrency,
+                    rpcUrls: chainParams.rpcUrls,
+                    blockExplorerUrls: [EXPLORERS[chainId as ChainId]],
+                  },
+                ],
+              });
+            } catch (addError) {
+              console.error("Failed to add the XDC Network:", addError);
+            }
           }
         }
       }
