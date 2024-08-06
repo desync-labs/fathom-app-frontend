@@ -2,8 +2,12 @@ import { contractAddresses } from "../../fixtures/global.data";
 import { test, expect } from "../../fixtures/pomSynpressFixture";
 import { tradeFintechVaultData } from "../../fixtures/vaults.data";
 import { VaultAction, WalletConnectOptions } from "../../types";
+// @ts-ignore
+import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
+
+const id = tradeFintechVaultData.id;
 
 test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", () => {
   test.beforeEach(async ({ vaultPage }) => {
@@ -15,15 +19,13 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.validateConnectedWalletAddress();
     await vaultPage.page.waitForLoadState("load");
     await vaultPage.page.waitForTimeout(3000);
-    const manageButton = vaultPage.getManageVaultButtonRowLocatorById(
-      tradeFintechVaultData.id
-    );
+    const manageButton = vaultPage.getManageVaultButtonRowLocatorById(id);
     if (await manageButton.isVisible()) {
       await vaultPage.manageVaultListItemWithdrawFully({
-        id: tradeFintechVaultData.id,
+        id,
       });
       await vaultPage.validateVaultListItemDepositState({
-        id: tradeFintechVaultData.id,
+        id,
       });
     }
   });
@@ -33,20 +35,20 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
   }) => {
     const depositAmount = 10000;
     const vaultExpectedData = await vaultPage.depositFirstTimeVaultListItem({
-      id: tradeFintechVaultData.id,
+      id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
     });
     await vaultPage.validateVaultDataListItemPage({
-      id: tradeFintechVaultData.id,
+      id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
     });
-    await vaultPage.openVaultDetails(tradeFintechVaultData.id);
+    await vaultPage.openVaultDetails(id);
     await vaultPage.validateVaultDataDetailManagePage({
-      id: tradeFintechVaultData.id,
+      id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
@@ -61,25 +63,25 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     const depositAmountInitial = 10000;
     const depositAmount = 1.5;
     await vaultPage.depositFirstTimeVaultListItem({
-      id: tradeFintechVaultData.id,
+      id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount: depositAmountInitial,
     });
     const vaultExpectedData = await vaultPage.manageVaultListItemDeposit({
-      id: tradeFintechVaultData.id,
+      id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
     });
     await vaultPage.validateVaultDataListItemPage({
-      id: tradeFintechVaultData.id,
+      id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
     });
-    await vaultPage.openVaultDetails(tradeFintechVaultData.id);
+    await vaultPage.openVaultDetails(id);
     await vaultPage.validateVaultDataDetailManagePage({
-      id: tradeFintechVaultData.id,
+      id,
       action: VaultAction.Deposit,
       amountChanged: depositAmount,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
@@ -92,7 +94,6 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     vaultPage,
   }) => {
     const depositAmount = 9999;
-    const id = tradeFintechVaultData.id;
     await expect
       .soft(vaultPage.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
@@ -146,25 +147,25 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     const depositAmount = 10100;
     const withdrawAmount = 100;
     await vaultPage.depositFirstTimeVaultListItem({
-      id: tradeFintechVaultData.id,
+      id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
     });
     const vaultExpectedData =
       await vaultPage.manageVaultListItemWithdrawPartially({
-        id: tradeFintechVaultData.id,
+        id,
         withdrawAmount,
       });
     await vaultPage.validateVaultDataListItemPage({
-      id: tradeFintechVaultData.id,
+      id,
       action: VaultAction.Withdraw,
       amountChanged: withdrawAmount,
       stakedAmountDialogBefore: vaultExpectedData.stakedAmountDialogBefore,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
     });
-    await vaultPage.openVaultDetails(tradeFintechVaultData.id);
+    await vaultPage.openVaultDetails(id);
     await vaultPage.validateVaultDataDetailManagePage({
-      id: tradeFintechVaultData.id,
+      id,
       action: VaultAction.Withdraw,
       amountChanged: withdrawAmount,
       stakedAmountDialogAfter: vaultExpectedData.stakedAmountDialogAfter,
@@ -178,9 +179,8 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
   }) => {
     const depositAmount = 10100;
     const withdrawAmount = 101;
-    const id = tradeFintechVaultData.id;
     await vaultPage.depositFirstTimeVaultListItem({
-      id: tradeFintechVaultData.id,
+      id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
     });
@@ -211,5 +211,87 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await expect.soft(errorTextLocator).toBeVisible();
     await expect.soft(vaultPage.btnWithdrawDetailManageModal).toBeVisible();
     await expect.soft(vaultPage.btnWithdrawDetailManageModal).toBeDisabled();
+  });
+
+  test("Deposit Period - Fully withdrawing all funds is successful", async ({
+    vaultPage,
+  }) => {
+    const depositAmount = 10000;
+    await vaultPage.depositFirstTimeVaultListItem({
+      id,
+      shareTokenName: tradeFintechVaultData.shareTokenName,
+      depositAmount,
+    });
+    await vaultPage.manageVaultListItemWithdrawFully({
+      id,
+    });
+    await vaultPage.validateVaultListItemDepositState({
+      id,
+    });
+    await vaultPage.openVaultDetails(id);
+    await vaultPage.validateVaultDataDetailDepositPage({
+      id,
+    });
+  });
+
+  test("Deposit Period - Non-KYC verified user cannot deposit and a proper warning message is displayed", async ({
+    vaultPage,
+  }) => {
+    await metamask.disconnectWalletFromDapp();
+    await metamask.switchAccount("Account 1");
+    await vaultPage.connectWallet(WalletConnectOptions.Metamask);
+    await expect
+      .soft(vaultPage.getDepositButtonRowLocatorById(id))
+      .toHaveText("Deposit");
+    await vaultPage.getDepositButtonRowLocatorById(id).click();
+    await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
+    await vaultPage.page.waitForTimeout(2000);
+    // Vault list item modal
+    await expect
+      .soft(vaultPage.btnConfirmDepositListItemDepositModal)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.btnConfirmDepositListItemDepositModal)
+      .toBeDisabled();
+    const kycVerificationWarningTextLocator = vaultPage.page.getByText(
+      "Only KYC-verified users can deposit. Please completing KYC at"
+    );
+    const kycVerificationWarningLinkLocator = vaultPage.page.locator(
+      "a[href='https://kyc.tradeflow.network/']"
+    );
+    const kycVerificationWarningTextBoxLocator = vaultPage.page.locator(
+      "//p[text()='Only KYC-verified users can deposit. Please completing KYC at']/parent::div/parent::div"
+    );
+    await expect.soft(kycVerificationWarningTextLocator).toBeVisible();
+    await expect
+      .soft(kycVerificationWarningTextLocator)
+      .toHaveCSS("color", "rgb(247, 176, 110)");
+    await expect.soft(kycVerificationWarningLinkLocator).toBeVisible();
+    await expect
+      .soft(kycVerificationWarningLinkLocator)
+      .toHaveText("https://kyc.tradeflow.network/");
+    await expect.soft(kycVerificationWarningTextBoxLocator).toBeVisible();
+    await expect
+      .soft(kycVerificationWarningTextBoxLocator)
+      .toHaveCSS("background-color", "rgb(69, 37, 8)");
+    // Vault details
+    await vaultPage.btnCloseModal.click();
+    await expect(vaultPage.dialogListItemDepositModal).not.toBeVisible();
+    await vaultPage.openVaultDetails(id);
+    await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeVisible();
+    await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeDisabled();
+    kycVerificationWarningTextLocator.locator("/parent::div/parent::div");
+    await expect.soft(kycVerificationWarningTextLocator).toBeVisible();
+    await expect
+      .soft(kycVerificationWarningTextLocator)
+      .toHaveCSS("color", "rgb(247, 176, 110)");
+    await expect.soft(kycVerificationWarningLinkLocator).toBeVisible();
+    await expect
+      .soft(kycVerificationWarningLinkLocator)
+      .toHaveText("https://kyc.tradeflow.network/");
+    await expect.soft(kycVerificationWarningTextBoxLocator).toBeVisible();
+    await expect
+      .soft(kycVerificationWarningTextBoxLocator)
+      .toHaveCSS("background-color", "rgb(69, 37, 8)");
   });
 });
