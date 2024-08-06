@@ -69,6 +69,9 @@ export default class VaultPage extends BasePage {
   readonly btnResetDetailDepositModal: Locator;
   readonly btnApproveDetailDepositModal: Locator;
   readonly earnedValueVaultDetails: Locator;
+  readonly kycVerificationWarningTextLocator: Locator;
+  readonly kycVerificationWarningLinkLocator: Locator;
+  readonly kycVerificationWarningTextBoxLocator: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -219,6 +222,15 @@ export default class VaultPage extends BasePage {
     );
     this.btnApproveDetailDepositModal = this.page.getByTestId(
       "vault-detailDepositModal-approveButton"
+    );
+    this.kycVerificationWarningTextLocator = this.page.getByText(
+      "Only KYC-verified users can deposit. Please completing KYC at"
+    );
+    this.kycVerificationWarningLinkLocator = this.page.locator(
+      "a[href='https://kyc.tradeflow.network/']"
+    );
+    this.kycVerificationWarningTextBoxLocator = this.page.locator(
+      "//p[text()='Only KYC-verified users can deposit. Please completing KYC at']/parent::div/parent::div"
     );
   }
 

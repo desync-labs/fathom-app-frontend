@@ -253,26 +253,23 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await expect
       .soft(vaultPage.btnConfirmDepositListItemDepositModal)
       .toBeDisabled();
-    const kycVerificationWarningTextLocator = vaultPage.page.getByText(
-      "Only KYC-verified users can deposit. Please completing KYC at"
-    );
-    const kycVerificationWarningLinkLocator = vaultPage.page.locator(
-      "a[href='https://kyc.tradeflow.network/']"
-    );
-    const kycVerificationWarningTextBoxLocator = vaultPage.page.locator(
-      "//p[text()='Only KYC-verified users can deposit. Please completing KYC at']/parent::div/parent::div"
-    );
-    await expect.soft(kycVerificationWarningTextLocator).toBeVisible();
     await expect
-      .soft(kycVerificationWarningTextLocator)
+      .soft(vaultPage.kycVerificationWarningTextLocator)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningTextLocator)
       .toHaveCSS("color", "rgb(247, 176, 110)");
-    await expect.soft(kycVerificationWarningLinkLocator).toBeVisible();
     await expect
-      .soft(kycVerificationWarningLinkLocator)
+      .soft(vaultPage.kycVerificationWarningLinkLocator)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningLinkLocator)
       .toHaveText("https://kyc.tradeflow.network/");
-    await expect.soft(kycVerificationWarningTextBoxLocator).toBeVisible();
     await expect
-      .soft(kycVerificationWarningTextBoxLocator)
+      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
     // Vault details
     await vaultPage.btnCloseModal.click();
@@ -280,18 +277,23 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.openVaultDetails(id);
     await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeVisible();
     await expect.soft(vaultPage.btnDepositDetailDepositModal).toBeDisabled();
-    kycVerificationWarningTextLocator.locator("/parent::div/parent::div");
-    await expect.soft(kycVerificationWarningTextLocator).toBeVisible();
     await expect
-      .soft(kycVerificationWarningTextLocator)
+      .soft(vaultPage.kycVerificationWarningTextLocator)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningTextLocator)
       .toHaveCSS("color", "rgb(247, 176, 110)");
-    await expect.soft(kycVerificationWarningLinkLocator).toBeVisible();
     await expect
-      .soft(kycVerificationWarningLinkLocator)
+      .soft(vaultPage.kycVerificationWarningLinkLocator)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningLinkLocator)
       .toHaveText("https://kyc.tradeflow.network/");
-    await expect.soft(kycVerificationWarningTextBoxLocator).toBeVisible();
     await expect
-      .soft(kycVerificationWarningTextBoxLocator)
+      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
+      .toBeVisible();
+    await expect
+      .soft(vaultPage.kycVerificationWarningTextBoxLocator)
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
   });
 });
