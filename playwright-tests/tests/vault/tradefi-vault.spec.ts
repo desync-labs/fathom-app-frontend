@@ -285,7 +285,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
   });
 
-  test.only("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
+  test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
     vaultPage,
   }) => {
     test.setTimeout(60000 * 4);
