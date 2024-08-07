@@ -30,7 +30,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     }
   });
 
-  test("Deposit Period - Depositing more than or equal to the minimum required amount is successful", async ({
+  test("Deposit Period - Depositing more than or equal to the minimum required amount is successful @smoke", async ({
     vaultPage,
   }) => {
     const depositAmount = 10000;
@@ -285,7 +285,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
   });
 
-  test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available", async ({
+  test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
     vaultPage,
   }) => {
     await vaultPage.startLockPeriod({
