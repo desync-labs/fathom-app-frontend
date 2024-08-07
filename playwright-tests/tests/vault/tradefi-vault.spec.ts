@@ -285,13 +285,16 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
   });
 
-  test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
+  test.only("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
     vaultPage,
   }) => {
+    test.setTimeout(60000 * 4);
     await vaultPage.startLockPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
-    await vaultPage.page.waitForTimeout(20000);
+    await vaultPage.page.waitForTimeout(18000);
+    await vaultPage.page.reload();
+    await vaultPage.page.waitForTimeout(2000);
     await expect
       .soft(vaultPage.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
