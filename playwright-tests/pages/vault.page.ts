@@ -1,6 +1,6 @@
 import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
-import { extractNumericValue } from "../utils/helpers";
+import { extractNumericValue, transformToSameDecimals } from "../utils/helpers";
 import {
   GraphOperationName,
   TradeFiPeriod,
@@ -716,12 +716,16 @@ export default class VaultPage extends BasePage {
       .toBeGreaterThanOrEqual(
         Math.round((stakedAmountDialogAfter as number) * 100) / 100
       );
+    const poolShareDialogFormatted = transformToSameDecimals(
+      poolShareDialogAfter as number,
+      poolShareValueDetailPageBefore as number
+    );
     expect
-      .soft(Math.round((poolShareValueDetailPageBefore as number) * 100) / 100)
-      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
+      .soft(poolShareValueDetailPageBefore as number)
+      .toEqual(poolShareDialogFormatted);
     expect
-      .soft(Math.round((poolShareValueDetailPageAfter as number) * 100) / 100)
-      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
+      .soft(poolShareValueDetailPageAfter as number)
+      .toEqual(poolShareDialogFormatted);
     expect
       .soft(
         Math.round((shareTokensValueDetailPageBefore as number) * 100) / 100
