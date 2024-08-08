@@ -1461,7 +1461,6 @@ export default class VaultPage extends BasePage {
       await tradeFintechStrategyMockContract.startLockPeriod();
     const receipt = await transaction.wait();
     expect(receipt.status).toEqual(1);
-    console.log("Lock period started");
   }
 
   async validateLockingPeriodBoxTradefiVault({

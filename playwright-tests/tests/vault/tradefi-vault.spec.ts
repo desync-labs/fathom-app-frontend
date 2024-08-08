@@ -14,7 +14,10 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.startDepositPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
+    await vaultPage.page.waitForTimeout(10000);
     await vaultPage.navigate();
+    await vaultPage.page.reload({ waitUntil: "load" });
+    await vaultPage.page.waitForTimeout(2000);
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await vaultPage.page.waitForLoadState("load");
@@ -288,12 +291,13 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
   test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
     vaultPage,
   }) => {
-    test.setTimeout(60000 * 4);
     await vaultPage.startLockPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
-    await vaultPage.page.waitForTimeout(18000);
-    await vaultPage.page.reload();
+    await vaultPage.page.waitForTimeout(10000);
+    await vaultPage.page.reload({ waitUntil: "load" });
+    await vaultPage.page.waitForTimeout(2000);
+    await vaultPage.page.reload({ waitUntil: "load" });
     await vaultPage.page.waitForTimeout(2000);
     await expect
       .soft(vaultPage.getDepositButtonRowLocatorById(id))
