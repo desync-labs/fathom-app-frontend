@@ -169,7 +169,7 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const MenuWrapper = styled("nav")<{ open: boolean }>`
-  padding: ${({ open }) => (open ? "24px 12px" : "20px 8px")};
+  padding: ${({ open }) => (open ? "20px 12px" : "20px 8px")};
   height: 100vh;
   position: relative;
   display: flex;
