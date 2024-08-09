@@ -14,10 +14,27 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.startDepositPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
-    await vaultPage.page.waitForTimeout(10000);
     await vaultPage.navigate();
-    await vaultPage.page.reload({ waitUntil: "load" });
+    await expect
+      .soft(vaultPage.getDepositButtonRowLocatorById(id))
+      .toHaveText("Deposit");
+    await vaultPage.getDepositButtonRowLocatorById(id).click();
+    await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
     await vaultPage.page.waitForTimeout(2000);
+    let depositCompletedWarningMessageVisible =
+      await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
+    while (depositCompletedWarningMessageVisible) {
+      await vaultPage.page.reload({ waitUntil: "load" });
+      await expect
+        .soft(vaultPage.getDepositButtonRowLocatorById(id))
+        .toHaveText("Deposit");
+      await vaultPage.getDepositButtonRowLocatorById(id).click();
+      await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
+      await vaultPage.page.waitForTimeout(2000);
+      depositCompletedWarningMessageVisible =
+        await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
+    }
+    await vaultPage.btnCloseModal.click();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await vaultPage.page.waitForLoadState("load");
@@ -294,17 +311,26 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.startLockPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
-    await vaultPage.page.waitForTimeout(10000);
     await vaultPage.page.reload({ waitUntil: "load" });
-    await vaultPage.page.waitForTimeout(2000);
-    await vaultPage.page.reload({ waitUntil: "load" });
-    await vaultPage.page.waitForTimeout(2000);
     await expect
       .soft(vaultPage.getDepositButtonRowLocatorById(id))
       .toHaveText("Deposit");
     await vaultPage.getDepositButtonRowLocatorById(id).click();
     await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
     await vaultPage.page.waitForTimeout(2000);
+    let depositCompletedWarningMessageVisible =
+      await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
+    while (!depositCompletedWarningMessageVisible) {
+      await vaultPage.page.reload({ waitUntil: "load" });
+      await expect
+        .soft(vaultPage.getDepositButtonRowLocatorById(id))
+        .toHaveText("Deposit");
+      await vaultPage.getDepositButtonRowLocatorById(id).click();
+      await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
+      await vaultPage.page.waitForTimeout(2000);
+      depositCompletedWarningMessageVisible =
+        await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
+    }
     // Vault list item modal
     await expect
       .soft(vaultPage.btnConfirmDepositListItemDepositModal)
