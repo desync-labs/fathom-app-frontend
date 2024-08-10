@@ -1,8 +1,9 @@
 import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
-import { extractNumericValue } from "../utils/helpers";
+import { extractNumericValue, transformToSameDecimals } from "../utils/helpers";
 import {
   GraphOperationName,
+  TradeFiPeriod,
   ValidateVaultDataParams,
   VaultAction,
   VaultDepositData,
@@ -12,6 +13,9 @@ import {
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import { graphAPIEndpoints } from "../fixtures/api.data";
+import { APOTHEM_RPC_INTERNAL } from "../fixtures/global.data";
+import { ethers } from "fathom-ethers";
+import ITradeFintechStrategyMock from "../fixtures/abis/ITradeFintechStrategyMock.json";
 
 export default class VaultPage extends BasePage {
   readonly path: string;
@@ -66,6 +70,22 @@ export default class VaultPage extends BasePage {
   readonly btnResetDetailDepositModal: Locator;
   readonly btnApproveDetailDepositModal: Locator;
   readonly earnedValueVaultDetails: Locator;
+  readonly kycVerificationWarningText: Locator;
+  readonly kycVerificationWarningLink: Locator;
+  readonly kycVerificationWarningTextBox: Locator;
+  readonly lockIconActiveTradefiVault: Locator;
+  readonly lockTitleTradefiVault: Locator;
+  readonly depositTimeTextTradeFiVault: Locator;
+  readonly lockTimeTextTradeFiVault: Locator;
+  readonly stepIconDepositTimeTradefiVault: Locator;
+  readonly stepIconLockTimeTradefiVault: Locator;
+  readonly timerDepositTime: Locator;
+  readonly timerLockTime: Locator;
+  readonly depositTimeCompletedWarningMessageText: Locator;
+  readonly depositTimeCompletedWarningMessageTextBox: Locator;
+  readonly completedTimerDepositTime: Locator;
+  readonly completedTimerLockTime: Locator;
+  readonly btnWithdrawAllTradeFiVaultDetail: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -217,6 +237,51 @@ export default class VaultPage extends BasePage {
     this.btnApproveDetailDepositModal = this.page.getByTestId(
       "vault-detailDepositModal-approveButton"
     );
+    this.kycVerificationWarningText = this.page.getByText(
+      "Only KYC-verified users can deposit. Please completing KYC at"
+    );
+    this.kycVerificationWarningLink = this.page.locator(
+      "a[href='https://kyc.tradeflow.network/']"
+    );
+    this.kycVerificationWarningTextBox = this.page.locator(
+      "//p[text()='Only KYC-verified users can deposit. Please completing KYC at']/parent::div/parent::div"
+    );
+    this.lockIconActiveTradefiVault = this.page.locator(
+      "img[alt='locked-active']"
+    );
+    this.lockTitleTradefiVault =
+      this.lockIconActiveTradefiVault.locator("+ h3");
+    this.depositTimeTextTradeFiVault = this.page.locator(
+      "//div[text()='Deposit Time']"
+    );
+    this.lockTimeTextTradeFiVault = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]"
+    );
+    this.stepIconDepositTimeTradefiVault = this.page.locator(
+      "//div[text()='Deposit Time']//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/span[1]//img"
+    );
+    this.stepIconLockTimeTradefiVault = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/span[1]//img"
+    );
+    this.timerDepositTime = this.page.locator(
+      "//div[text()='Deposit Time']//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/following-sibling::div//div[contains(text(), '999')]"
+    );
+    this.timerLockTime = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]/following-sibling::div//div[contains(text(), '999')]"
+    );
+    this.depositTimeCompletedWarningMessageText = this.page.locator(
+      "//p[text()='Deposit period has been completed.']"
+    );
+    this.depositTimeCompletedWarningMessageTextBox = this.page.locator(
+      "//p[text()='Deposit period has been completed.']/parent::div/parent::div"
+    );
+    this.completedTimerDepositTime = this.page.locator(
+      "//div[text()='Deposit Time']//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]//div[text()='Completed']"
+    );
+    this.completedTimerLockTime = this.page.locator(
+      "//div[contains(text(), 'Lock Time')]//ancestor::span[contains(@class, 'MuiStepLabel-vertical')]//div[text()='Completed']"
+    );
+    this.btnWithdrawAllTradeFiVaultDetail = this.page.getByText("Withdraw all");
   }
 
   async navigate(): Promise<void> {
@@ -651,12 +716,16 @@ export default class VaultPage extends BasePage {
       .toBeGreaterThanOrEqual(
         Math.round((stakedAmountDialogAfter as number) * 100) / 100
       );
+    const poolShareDialogFormatted = transformToSameDecimals(
+      poolShareDialogAfter as number,
+      poolShareValueDetailPageBefore as number
+    );
     expect
-      .soft(Math.round((poolShareValueDetailPageBefore as number) * 100) / 100)
-      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
+      .soft(poolShareValueDetailPageBefore as number)
+      .toEqual(poolShareDialogFormatted);
     expect
-      .soft(Math.round((poolShareValueDetailPageAfter as number) * 100) / 100)
-      .toEqual(Math.round((poolShareDialogAfter as number) * 100) / 100);
+      .soft(poolShareValueDetailPageAfter as number)
+      .toEqual(poolShareDialogFormatted);
     expect
       .soft(
         Math.round((shareTokensValueDetailPageBefore as number) * 100) / 100
@@ -1348,5 +1417,110 @@ export default class VaultPage extends BasePage {
     ]);
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(2000);
+  }
+
+  async startDepositPeriod({
+    strategyAddress,
+  }: {
+    strategyAddress: string;
+  }): Promise<void> {
+    const rpcUrl = APOTHEM_RPC_INTERNAL;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
+    const signer = wallet.connect(provider);
+    const tradeFintechStrategyMockContractAddress = strategyAddress;
+    const tradeFintechStrategyMockContractAbi = ITradeFintechStrategyMock.abi;
+    const tradeFintechStrategyMockContract = new ethers.Contract(
+      tradeFintechStrategyMockContractAddress,
+      tradeFintechStrategyMockContractAbi,
+      signer
+    );
+    const transaction =
+      await tradeFintechStrategyMockContract.startDepositPeriod();
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
+  }
+
+  async startLockPeriod({
+    strategyAddress,
+  }: {
+    strategyAddress: string;
+  }): Promise<void> {
+    const rpcUrl = APOTHEM_RPC_INTERNAL;
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    const wallet = new ethers.Wallet(this.privateKeyMainAccount, provider);
+    const signer = wallet.connect(provider);
+    const tradeFintechStrategyMockContractAddress = strategyAddress;
+    const tradeFintechStrategyMockContractAbi = ITradeFintechStrategyMock.abi;
+    const tradeFintechStrategyMockContract = new ethers.Contract(
+      tradeFintechStrategyMockContractAddress,
+      tradeFintechStrategyMockContractAbi,
+      signer
+    );
+    const transaction =
+      await tradeFintechStrategyMockContract.startLockPeriod();
+    const receipt = await transaction.wait();
+    expect(receipt.status).toEqual(1);
+  }
+
+  async validateLockingPeriodBoxTradefiVault({
+    period,
+  }: {
+    period: TradeFiPeriod;
+  }): Promise<void> {
+    if (period === TradeFiPeriod.Lock) {
+      await expect.soft(this.stepIconDepositTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconDepositTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon-active.");
+      await expect.soft(this.depositTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.completedTimerDepositTime).toBeVisible();
+      await expect
+        .soft(this.completedTimerDepositTime)
+        .toHaveCSS("color", "rgb(67, 255, 241)");
+      await expect.soft(this.stepIconLockTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconLockTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon.");
+      await expect.soft(this.lockTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.timerLockTime).toBeVisible();
+      await expect
+        .soft(this.timerLockTime)
+        .toHaveCSS("color", "rgb(245, 149, 61)");
+    } else if (period === TradeFiPeriod.Deposit) {
+      await expect.soft(this.stepIconDepositTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconDepositTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon.");
+      await expect.soft(this.depositTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.timerDepositTime).toBeVisible();
+      await expect
+        .soft(this.timerDepositTime)
+        .toHaveCSS("color", "rgb(245, 149, 61)");
+      await expect.soft(this.stepIconLockTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconLockTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon.");
+      await expect.soft(this.lockTimeTextTradeFiVault).toBeVisible();
+    } else if (period === TradeFiPeriod.LockEnded) {
+      await expect.soft(this.stepIconDepositTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconDepositTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon-active.");
+      await expect.soft(this.depositTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.completedTimerDepositTime).toBeVisible();
+      await expect
+        .soft(this.completedTimerDepositTime)
+        .toHaveCSS("color", "rgb(67, 255, 241)");
+      await expect.soft(this.stepIconLockTimeTradefiVault).toBeVisible();
+      expect
+        .soft(await this.stepIconLockTimeTradefiVault.getAttribute("src"))
+        .toContain("stepper-item-icon-active.");
+      await expect.soft(this.lockTimeTextTradeFiVault).toBeVisible();
+      await expect.soft(this.completedTimerLockTime).toBeVisible();
+      await expect
+        .soft(this.completedTimerLockTime)
+        .toHaveCSS("color", "rgb(67, 255, 241)");
+    }
   }
 }
