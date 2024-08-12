@@ -7,16 +7,12 @@ on:
       - dev
 
 concurrency:
-  group: global-tests
-  cancel-in-progress: false
+  group: ci-dev
 
 jobs:
   smoke-tests-local-dev:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    concurrency:
-      group: smoke-tests-local-dev-${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

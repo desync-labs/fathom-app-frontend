@@ -6,16 +6,12 @@ on:
     - cron: "0 0 * * *"
 
 concurrency:
-  group: global-tests
-  cancel-in-progress: false
+  group: ci-dev
 
 jobs:
   all-tests-dev:
     timeout-minutes: 120
     runs-on: ubuntu-latest
-    concurrency:
-      group: all-tests-dev-${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
         with:
