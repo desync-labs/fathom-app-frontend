@@ -21,18 +21,17 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.getDepositButtonRowLocatorById(id).click();
     await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
     await vaultPage.page.waitForTimeout(2000);
-    let depositCompletedWarningMessageVisible =
-      await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
-    while (depositCompletedWarningMessageVisible) {
+    let depositTimer = await vaultPage.timerDepositTime.isVisible();
+    while (!depositTimer) {
       await vaultPage.page.reload({ waitUntil: "load" });
+      await vaultPage.page.waitForTimeout(2000);
       await expect
         .soft(vaultPage.getDepositButtonRowLocatorById(id))
         .toHaveText("Deposit");
       await vaultPage.getDepositButtonRowLocatorById(id).click();
       await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
       await vaultPage.page.waitForTimeout(2000);
-      depositCompletedWarningMessageVisible =
-        await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
+      depositTimer = await vaultPage.timerDepositTime.isVisible();
     }
     await vaultPage.btnCloseModal.click();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
@@ -305,7 +304,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       .toHaveCSS("background-color", "rgb(69, 37, 8)");
   });
 
-  test("Lock Period - Layout is corrrect, deposit, withdraw and withdraw all funds is not available @smoke", async ({
+  test("Lock Period - Layout is correct, deposit, withdraw and withdraw all funds are not available @smoke", async ({
     vaultPage,
   }) => {
     await vaultPage.startLockPeriod({
@@ -318,18 +317,17 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
     await vaultPage.getDepositButtonRowLocatorById(id).click();
     await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
     await vaultPage.page.waitForTimeout(2000);
-    let depositCompletedWarningMessageVisible =
-      await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
-    while (!depositCompletedWarningMessageVisible) {
+    let lockTimer = await vaultPage.timerLockTime.isVisible();
+    while (!lockTimer) {
       await vaultPage.page.reload({ waitUntil: "load" });
+      await vaultPage.page.waitForTimeout(2000);
       await expect
         .soft(vaultPage.getDepositButtonRowLocatorById(id))
         .toHaveText("Deposit");
       await vaultPage.getDepositButtonRowLocatorById(id).click();
       await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
       await vaultPage.page.waitForTimeout(2000);
-      depositCompletedWarningMessageVisible =
-        await vaultPage.depositTimeCompletedWarningMessageText.isVisible();
+      lockTimer = await vaultPage.timerLockTime.isVisible();
     }
     // Vault list item modal
     await expect
