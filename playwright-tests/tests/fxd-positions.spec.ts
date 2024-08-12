@@ -1,134 +1,149 @@
 import { test } from "../fixtures/pomSynpressFixture";
-import { WalletConnectOptions } from "../types";
+import { StablecoinCollateral, WalletConnectOptions } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: FXD Positions Operations", () => {
-  test.describe.serial("Scenario 1 @smoke", () => {
-    test("Creating a position with 100 collateral and safe max borrow amount is successful", async ({
-      fxdPage,
-    }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      const positionData = await fxdPage.openPosition({
-        collateralAmount: 100,
-        borrowAmount: "safeMax",
-      });
-      await fxdPage.page.waitForTimeout(5000);
-      await fxdPage.validateLatestPositionDisplayedData({
-        positionIdExpected: positionData.positionId,
-        borrowAmountExpected: positionData.borrowAmount,
-        collateralAmountExpected: positionData.collateralAmount,
-        safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
-      });
-    });
+test.describe("Fathom App Test Suite: FXD Tests", () => {
+  for (const collateral of Object.values(StablecoinCollateral)) {
+    test.describe(`Positions Operations - ${collateral} collateral`, () => {
+      test.describe.serial("Scenario 1 @smoke", () => {
+        test("Creating a position with 100 collateral and safe max borrow amount is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          const positionData = await fxdPage.openPosition({
+            collateralAmount: 100,
+            borrowAmount: "safeMax",
+            collateral,
+          });
+          await fxdPage.page.waitForTimeout(5000);
+          await fxdPage.validateLatestPositionDisplayedData({
+            collateral,
+            positionIdExpected: positionData.positionId,
+            borrowAmountExpected: positionData.borrowAmount,
+            collateralAmountExpected: positionData.collateralAmount,
+            safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
+          });
+        });
 
-    test("Fully repaying a newly created position is successful", async ({
-      fxdPage,
-    }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      await fxdPage.fullyCloseLatestPositionAndValidate();
-    });
-  });
+        test("Fully repaying a newly created position is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          await fxdPage.fullyCloseLatestPositionAndValidate();
+        });
+      });
 
-  test.describe.serial("Scenario 2", () => {
-    test("Creating a position with 150 collateral and 1 borrow amount is successful", async ({
-      fxdPage,
-    }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      const positionData = await fxdPage.openPosition({
-        collateralAmount: 150,
-        borrowAmount: 1,
-      });
-      await fxdPage.page.waitForTimeout(5000);
-      await fxdPage.validateLatestPositionDisplayedData({
-        positionIdExpected: positionData.positionId,
-        borrowAmountExpected: positionData.borrowAmount,
-        collateralAmountExpected: positionData.collateralAmount,
-        safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
-      });
-    });
+      test.describe.serial("Scenario 2", () => {
+        test("Creating a position with 150 collateral and 1 borrow amount is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          const positionData = await fxdPage.openPosition({
+            collateralAmount: 150,
+            borrowAmount: 1,
+            collateral,
+          });
+          await fxdPage.page.waitForTimeout(5000);
+          await fxdPage.validateLatestPositionDisplayedData({
+            collateral,
+            positionIdExpected: positionData.positionId,
+            borrowAmountExpected: positionData.borrowAmount,
+            collateralAmountExpected: positionData.collateralAmount,
+            safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
+          });
+        });
 
-    test("Topping up a position is successful", async ({ fxdPage }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      const toppedUpPositionData = await fxdPage.topUpLatestPosition({
-        collateralAmount: 60,
-        borrowAmount: 1,
-      });
-      await fxdPage.page.waitForTimeout(5000);
-      await fxdPage.validateLatestPositionDisplayedData({
-        positionIdExpected: toppedUpPositionData.positionId,
-        borrowAmountExpected: toppedUpPositionData.borrowAmount,
-        collateralAmountExpected: toppedUpPositionData.collateralAmount,
-        safetyBufferPercentageExpected:
-          toppedUpPositionData.safetyBufferPercentage,
-      });
-    });
+        test("Topping up a position is successful", async ({ fxdPage }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          const toppedUpPositionData = await fxdPage.topUpLatestPosition({
+            collateralAmount: 60,
+            borrowAmount: 1,
+            collateral,
+          });
+          await fxdPage.page.waitForTimeout(5000);
+          await fxdPage.validateLatestPositionDisplayedData({
+            collateral,
+            positionIdExpected: toppedUpPositionData.positionId,
+            borrowAmountExpected: toppedUpPositionData.borrowAmount,
+            collateralAmountExpected: toppedUpPositionData.collateralAmount,
+            safetyBufferPercentageExpected:
+              toppedUpPositionData.safetyBufferPercentage,
+          });
+        });
 
-    test("Fully repaying a topped up position is successful", async ({
-      fxdPage,
-    }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      await fxdPage.fullyCloseLatestPositionAndValidate();
-    });
-  });
+        test("Fully repaying a topped up position is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          await fxdPage.fullyCloseLatestPositionAndValidate();
+        });
+      });
 
-  test.describe.serial("Scenario 3", () => {
-    test("Creating a position with 105.5 collateral and 1.5 borrow amount is successful", async ({
-      fxdPage,
-    }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      const positionData = await fxdPage.openPosition({
-        collateralAmount: 105.5,
-        borrowAmount: 1.5,
-      });
-      await fxdPage.page.waitForTimeout(5000);
-      await fxdPage.validateLatestPositionDisplayedData({
-        positionIdExpected: positionData.positionId,
-        borrowAmountExpected: positionData.borrowAmount,
-        collateralAmountExpected: positionData.collateralAmount,
-        safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
-      });
-    });
+      test.describe.serial("Scenario 3", () => {
+        test("Creating a position with 105.5 collateral and 1.5 borrow amount is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          const positionData = await fxdPage.openPosition({
+            collateralAmount: 105.5,
+            borrowAmount: 1.5,
+            collateral,
+          });
+          await fxdPage.page.waitForTimeout(5000);
+          await fxdPage.validateLatestPositionDisplayedData({
+            collateral,
+            positionIdExpected: positionData.positionId,
+            borrowAmountExpected: positionData.borrowAmount,
+            collateralAmountExpected: positionData.collateralAmount,
+            safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
+          });
+        });
 
-    test("Partially repaying a position is successful", async ({ fxdPage }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      const positionData = await fxdPage.partiallyCloseLatestPosition({
-        repayAmount: 0.5,
-      });
-      await fxdPage.page.waitForTimeout(5000);
-      await fxdPage.validateLatestPositionDisplayedData({
-        positionIdExpected: positionData.positionId,
-        borrowAmountExpected: positionData.borrowAmount,
-        collateralAmountExpected: positionData.collateralAmount,
-        safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
-      });
-    });
+        test("Partially repaying a position is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          const positionData = await fxdPage.partiallyCloseLatestPosition({
+            repayAmount: 0.5,
+          });
+          await fxdPage.page.waitForTimeout(5000);
+          await fxdPage.validateLatestPositionDisplayedData({
+            collateral,
+            positionIdExpected: positionData.positionId,
+            borrowAmountExpected: positionData.borrowAmount,
+            collateralAmountExpected: positionData.collateralAmount,
+            safetyBufferPercentageExpected: positionData.safetyBufferPercentage,
+          });
+        });
 
-    test("Fully repaying a partially repaid position is successful", async ({
-      fxdPage,
-    }) => {
-      await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      await fxdPage.fullyCloseLatestPositionAndValidate();
+        test("Fully repaying a partially repaid position is successful", async ({
+          fxdPage,
+        }) => {
+          await fxdPage.navigate();
+          await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+          await fxdPage.validateConnectedWalletAddress();
+          await fxdPage.fullyCloseLatestPositionAndValidate();
+        });
+      });
     });
-  });
+  }
 
   test("Switching Metamask accounts is succesfull and correctly updates the positions list", async ({
     fxdPage,
