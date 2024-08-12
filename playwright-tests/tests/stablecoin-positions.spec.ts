@@ -5,7 +5,7 @@ import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";
 dotenv.config();
 
-test.describe("Fathom App Test Suite: FXD Tests", () => {
+test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
   for (const collateral of Object.values(StablecoinCollateral)) {
     test.describe(`Positions Operations - ${collateral} collateral`, () => {
       test.describe.serial("Scenario 1 @smoke", () => {
