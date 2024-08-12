@@ -113,7 +113,7 @@ import {
   useGlobalData,
 } from "apps/charts/contexts/GlobalData";
 import Transactions from "apps/dex/pages/Transactions";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useMemo } from "react";
 import ReactGA from "react-ga4";
 import VaultListView from "components/Vaults/VaultList/VaultListView";
 import VaultTutorial from "components/Vaults/VaultTutorial/VaultTutorial";
@@ -130,6 +130,7 @@ import {
   DISPLAY_STABLE_SWAP,
   DISPLAY_VAULTS,
   NETWORK_SETTINGS,
+  supportedChainIds,
 } from "connectors/networks";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 import CookieConsent from "components/Common/CookieConsent";
@@ -311,6 +312,11 @@ const MainLayout = () => {
     openConnectorMenu,
   } = useConnector();
 
+  const checkedChainId = useMemo(
+    () => (supportedChainIds.includes(chainId) ? chainId : DEFAULT_CHAIN_ID),
+    [chainId]
+  );
+
   /**
    * Load charts data.
    */
@@ -386,7 +392,7 @@ const MainLayout = () => {
               {isWalletConnect && (
                 <img src={WalletConnectSrc} alt={"wallet-connect"} />
               )}
-              {(!chainId || DISPLAY_GOVERNANCE.includes(chainId)) &&
+              {DISPLAY_GOVERNANCE.includes(checkedChainId) &&
                 aggregateBalance && (
                   <FTHMWrapper onClick={() => setShowFthmBalanceModal(true)}>
                     <FTHMAmount
@@ -486,7 +492,7 @@ const MainLayout = () => {
             <TransactionStatus scroll={scroll} />
             <FxdProvider>
               <Routes>
-                {!chainId || DISPLAY_FXD.includes(chainId) ? (
+                {DISPLAY_FXD.includes(checkedChainId) ? (
                   <Route path="/fxd" element={<FXDView />}>
                     <>
                       <Route path="/fxd" element={<DashboardContent />} />
@@ -505,7 +511,7 @@ const MainLayout = () => {
                     </>
                   </Route>
                 ) : null}
-                {!chainId || DISPLAY_STABLE_SWAP.includes(chainId) ? (
+                {DISPLAY_STABLE_SWAP.includes(checkedChainId) ? (
                   <>
                     {allowStableSwap ||
                     isUserWrapperWhiteListed ||
@@ -530,7 +536,7 @@ const MainLayout = () => {
                     ) : null}
                   </>
                 ) : null}
-                {!chainId || DISPLAY_GOVERNANCE.includes(chainId) ? (
+                {DISPLAY_GOVERNANCE.includes(checkedChainId) ? (
                   <Route path="/dao" element={<DaoView />}>
                     <Route
                       index
@@ -567,7 +573,7 @@ const MainLayout = () => {
                     />
                   </Route>
                 ) : null}
-                {!chainId || DISPLAY_DEX.includes(chainId) ? (
+                {DISPLAY_DEX.includes(checkedChainId) ? (
                   <Route path="/swap" element={<DexView />}>
                     <Route index element={<Swap />} />
                     <Route
@@ -609,7 +615,7 @@ const MainLayout = () => {
                     <Route element={<RedirectPathToSwapOnly />} />
                   </Route>
                 ) : null}
-                {!chainId || DISPLAY_LENDING.includes(chainId) ? (
+                {DISPLAY_LENDING.includes(checkedChainId) ? (
                   <Route path="/lending" element={<LendingView />}>
                     <Route index element={<Home />} />
                     <Route path="markets" element={<Markets />} />
@@ -625,7 +631,7 @@ const MainLayout = () => {
                     />
                   </Route>
                 ) : null}
-                {!chainId || DISPLAY_VAULTS.includes(chainId) ? (
+                {DISPLAY_VAULTS.includes(checkedChainId) ? (
                   <Route path="/vaults" element={<VaultsView />}>
                     <Route index element={<VaultListView />} />
                     <Route path="tutorial" index element={<VaultTutorial />} />
@@ -635,7 +641,7 @@ const MainLayout = () => {
                     />
                   </Route>
                 ) : null}
-                {!chainId || DISPLAY_CHARTS.includes(chainId) ? (
+                {DISPLAY_CHARTS.includes(checkedChainId) ? (
                   <Route path="/charts" element={<ChartsView />}>
                     <Route
                       index
@@ -728,7 +734,7 @@ const MainLayout = () => {
       {!isMobile && openConnector && (
         <DesktopConnector onClose={() => setOpenConnector(false)} />
       )}
-      {!chainId || [ChainId.AXDC, ChainId.XDC].includes(chainId) ? (
+      {[ChainId.AXDC, ChainId.XDC].includes(checkedChainId) ? (
         <FthmInfoModal
           onClose={() => setShowFthmBalanceModal(false)}
           open={showFthmBalanceModal}
