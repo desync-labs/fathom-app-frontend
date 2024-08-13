@@ -59,7 +59,7 @@ export default defineConfig({
         ...devices["Desktop Chrome"],
       },
       testDir: "./playwright-tests/tests/",
-      testMatch: "stablecoin-positions.spec.ts",
+      testMatch: "stablecoin.spec.ts",
     },
     {
       name: "vault-tests",
