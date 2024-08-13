@@ -558,14 +558,44 @@ export default class VaultPage extends BasePage {
     id,
     shareTokenName,
     depositAmount,
+    lockPeriodExpected,
   }: {
     id: string;
     shareTokenName: string;
     depositAmount: number;
+    lockPeriodExpected?: TradeFiPeriod;
   }): Promise<VaultDepositData> {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
     await this.btnDepositNavItemListItemManageModal.click();
+    await this.page.waitForTimeout(2000);
+    if (lockPeriodExpected === TradeFiPeriod.Deposit) {
+      let depositTimer = await this.timerDepositTime.isVisible();
+      while (!depositTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getManageVaultButtonRowLocatorById(id))
+          .toHaveText("Manage");
+        await this.getManageVaultButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemManageModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        depositTimer = await this.timerDepositTime.isVisible();
+      }
+    } else if (lockPeriodExpected === TradeFiPeriod.Lock) {
+      let lockTimer = await this.timerLockTime.isVisible();
+      while (!lockTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getManageVaultButtonRowLocatorById(id))
+          .toHaveText("Manage");
+        await this.getManageVaultButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemManageModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        lockTimer = await this.timerLockTime.isVisible();
+      }
+    }
     await this.enterDepositAmountVaultListItemManageModal(depositAmount);
     await this.page.waitForTimeout(2000);
     const depositedValueBeforeText =
@@ -797,12 +827,42 @@ export default class VaultPage extends BasePage {
   async manageVaultListItemWithdrawPartially({
     id,
     withdrawAmount,
+    lockPeriodExpected,
   }: {
     id: string;
     withdrawAmount: number;
+    lockPeriodExpected?: TradeFiPeriod;
   }): Promise<VaultDepositData> {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
+    await this.page.waitForTimeout(2000);
+    if (lockPeriodExpected === TradeFiPeriod.Deposit) {
+      let depositTimer = await this.timerDepositTime.isVisible();
+      while (!depositTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getManageVaultButtonRowLocatorById(id))
+          .toHaveText("Manage");
+        await this.getManageVaultButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemManageModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        depositTimer = await this.timerDepositTime.isVisible();
+      }
+    } else if (lockPeriodExpected === TradeFiPeriod.Lock) {
+      let lockTimer = await this.timerLockTime.isVisible();
+      while (!lockTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getManageVaultButtonRowLocatorById(id))
+          .toHaveText("Manage");
+        await this.getManageVaultButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemManageModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        lockTimer = await this.timerLockTime.isVisible();
+      }
+    }
     await this.btnWithdrawNavItemListItemManageModal.click();
     await this.enterWithdrawAmountVaultListItemManageModal(withdrawAmount);
     await this.page.waitForTimeout(2000);
@@ -871,11 +931,41 @@ export default class VaultPage extends BasePage {
 
   async manageVaultListItemWithdrawFully({
     id,
+    lockPeriodExpected,
   }: {
     id: string;
+    lockPeriodExpected?: TradeFiPeriod;
   }): Promise<void> {
     await this.getManageVaultButtonRowLocatorById(id).click();
     await expect(this.dialogListItemManageModal).toBeVisible();
+    await this.page.waitForTimeout(2000);
+    if (lockPeriodExpected === TradeFiPeriod.Deposit) {
+      let depositTimer = await this.timerDepositTime.isVisible();
+      while (!depositTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getManageVaultButtonRowLocatorById(id))
+          .toHaveText("Manage");
+        await this.getManageVaultButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemManageModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        depositTimer = await this.timerDepositTime.isVisible();
+      }
+    } else if (lockPeriodExpected === TradeFiPeriod.Lock) {
+      let lockTimer = await this.timerLockTime.isVisible();
+      while (!lockTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getManageVaultButtonRowLocatorById(id))
+          .toHaveText("Manage");
+        await this.getManageVaultButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemManageModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        lockTimer = await this.timerLockTime.isVisible();
+      }
+    }
     await this.btnWithdrawNavItemListItemManageModal.click();
     await this.page.waitForTimeout(5000);
     await this.btnMaxWithdrawInputListItemManageModal.click();
@@ -963,10 +1053,12 @@ export default class VaultPage extends BasePage {
     id,
     shareTokenName,
     depositAmount,
+    lockPeriodExpected,
   }: {
     id: string;
     shareTokenName: string;
     depositAmount: number;
+    lockPeriodExpected?: TradeFiPeriod;
   }): Promise<VaultDepositData> {
     await expect
       .soft(this.getDepositButtonRowLocatorById(id))
@@ -977,6 +1069,33 @@ export default class VaultPage extends BasePage {
     await this.getDepositButtonRowLocatorById(id).click();
     await expect(this.dialogListItemDepositModal).toBeVisible();
     await this.page.waitForTimeout(2000);
+    if (lockPeriodExpected === TradeFiPeriod.Deposit) {
+      let depositTimer = await this.timerDepositTime.isVisible();
+      while (!depositTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getDepositButtonRowLocatorById(id))
+          .toHaveText("Deposit");
+        await this.getDepositButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemDepositModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        depositTimer = await this.timerDepositTime.isVisible();
+      }
+    } else if (lockPeriodExpected === TradeFiPeriod.Lock) {
+      let lockTimer = await this.timerLockTime.isVisible();
+      while (!lockTimer) {
+        await this.page.reload({ waitUntil: "load" });
+        await this.page.waitForTimeout(2000);
+        await expect
+          .soft(this.getDepositButtonRowLocatorById(id))
+          .toHaveText("Deposit");
+        await this.getDepositButtonRowLocatorById(id).click();
+        await expect(this.dialogListItemDepositModal).toBeVisible();
+        await this.page.waitForTimeout(2000);
+        lockTimer = await this.timerLockTime.isVisible();
+      }
+    }
     await this.enterDepositAmountVaultListItemDepositModal(depositAmount);
     await this.page.waitForTimeout(2000);
     await this.approveTokensMaxUintListItemDepositModal();
