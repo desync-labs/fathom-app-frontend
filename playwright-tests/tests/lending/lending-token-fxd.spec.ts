@@ -13,7 +13,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     await lendingPage.withdrawAllSuppliedAssetsFullyIfAny();
   });
 
-  test("Supply FXD Token when no FXD is supplied is successful @smoke", async ({
+  test("Supply FXD Token when no FXD is supplied is successful", async ({
     lendingPage,
   }) => {
     const assetName = LendingAssets.FXD;
@@ -68,7 +68,7 @@ test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
     );
   });
 
-  test("Borrow FXD Token with variable APY rate is successful @smoke", async ({
+  test("Borrow FXD Token with variable APY rate is successful", async ({
     lendingPage,
   }) => {
     const assetName = LendingAssets.FXD;
