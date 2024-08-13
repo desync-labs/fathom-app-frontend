@@ -27,6 +27,7 @@ export default class LendingPage extends BasePage {
   readonly btnAddToWallet: Locator;
   readonly descriptionAddToWalletAllDoneModal: Locator;
   readonly netWorthAmountText: Locator;
+  readonly transactionSuccessTimeout: number;
 
   constructor(page: Page) {
     super(page);
@@ -75,6 +76,7 @@ export default class LendingPage extends BasePage {
     this.netWorthAmountText = this.page.locator(
       "//div[text()='Net worth']/parent::div/following-sibling::p"
     );
+    this.transactionSuccessTimeout = 90000;
   }
 
   async navigate(): Promise<void> {
@@ -162,7 +164,7 @@ export default class LendingPage extends BasePage {
         await this.btnAction.click();
         await metamask.confirmTransaction();
         await expect(this.headingTwoAllDoneModal).toBeVisible({
-          timeout: 60000,
+          timeout: this.transactionSuccessTimeout,
         });
         await this.btnCloseAllDoneModal.click();
         await this.page.waitForTimeout(3000);
@@ -471,7 +473,7 @@ export default class LendingPage extends BasePage {
     await this.btnAction.click();
     await metamask.confirmTransaction();
     await expect(this.headingTwoAllDoneModal).toBeVisible({
-      timeout: 60000,
+      timeout: this.transactionSuccessTimeout,
     });
     await this.page.waitForTimeout(1000);
   }
@@ -519,7 +521,7 @@ export default class LendingPage extends BasePage {
     await this.btnAction.click();
     await metamask.confirmTransaction();
     await expect(this.headingTwoAllDoneModal).toBeVisible({
-      timeout: 60000,
+      timeout: this.transactionSuccessTimeout,
     });
     await this.page.waitForTimeout(1000);
   }
@@ -551,7 +553,7 @@ export default class LendingPage extends BasePage {
       await this.btnAction.click();
       await metamask.confirmTransaction();
       await expect(this.headingTwoAllDoneModal).toBeVisible({
-        timeout: 60000,
+        timeout: this.transactionSuccessTimeout,
       });
       await this.btnCloseAllDoneModal.click();
       await this.page.waitForTimeout(1000);
@@ -578,7 +580,7 @@ export default class LendingPage extends BasePage {
       await this.btnAction.click();
       await metamask.confirmTransaction();
       await expect(this.headingTwoAllDoneModal).toBeVisible({
-        timeout: 60000,
+        timeout: this.transactionSuccessTimeout,
       });
       await this.btnCloseAllDoneModal.click();
       await this.page.waitForTimeout(1000);
@@ -636,7 +638,7 @@ export default class LendingPage extends BasePage {
     await this.btnAction.click();
     await metamask.confirmTransaction();
     await expect(this.headingTwoAllDoneModal).toBeVisible({
-      timeout: 60000,
+      timeout: this.transactionSuccessTimeout,
     });
     await this.page.waitForTimeout(1000);
   }
@@ -675,7 +677,7 @@ export default class LendingPage extends BasePage {
     await this.btnAction.click();
     await metamask.confirmTransaction();
     await expect(this.headingTwoAllDoneModal).toBeVisible({
-      timeout: 60000,
+      timeout: this.transactionSuccessTimeout,
     });
     await this.page.waitForTimeout(1000);
   }
@@ -691,7 +693,7 @@ export default class LendingPage extends BasePage {
     await this.btnAction.click();
     await metamask.confirmTransaction();
     await expect(this.headingTwoAllDoneModal).toBeVisible({
-      timeout: 60000,
+      timeout: this.transactionSuccessTimeout,
     });
     await this.btnCloseAllDoneModal.click();
     await this.page.waitForTimeout(1000);

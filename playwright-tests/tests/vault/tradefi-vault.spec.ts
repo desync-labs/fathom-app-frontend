@@ -15,33 +15,18 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
     });
     await vaultPage.navigate();
-    await expect
-      .soft(vaultPage.getDepositButtonRowLocatorById(id))
-      .toHaveText("Deposit");
-    await vaultPage.getDepositButtonRowLocatorById(id).click();
-    await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
-    await vaultPage.page.waitForTimeout(2000);
-    let depositTimer = await vaultPage.timerDepositTime.isVisible();
-    while (!depositTimer) {
-      await vaultPage.page.reload({ waitUntil: "load" });
-      await vaultPage.page.waitForTimeout(2000);
-      await expect
-        .soft(vaultPage.getDepositButtonRowLocatorById(id))
-        .toHaveText("Deposit");
-      await vaultPage.getDepositButtonRowLocatorById(id).click();
-      await expect(vaultPage.dialogListItemDepositModal).toBeVisible();
-      await vaultPage.page.waitForTimeout(2000);
-      depositTimer = await vaultPage.timerDepositTime.isVisible();
-    }
-    await vaultPage.btnCloseModal.click();
     await vaultPage.connectWallet(WalletConnectOptions.Metamask);
     await vaultPage.validateConnectedWalletAddress();
     await vaultPage.page.waitForLoadState("load");
     await vaultPage.page.waitForTimeout(3000);
+    await expect(
+      vaultPage.getEarnedLoadingVaultRowLocatorById(id)
+    ).not.toBeVisible();
     const manageButton = vaultPage.getManageVaultButtonRowLocatorById(id);
     if (await manageButton.isVisible()) {
       await vaultPage.manageVaultListItemWithdrawFully({
         id,
+        lockPeriodExpected: TradeFiPeriod.Deposit,
       });
       await vaultPage.validateVaultListItemDepositState({
         id,
@@ -57,6 +42,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     await vaultPage.validateVaultDataListItemPage({
       id,
@@ -85,11 +71,13 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount: depositAmountInitial,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     const vaultExpectedData = await vaultPage.manageVaultListItemDeposit({
       id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     await vaultPage.validateVaultDataListItemPage({
       id,
@@ -169,11 +157,13 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     const vaultExpectedData =
       await vaultPage.manageVaultListItemWithdrawPartially({
         id,
         withdrawAmount,
+        lockPeriodExpected: TradeFiPeriod.Deposit,
       });
     await vaultPage.validateVaultDataListItemPage({
       id,
@@ -202,6 +192,7 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     // Vault List Item Modal
     await vaultPage.getManageVaultButtonRowLocatorById(id).click();
@@ -240,9 +231,11 @@ test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", ()
       id,
       shareTokenName: tradeFintechVaultData.shareTokenName,
       depositAmount,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     await vaultPage.manageVaultListItemWithdrawFully({
       id,
+      lockPeriodExpected: TradeFiPeriod.Deposit,
     });
     await vaultPage.validateVaultListItemDepositState({
       id,

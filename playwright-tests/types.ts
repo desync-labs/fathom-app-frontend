@@ -8,9 +8,15 @@ export enum AvailableNetworks {
   XDC = "XDC",
   Apothem = "Apothem",
 }
+
+export enum StablecoinCollateral {
+  XDC = "XDC",
+  CGO = "CGO",
+}
 export interface OpenPositionParams {
   collateralAmount: number | "max";
   borrowAmount: number | "safeMax";
+  collateral: StablecoinCollateral;
 }
 
 export enum GraphOperationName {

@@ -54,12 +54,12 @@ export default defineConfig({
       testMatch: "wallet.spec.ts",
     },
     {
-      name: "fxd-tests",
+      name: "stablecoin-tests",
       use: {
         ...devices["Desktop Chrome"],
       },
       testDir: "./playwright-tests/tests/",
-      testMatch: "fxd-positions.spec.ts",
+      testMatch: "stablecoin.spec.ts",
     },
     {
       name: "vault-tests",
