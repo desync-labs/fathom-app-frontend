@@ -30,7 +30,8 @@ import useDexTransactionList from "apps/dex/hooks/useDexTransactionList";
 
 const Transactions: FC = () => {
   const {
-    loading,
+    isLoading,
+    setIsLoading,
     filterActive,
     filterByType,
     searchValue,
@@ -48,6 +49,7 @@ const Transactions: FC = () => {
         handleFilterByType={handleFilterByType}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
+        setIsLoading={setIsLoading}
       />
       <BaseTableContainer>
         <Table aria-label="pools table">
@@ -58,7 +60,7 @@ const Transactions: FC = () => {
           </TableHead>
 
           <TableBody>
-            {loading ? (
+            {isLoading ? (
               <>
                 <DexTransactionListLoader />
                 <DexTransactionListLoader txAmount={3} />
@@ -143,7 +145,8 @@ const Transactions: FC = () => {
                 )}
                 {mergedTransactions &&
                 !mergedTransactions.length &&
-                !filterActive ? (
+                !filterActive &&
+                !isLoading ? (
                   <Typography
                     sx={{ my: 12 }}
                     textAlign={"center"}
