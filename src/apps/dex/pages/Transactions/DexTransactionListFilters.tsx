@@ -22,6 +22,7 @@ type PositionsTransactionFiltersProps = {
   handleFilterByType: (event: SelectChangeEvent<unknown>) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
+  setIsLoading: (value: boolean) => void;
 };
 
 const DexTransactionListFilters: FC<PositionsTransactionFiltersProps> = ({
@@ -29,6 +30,7 @@ const DexTransactionListFilters: FC<PositionsTransactionFiltersProps> = ({
   handleFilterByType,
   searchValue,
   setSearchValue,
+  setIsLoading,
 }) => {
   const filterOptions = Object.values(TXN_TYPE);
   const filterValues = Object.keys(TXN_TYPE);
@@ -57,7 +59,10 @@ const DexTransactionListFilters: FC<PositionsTransactionFiltersProps> = ({
       <BaseSortSelect
         autoWidth
         value={filterByType}
-        onChange={handleFilterByType}
+        onChange={(event) => {
+          handleFilterByType(event);
+          setIsLoading(true);
+        }}
         sx={{ minWidth: isMobile ? "40%" : "210px" }}
       >
         {filterOptions.map((option, index) => (

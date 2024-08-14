@@ -49,6 +49,7 @@ const PositionActivityList = () => {
         handleFilterByType={handleFilterByType}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
+        setIsLoading={setIsLoading}
       />
       <BaseTableContainer>
         <Table aria-label="pools table">

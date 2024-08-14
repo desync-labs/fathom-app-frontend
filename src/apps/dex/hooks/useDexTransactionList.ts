@@ -32,6 +32,7 @@ const useDexTransactionList = () => {
   >([]);
   const [filterByType, setFilterByType] = useState<TXN_KEYS_TYPE>("ALL");
   const [searchValue, setSearchValue] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { account, chainId } = useActiveWeb3React();
   const { syncDex, prevSyncDex } = useSyncContext();
@@ -234,8 +235,19 @@ const useDexTransactionList = () => {
     [searchValue, filterByType]
   );
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(loading);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [loading, setIsLoading, isLoading]);
+
   return {
-    loading,
+    isLoading,
+    setIsLoading,
     setSearchValue,
     handleFilterByType,
     mergedTransactions,
