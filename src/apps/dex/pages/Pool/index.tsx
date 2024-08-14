@@ -182,7 +182,7 @@ const Pool = () => {
             ) : v2IsLoading ? (
               <EmptyProposals>
                 <CircleWrapper>
-                  <CircularProgress size={28} />
+                  <CircularProgress size={23} />
                 </CircleWrapper>
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 ? (
