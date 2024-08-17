@@ -10,6 +10,7 @@ import {
   DISPLAY_LENDING,
   DISPLAY_STABLE_SWAP,
   DISPLAY_VAULTS,
+  supportedChainIds,
 } from "connectors/networks";
 import useConnector from "context/connector";
 import {
@@ -22,6 +23,7 @@ import {
   VaultIcon,
 } from "components/Common/MenuIcons";
 import AppMenuItem from "components/MenuItem/AppMenuItem";
+import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
 type ItemPropsType = {
   open: boolean;
@@ -30,6 +32,11 @@ type ItemPropsType = {
 export const Menu: FC<ItemPropsType> = memo(({ open }) => {
   const location = useLocation();
   const { allowStableSwap, chainId } = useConnector();
+
+  const checkedChainId = useMemo(
+    () => (supportedChainIds.includes(chainId) ? chainId : DEFAULT_CHAIN_ID),
+    [chainId]
+  );
 
   const isDashboardActive = useMemo(
     () => location.pathname.includes("fxd"),
@@ -67,7 +74,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
 
   const appMenuItems = [];
 
-  if (!chainId || DISPLAY_FXD.includes(chainId)) {
+  if (DISPLAY_FXD.includes(checkedChainId)) {
     appMenuItems.push({
       name: "FXD",
       link: "/fxd",
@@ -77,7 +84,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!chainId || DISPLAY_STABLE_SWAP.includes(chainId)) {
+  if (DISPLAY_STABLE_SWAP.includes(checkedChainId)) {
     appMenuItems.push({
       name: "Stable Swap",
       link: "/stable-swap",
@@ -87,7 +94,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!chainId || DISPLAY_LENDING.includes(chainId)) {
+  if (DISPLAY_LENDING.includes(checkedChainId)) {
     appMenuItems.push({
       name: "Lending",
       link: "/lending",
@@ -97,7 +104,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!chainId || DISPLAY_VAULTS.includes(chainId)) {
+  if (DISPLAY_VAULTS.includes(checkedChainId)) {
     appMenuItems.push({
       name: "Vaults",
       link: "/vaults",
@@ -107,7 +114,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!chainId || DISPLAY_DEX.includes(chainId)) {
+  if (DISPLAY_DEX.includes(checkedChainId)) {
     appMenuItems.push({
       name: "DEX",
       link: "/swap",
@@ -117,7 +124,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!chainId || DISPLAY_CHARTS.includes(chainId)) {
+  if (DISPLAY_CHARTS.includes(checkedChainId)) {
     appMenuItems.push({
       name: "Charts",
       link: "/charts",
@@ -127,7 +134,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!chainId || DISPLAY_GOVERNANCE.includes(chainId)) {
+  if (DISPLAY_GOVERNANCE.includes(checkedChainId)) {
     appMenuItems.push({
       name: "DAO",
       link: "/dao/staking",
@@ -137,7 +144,7 @@ export const Menu: FC<ItemPropsType> = memo(({ open }) => {
     });
   }
 
-  if (!allowStableSwap && (!chainId || DISPLAY_STABLE_SWAP.includes(chainId))) {
+  if (!allowStableSwap && DISPLAY_STABLE_SWAP.includes(checkedChainId)) {
     appMenuItems.splice(1, 1);
   }
 
