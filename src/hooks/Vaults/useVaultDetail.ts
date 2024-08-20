@@ -16,7 +16,6 @@ import { useLazyQuery, useQuery } from "@apollo/client";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
-import useRpcError from "hooks/General/useRpcError";
 import {
   VAULT,
   VAULT_FACTORIES,
@@ -148,7 +147,6 @@ const useVaultDetail = ({ vaultId, urlParams }: UseVaultDetailProps) => {
 
   const { chainId, account, library } = useConnector();
   const { vaultService, poolService } = useServices();
-  const { showErrorNotification } = useRpcError();
 
   const [loadVault, { loading: vaultLoading }] = useLazyQuery(VAULT, {
     context: { clientName: "vaults", chainId },
@@ -659,29 +657,21 @@ const useVaultDetail = ({ vaultId, urlParams }: UseVaultDetailProps) => {
   );
 
   useEffect(() => {
-    try {
-      const methods = (
-        (isTfVaultType ? TRADE_FLOW_VAULT_ABI : VAULT_ABI) as FunctionFragment[]
-      ).filter((item: FunctionFragment) => item.type === "function");
+    const methods = (
+      (isTfVaultType ? TRADE_FLOW_VAULT_ABI : VAULT_ABI) as FunctionFragment[]
+    ).filter((item: FunctionFragment) => item.type === "function");
 
-      setVaultMethods(methods);
-    } catch (e: any) {
-      console.error(e);
-    }
+    setVaultMethods(methods);
   }, [setVaultMethods, isTfVaultType]);
 
   useEffect(() => {
-    try {
-      const methods = (
-        (isTfVaultType
-          ? TRADE_FLOW_STRATEGY_ABI
-          : STRATEGY_ABI) as FunctionFragment[]
-      ).filter((item: FunctionFragment) => item.type === "function");
+    const methods = (
+      (isTfVaultType
+        ? TRADE_FLOW_STRATEGY_ABI
+        : STRATEGY_ABI) as FunctionFragment[]
+    ).filter((item: FunctionFragment) => item.type === "function");
 
-      setStrategyMethods(methods);
-    } catch (e: any) {
-      console.error(e);
-    }
+    setStrategyMethods(methods);
   }, [setStrategyMethods, isTfVaultType]);
 
   const fetchBalanceToken = useCallback(
@@ -700,7 +690,6 @@ const useVaultDetail = ({ vaultId, urlParams }: UseVaultDetailProps) => {
         )
         .catch((error) => {
           console.error("Error fetching balance token:", error);
-          showErrorNotification(error);
           return "-1";
         })
         .finally(() => setFetchBalanceLoading(false));

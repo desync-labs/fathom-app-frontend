@@ -12,7 +12,6 @@ import dayjs from "dayjs";
 import { useServices } from "context/services";
 import useConnector from "context/connector";
 import useSyncContext from "context/sync";
-import useRpcError from "hooks/General/useRpcError";
 import {
   VAULT_POSITION_TRANSACTIONS,
   VAULT_STRATEGY_REPORTS,
@@ -72,7 +71,6 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
 
   const { account } = useConnector();
   const { vaultService } = useServices();
-  const { showErrorNotification } = useRpcError();
   const { setLastTransactionBlock } = useSyncContext();
 
   const [loadPositionTransactions, { loading: transactionsLoading }] =
@@ -97,8 +95,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
           .toString(),
         vault.id
       )
-      .catch((error) => {
-        showErrorNotification(error);
+      .catch(() => {
         return "-1";
       })
       .finally(() => {
@@ -145,7 +142,7 @@ const useVaultListItem = ({ vaultPosition, vault }: UseVaultListItemProps) => {
       }
       fetchReports(vault.strategies[0].id);
     }
-  }, [vault?.strategies, chainId, isTfVaultType, activeTfPeriod]);
+  }, [vault?.strategies, isTfVaultType, activeTfPeriod]);
 
   useEffect(() => {
     if (
