@@ -29,7 +29,7 @@ jobs:
       - name: Run Playwright tests
         run: xvfb-run --auto-servernum -- QASE_MODE=testops npm run playwright:test:smoke
         env:
-          ENVIRONMENT_URL: http://127.0.0.1:3000
+          ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
           METAMASK_SETUP_PRIVATE_KEY: ${{secrets.METAMASK_SETUP_PRIVATE_KEY}}
           METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
@@ -38,7 +38,7 @@ jobs:
           QASE_PW_API_TOKEN: ${{secrets.QASE_PW_API_TOKEN}}
           QASE_TESTOPS_API_TOKEN: ${{secrets.QASE_TESTOPS_API_TOKEN}}
           QASE_TEST_RUN_NAME: CI Automation Tests Run - Smoke
-          QASE_ENVIRONMENT: local-dev-apothem
+          QASE_ENVIRONMENT: dev-apothem
       - uses: actions/upload-artifact@v3
         if: always()
         with:

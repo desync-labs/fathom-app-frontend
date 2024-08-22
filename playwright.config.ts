@@ -28,6 +28,26 @@ export default defineConfig({
     ["list"],
     ["html", { outputFolder: "playwright-tests/test-report", open: "never" }],
     ["json", { outputFile: "playwright-tests/test-report/results.json" }],
+    [
+      "playwright-qase-reporter",
+      {
+        testops: {
+          api: {
+            token: process.env.QASE_PW_API_TOKEN,
+          },
+          project: "FATHOM",
+          uploadAttachments: true,
+          environment: process.env.QASE_ENVIRONMENT,
+          basePath: "playwright-tests/test-results",
+          run: {
+            complete: true,
+            title: `${
+              process.env.QASE_TEST_RUN_NAME
+            } at ${new Date().toISOString()}`,
+          },
+        },
+      },
+    ],
   ],
   timeout: process.env.CI ? 150000 : 120000,
   outputDir: "./playwright-tests/test-results",

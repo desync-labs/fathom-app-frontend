@@ -24,7 +24,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- npm run playwright:test
+        run: xvfb-run --auto-servernum -- QASE_MODE=testops npm run playwright:test
         env:
           ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
@@ -32,6 +32,10 @@ jobs:
           METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
           METAMASK_TEST_TWO_PRIVATE_KEY: ${{secrets.METAMASK_TEST_TWO_PRIVATE_KEY}}
           METAMASK_SETUP_PASSWORD: ${{secrets.METAMASK_SETUP_PASSWORD}}
+          QASE_PW_API_TOKEN: ${{secrets.QASE_PW_API_TOKEN}}
+          QASE_TESTOPS_API_TOKEN: ${{secrets.QASE_TESTOPS_API_TOKEN}}
+          QASE_TEST_RUN_NAME: CI Automation Tests Run - Regression
+          QASE_ENVIRONMENT: dev-apothem
       - uses: actions/upload-artifact@v3
         if: always()
         with:
