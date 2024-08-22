@@ -27,7 +27,7 @@ jobs:
       - name: Wait for server to start
         run: sleep 40
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- QASE_MODE=testops npm run playwright:test:smoke
+        run: QASE_MODE=testops xvfb-run --auto-servernum -- npm run playwright:test:smoke
         env:
           ENVIRONMENT_URL: http://127.0.0.1:3000
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
