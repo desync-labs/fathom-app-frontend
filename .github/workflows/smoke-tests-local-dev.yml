@@ -18,8 +18,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Set environment variable with branch name
-        run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+      - name: Get the branch name
+        id: get_branch_name
+        run: |
+            if [ "${{ github.event_name }}" == "pull_request" ]; then
+              echo "BRANCH_NAME=$(echo ${{ github.head_ref }})" >> $GITHUB_ENV
+            else
+              echo "BRANCH_NAME=$(echo ${{ github.ref_name }})" >> $GITHUB_ENV
+            fi
       - name: Install dependencies
         run: npm install
       - name: Install Playwright Browsers
