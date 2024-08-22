@@ -17,11 +17,13 @@ test.describe("Fathom App Test Suite: Wallet Connectivity", () => {
     ),
     async ({ fxdPage }) => {
       await fxdPage.navigate();
-      await fxdPage.connectWallet(WalletConnectOptions.Metamask);
-      await fxdPage.validateConnectedWalletAddress();
-      await fxdPage.validateExitButton();
-      await fxdPage.validateMetamaskLogo();
-      await fxdPage.validateNetworkBlock(network);
+      await test.step("Step 1", async () => {
+        await fxdPage.connectWallet(WalletConnectOptions.Metamask);
+        await fxdPage.validateConnectedWalletAddress();
+        await fxdPage.validateExitButton();
+        await fxdPage.validateMetamaskLogo();
+        await fxdPage.validateNetworkBlock(network);
+      });
     }
   );
 
@@ -34,8 +36,10 @@ test.describe("Fathom App Test Suite: Wallet Connectivity", () => {
       await fxdPage.navigate();
       await fxdPage.connectWallet(WalletConnectOptions.Metamask);
       await fxdPage.validateConnectedWalletAddress();
-      await fxdPage.disconnectWallet();
-      await fxdPage.validateWalletDisconnected();
+      await test.step("Step 1", async () => {
+        await fxdPage.disconnectWallet();
+        await fxdPage.validateWalletDisconnected();
+      });
     }
   );
 });
