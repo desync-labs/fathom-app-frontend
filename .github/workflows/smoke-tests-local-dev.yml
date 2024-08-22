@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Set environment variable with branch name
+        run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
       - name: Install dependencies
         run: npm install
       - name: Install Playwright Browsers
@@ -37,7 +39,7 @@ jobs:
           METAMASK_SETUP_PASSWORD: ${{secrets.METAMASK_SETUP_PASSWORD}}
           QASE_PW_API_TOKEN: ${{secrets.QASE_PW_API_TOKEN}}
           QASE_TESTOPS_API_TOKEN: ${{secrets.QASE_TESTOPS_API_TOKEN}}
-          QASE_TEST_RUN_NAME: CI Automation Tests Run - Smoke
+          QASE_TEST_RUN_NAME: CI Automation Tests Run - Smoke at branch ${{ env.BRANCH_NAME }}
           QASE_ENVIRONMENT: local-dev-apothem
       - uses: actions/upload-artifact@v3
         if: always()

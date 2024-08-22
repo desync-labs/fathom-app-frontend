@@ -41,9 +41,7 @@ export default defineConfig({
           basePath: "playwright-tests/test-results",
           run: {
             complete: true,
-            title: `${
-              process.env.QASE_TEST_RUN_NAME
-            } at ${new Date().toISOString()}`,
+            title: `${process.env.QASE_TEST_RUN_NAME}`,
           },
         },
       },
