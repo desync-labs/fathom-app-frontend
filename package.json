@@ -114,7 +114,7 @@
     "lint": "eslint src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "npx prettier --write .",
-    "playwright:test": "QASE_MODE=testops npx playwright test",
+    "playwright:test": "npx playwright test",
     "playwright:test:smoke": "npx playwright test --grep @smoke",
     "analyze:source": "source-map-explorer 'build/static/js/*.js'",
     "analyze": "env-cmd -f .env.prod node analyzer.js"

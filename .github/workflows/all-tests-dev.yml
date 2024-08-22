@@ -24,7 +24,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- npm run playwright:test
+        run: QASE_MODE=testops xvfb-run --auto-servernum -- npm run playwright:test
         env:
           ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
