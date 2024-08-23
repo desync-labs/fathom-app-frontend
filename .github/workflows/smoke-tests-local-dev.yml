@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: qase-tms/qase-link-run@main
         env:
-          QASE_API_TOKEN: ${{ env.QASE_API_TOKEN }}
+          QASE_TESTOPS_API_TOKEN: ${{ env.QASE_TESTOPS_API_TOKEN }}
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
