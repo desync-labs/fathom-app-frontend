@@ -24,7 +24,7 @@ export const TopInfoPanel: FC<TopInfoPanelProps> = ({
     <Box
       sx={{
         pt: { xs: 5, md: 6 },
-        pb: { xs: 9, md: 10, lg: "94px", xl: "92px", xxl: "96px" },
+        pb: { xs: 9, md: 10, lg: "60px", xl: "92px", xxl: "96px" },
         color: "#F1F1F3",
       }}
     >

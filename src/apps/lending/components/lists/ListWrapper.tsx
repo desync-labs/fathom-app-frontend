@@ -106,74 +106,76 @@ export const ListWrapper: FC<ListWrapperProps> = ({
         mt: withTopMargin ? 2 : 0,
       }}
     >
-      <Box
-        sx={{
-          px: { xs: 2, xsm: 3 },
-          py: { xs: 1.5, xsm: 2 },
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          ...wrapperSx,
-        }}
-      >
+      {(titleComponent || subTitleComponent) && (
         <Box
           sx={{
-            width: "100%",
+            px: { xs: 2, xsm: 3 },
+            py: { xs: 1.5, xsm: 2 },
             display: "flex",
-            alignItems: { xs: "flex-start", xsm: "center" },
-            py: "3.6px",
-            flexDirection: { xs: "column", xsm: "row" },
+            alignItems: "center",
+            justifyContent: "space-between",
+            ...wrapperSx,
           }}
         >
-          {titleComponent}
-          {subTitleComponent}
-        </Box>
-
-        {!!localStorageName && !noData && (
           <Box
             sx={{
+              width: "100%",
               display: "flex",
-              alignItems: "center",
-              cursor: "pointer",
-              minHeight: "28px",
-              pl: 1.5,
-              span: {
-                width: "14px",
-                height: "2px",
-                bgcolor: "text.secondary",
-                position: "relative",
-                ml: 0.5,
-                "&:after": {
-                  content: "''",
-                  position: "absolute",
+              alignItems: { xs: "flex-start", xsm: "center" },
+              py: "3.6px",
+              flexDirection: { xs: "column", xsm: "row" },
+            }}
+          >
+            {titleComponent}
+            {subTitleComponent}
+          </Box>
+
+          {!!localStorageName && !noData && (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+                minHeight: "28px",
+                pl: 1.5,
+                span: {
                   width: "14px",
                   height: "2px",
                   bgcolor: "text.secondary",
-                  transition: "all 0.2s ease",
-                  transform: collapsed ? "rotate(90deg)" : "rotate(0)",
-                  opacity: collapsed ? 1 : 0,
+                  position: "relative",
+                  ml: 0.5,
+                  "&:after": {
+                    content: "''",
+                    position: "absolute",
+                    width: "14px",
+                    height: "2px",
+                    bgcolor: "text.secondary",
+                    transition: "all 0.2s ease",
+                    transform: collapsed ? "rotate(90deg)" : "rotate(0)",
+                    opacity: collapsed ? 1 : 0,
+                  },
                 },
-              },
-            }}
-            onClick={() => {
-              handleTrackingEvents();
+              }}
+              onClick={() => {
+                handleTrackingEvents();
 
-              !!localStorageName && !noData
-                ? toggleLocalStorageClick(
-                    isCollapse,
-                    setIsCollapse,
-                    localStorageName
-                  )
-                : undefined;
-            }}
-          >
-            <Typography variant="buttonM" color="text.secondary">
-              {collapsed ? "Show" : "Hide"}
-            </Typography>
-            <span />
-          </Box>
-        )}
-      </Box>
+                !!localStorageName && !noData
+                  ? toggleLocalStorageClick(
+                      isCollapse,
+                      setIsCollapse,
+                      localStorageName
+                    )
+                  : undefined;
+              }}
+            >
+              <Typography variant="buttonM" color="text.secondary">
+                {collapsed ? "Show" : "Hide"}
+              </Typography>
+              <span />
+            </Box>
+          )}
+        </Box>
+      )}
 
       {topInfo && (
         <Box
