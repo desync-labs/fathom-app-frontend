@@ -7,16 +7,33 @@ dotenv.config();
 
 test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
   for (const collateral of Object.values(StablecoinCollateral)) {
+    const scenarioOneCollateralAmount =
+      collateral == StablecoinCollateral.XDC ? 100 : 1;
+    const scenarioTwoCollateralAmount =
+      collateral == StablecoinCollateral.XDC ? 150 : 1.5;
+    const scenarioTwoBorrowAmount =
+      collateral == StablecoinCollateral.XDC ? 1 : 40.5;
+    const scenarioTwoCollateralTopUpAmount =
+      collateral == StablecoinCollateral.XDC ? 60 : 0.5;
+    const scenarioTwoTopUpBorrowAmount =
+      collateral == StablecoinCollateral.XDC ? 1 : 20;
+    const scenarioThreeCollateralAmount =
+      collateral == StablecoinCollateral.XDC ? 105.5 : 1.05;
+    const scenarioThreeBorrowAmount =
+      collateral == StablecoinCollateral.XDC ? 1.5 : 30.15;
+    const scenarioThreeRepayAmount =
+      collateral == StablecoinCollateral.XDC ? 0.5 : 10.15;
+
     test.describe(`Positions Operations - ${collateral} collateral`, () => {
       test.describe.serial("Scenario 1 @smoke", () => {
-        test("Creating a position with 100 collateral and safe max borrow amount is successful", async ({
+        test(`Creating a position with ${scenarioOneCollateralAmount} collateral and safe max borrow amount is successful`, async ({
           fxdPage,
         }) => {
           await fxdPage.navigate();
           await fxdPage.connectWallet(WalletConnectOptions.Metamask);
           await fxdPage.validateConnectedWalletAddress();
           const positionData = await fxdPage.openPosition({
-            collateralAmount: 100,
+            collateralAmount: scenarioOneCollateralAmount,
             borrowAmount: "safeMax",
             collateral,
           });
@@ -41,15 +58,15 @@ test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
       });
 
       test.describe.serial("Scenario 2", () => {
-        test("Creating a position with 150 collateral and 1 borrow amount is successful", async ({
+        test(`Creating a position with ${scenarioTwoCollateralAmount} collateral and ${scenarioTwoBorrowAmount} borrow amount is successful`, async ({
           fxdPage,
         }) => {
           await fxdPage.navigate();
           await fxdPage.connectWallet(WalletConnectOptions.Metamask);
           await fxdPage.validateConnectedWalletAddress();
           const positionData = await fxdPage.openPosition({
-            collateralAmount: 150,
-            borrowAmount: 1,
+            collateralAmount: scenarioTwoCollateralAmount,
+            borrowAmount: scenarioTwoBorrowAmount,
             collateral,
           });
           await fxdPage.page.waitForTimeout(5000);
@@ -67,8 +84,8 @@ test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
           await fxdPage.connectWallet(WalletConnectOptions.Metamask);
           await fxdPage.validateConnectedWalletAddress();
           const toppedUpPositionData = await fxdPage.topUpLatestPosition({
-            collateralAmount: 60,
-            borrowAmount: 1,
+            collateralAmount: scenarioTwoCollateralTopUpAmount,
+            borrowAmount: scenarioTwoTopUpBorrowAmount,
             collateral,
           });
           await fxdPage.page.waitForTimeout(5000);
@@ -93,15 +110,15 @@ test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
       });
 
       test.describe.serial("Scenario 3", () => {
-        test("Creating a position with 105.5 collateral and 1.5 borrow amount is successful", async ({
+        test(`Creating a position with ${scenarioThreeCollateralAmount} collateral and ${scenarioThreeBorrowAmount} borrow amount is successful`, async ({
           fxdPage,
         }) => {
           await fxdPage.navigate();
           await fxdPage.connectWallet(WalletConnectOptions.Metamask);
           await fxdPage.validateConnectedWalletAddress();
           const positionData = await fxdPage.openPosition({
-            collateralAmount: 105.5,
-            borrowAmount: 1.5,
+            collateralAmount: scenarioThreeCollateralAmount,
+            borrowAmount: scenarioThreeBorrowAmount,
             collateral,
           });
           await fxdPage.page.waitForTimeout(5000);
@@ -121,7 +138,7 @@ test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
           await fxdPage.connectWallet(WalletConnectOptions.Metamask);
           await fxdPage.validateConnectedWalletAddress();
           const positionData = await fxdPage.partiallyCloseLatestPosition({
-            repayAmount: 0.5,
+            repayAmount: scenarioThreeRepayAmount,
           });
           await fxdPage.page.waitForTimeout(5000);
           await fxdPage.validateLatestPositionDisplayedData({
