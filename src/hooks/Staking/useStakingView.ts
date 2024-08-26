@@ -273,18 +273,16 @@ const useStakingView = () => {
   );
 
   useEffect(() => {
-    if (account) {
-      fetchStakes({
-        variables: {
-          skip: 0,
-          first: COUNT_PER_PAGE,
-          address: account,
-        },
-        fetchPolicy: "network-only",
-      });
+    fetchStakes({
+      variables: {
+        skip: 0,
+        first: COUNT_PER_PAGE,
+        address: account,
+      },
+      fetchPolicy: "network-only",
+    });
 
-      setCurrentPage(1);
-    }
+    setCurrentPage(1);
   }, [account, fetchStakes, setCurrentPage]);
 
   const claimRewards = useCallback(
