@@ -12,10 +12,10 @@ import {
 } from "../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
-import { graphAPIEndpoints } from "../fixtures/api.data";
-import { APOTHEM_RPC_INTERNAL } from "../fixtures/global.data";
+import { graphAPIEndpoints } from "../test-data/api.data";
+import { APOTHEM_RPC_INTERNAL } from "../test-data/global.data";
 import { ethers } from "fathom-ethers";
-import ITradeFintechStrategyMock from "../fixtures/abis/ITradeFintechStrategyMock.json";
+import ITradeFintechStrategyMock from "../test-data/abis/ITradeFintechStrategyMock.json";
 
 export default class VaultPage extends BasePage {
   readonly path: string;

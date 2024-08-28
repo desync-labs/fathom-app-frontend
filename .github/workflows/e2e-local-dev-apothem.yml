@@ -1,23 +1,31 @@
-name: smoke-tests-local-dev
+name: e2e-local-dev-apothem
 
 on:
   workflow_dispatch:
   pull_request:
     branches:
-      - dev
+      - master
 
 concurrency:
-  group: ci-dev
+  group: e2e-dev-apothem
 
 jobs:
-  smoke-tests-local-dev:
-    timeout-minutes: 60
+  e2e-local-dev-apothem:
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16
+      - name: Get the branch name
+        id: get_branch_name
+        run: |
+            if [ "${{ github.event_name }}" == "pull_request" ]; then
+               echo "BRANCH_NAME=$(echo ${{ github.head_ref }})" >> $GITHUB_ENV
+            else
+              echo "BRANCH_NAME=$(echo ${{ github.ref_name }})" >> $GITHUB_ENV
+            fi
       - name: Install dependencies
         run: npm install
       - name: Install Playwright Browsers
@@ -27,7 +35,7 @@ jobs:
       - name: Wait for server to start
         run: sleep 40
       - name: Run Playwright tests
-        run: xvfb-run --auto-servernum -- npm run playwright:test:smoke
+        run: QASE_MODE=testops xvfb-run --auto-servernum -- npm run playwright:test:e2e
         env:
           ENVIRONMENT_URL: http://127.0.0.1:3000
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
@@ -35,6 +43,10 @@ jobs:
           METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
           METAMASK_TEST_TWO_PRIVATE_KEY: ${{secrets.METAMASK_TEST_TWO_PRIVATE_KEY}}
           METAMASK_SETUP_PASSWORD: ${{secrets.METAMASK_SETUP_PASSWORD}}
+          QASE_PW_API_TOKEN: ${{secrets.QASE_PW_API_TOKEN}}
+          QASE_TESTOPS_API_TOKEN: ${{secrets.QASE_TESTOPS_API_TOKEN}}
+          QASE_TEST_RUN_NAME: CI Automation Tests Run - E2E Regression at branch ${{ env.BRANCH_NAME }}
+          QASE_ENVIRONMENT: local-dev-apothem
       - uses: actions/upload-artifact@v3
         if: always()
         with:

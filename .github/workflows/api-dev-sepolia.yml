@@ -1,0 +1,41 @@
+name: api-dev-sepolia
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+concurrency:
+  group: api-dev-sepolia
+
+jobs:
+  api-dev-sepolia:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: dev
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Run Playwright tests
+        run: QASE_MODE=testops npm run playwright:test:api
+        env:
+          GRAPH_API_BASE_URL: https://graph.sepolia.fathom.fi
+          QASE_PW_API_TOKEN: ${{secrets.QASE_PW_API_TOKEN}}
+          QASE_TESTOPS_API_TOKEN: ${{secrets.QASE_TESTOPS_API_TOKEN}}
+          QASE_TEST_RUN_NAME: CI Automation Tests Run - API
+          QASE_ENVIRONMENT: dev-sepolia
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-report
+          path: playwright-tests/test-report/
+          retention-days: 30
+      - uses: daun/playwright-report-summary@v3
+        if: always()
+        with:
+          report-file: playwright-tests/test-report/results.json
