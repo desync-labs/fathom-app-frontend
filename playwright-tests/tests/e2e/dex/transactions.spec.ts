@@ -1,7 +1,7 @@
-import { test, expect } from "../../fixtures/pomSynpressFixture";
-import { DexTabs, WalletConnectOptions } from "../../types";
+import { test, expect } from "../../../fixtures/pomSynpressFixture";
+import { DexTabs, WalletConnectOptions } from "../../../types";
 import dotenv from "dotenv";
-import { xUsdtData, xdcData } from "../../fixtures/dex.data";
+import { xUsdtData, xdcData } from "../../../test-data/dex.data";
 import { qase } from "playwright-qase-reporter";
 dotenv.config();
 

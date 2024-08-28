@@ -1,7 +1,7 @@
 import { qase } from "playwright-qase-reporter";
-import { test, expect } from "../../fixtures/pomSynpressFixture";
-import { lendingLiquidationVaultData } from "../../fixtures/vaults.data";
-import { VaultAction, WalletConnectOptions } from "../../types";
+import { test, expect } from "../../../fixtures/pomSynpressFixture";
+import { lendingLiquidationVaultData } from "../../../test-data/vaults.data";
+import { VaultAction, WalletConnectOptions } from "../../../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";

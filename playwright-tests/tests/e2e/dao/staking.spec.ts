@@ -1,6 +1,6 @@
 import { qase } from "playwright-qase-reporter";
-import { test, expect } from "../../fixtures/pomSynpressFixture";
-import { WalletConnectOptions } from "../../types";
+import { test, expect } from "../../../fixtures/pomSynpressFixture";
+import { WalletConnectOptions } from "../../../types";
 import dotenv from "dotenv";
 dotenv.config();
 

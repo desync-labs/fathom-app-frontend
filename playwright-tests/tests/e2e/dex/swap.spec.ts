@@ -1,7 +1,7 @@
-import { test, expect } from "../../fixtures/pomSynpressFixture";
-import { WalletConnectOptions } from "../../types";
+import { test, expect } from "../../../fixtures/pomSynpressFixture";
+import { WalletConnectOptions } from "../../../types";
 import dotenv from "dotenv";
-import { wxdcData, xUsdtData, xdcData } from "../../fixtures/dex.data";
+import { wxdcData, xUsdtData, xdcData } from "../../../test-data/dex.data";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import { qase } from "playwright-qase-reporter";

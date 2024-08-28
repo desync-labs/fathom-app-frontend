@@ -14,7 +14,7 @@ import DexPage from "../pages/dex.page";
 import LendingPage from "../pages/lending.page";
 import DaoPage from "../pages/dao.page";
 import { XDC_RPC } from "../../src/connectors/networks";
-import { APOTHEM_RPC_INTERNAL } from "./global.data";
+import { APOTHEM_RPC_INTERNAL } from "../test-data/global.data";
 dotenv.config();
 
 let networkName: string;

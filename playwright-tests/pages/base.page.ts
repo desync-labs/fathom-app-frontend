@@ -13,9 +13,9 @@ import {
   type WalletConnectOptions,
 } from "../types";
 import { ethers } from "fathom-ethers";
-import FathomStablecoin from "../fixtures/abis/FathomStablecoin.json";
-import { contractAddresses } from "../fixtures/global.data";
-import { APOTHEM_RPC_INTERNAL } from "../fixtures/global.data";
+import FathomStablecoin from "../test-data/abis/FathomStablecoin.json";
+import { contractAddresses } from "../test-data/global.data";
+import { APOTHEM_RPC_INTERNAL } from "../test-data/global.data";
 dotenv.config();
 
 export default class BasePage {

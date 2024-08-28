@@ -1,5 +1,5 @@
-import { test } from "../fixtures/pomSynpressFixture";
-import { AvailableNetworks, WalletConnectOptions } from "../types";
+import { test } from "../../fixtures/pomSynpressFixture";
+import { AvailableNetworks, WalletConnectOptions } from "../../types";
 import { qase } from "playwright-qase-reporter";
 import dotenv from "dotenv";
 dotenv.config();

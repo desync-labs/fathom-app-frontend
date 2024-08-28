@@ -1,8 +1,12 @@
 import { qase } from "playwright-qase-reporter";
-import { contractAddresses } from "../../fixtures/global.data";
-import { test, expect } from "../../fixtures/pomSynpressFixture";
-import { tradeFintechVaultData } from "../../fixtures/vaults.data";
-import { TradeFiPeriod, VaultAction, WalletConnectOptions } from "../../types";
+import { contractAddresses } from "../../../test-data/global.data";
+import { test, expect } from "../../../fixtures/pomSynpressFixture";
+import { tradeFintechVaultData } from "../../../test-data/vaults.data";
+import {
+  TradeFiPeriod,
+  VaultAction,
+  WalletConnectOptions,
+} from "../../../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";

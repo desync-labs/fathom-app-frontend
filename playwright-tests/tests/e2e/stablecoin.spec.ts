@@ -1,6 +1,6 @@
 import { qase } from "playwright-qase-reporter";
-import { test } from "../fixtures/pomSynpressFixture";
-import { StablecoinCollateral, WalletConnectOptions } from "../types";
+import { test } from "../../fixtures/pomSynpressFixture";
+import { StablecoinCollateral, WalletConnectOptions } from "../../types";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
 import dotenv from "dotenv";

@@ -1,22 +1,23 @@
-name: all-tests-local-dev
+name: e2e-smoke-dev
 
 on:
   workflow_dispatch:
   pull_request:
     branches:
       - master
+      - dev
 
 concurrency:
-  group: ci-dev
+  group: e2e-dev-apothem
 
 jobs:
-  all-tests-local-dev:
-    timeout-minutes: 120
+  e2e-smoke-dev:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set environment variable with branch name
-        run: echo "BRANCH_NAME=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+        with:
+          ref: dev
       - uses: actions/setup-node@v3
         with:
           node-version: 16
@@ -24,14 +25,10 @@ jobs:
         run: npm install
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
-      - name: Start Frontend on Dev environment in background
-        run: npm run start:dev &
-      - name: Wait for server to start
-        run: sleep 40
       - name: Run Playwright tests
-        run: QASE_MODE=testops xvfb-run --auto-servernum -- npm run playwright:test
+        run: QASE_MODE=testops xvfb-run --auto-servernum -- npm run playwright:test:e2e:smoke
         env:
-          ENVIRONMENT_URL: http://127.0.0.1:3000
+          ENVIRONMENT_URL: https://dev-app-frontend-wpa8a.ondigitalocean.app
           HEADLESS_MODE: ${{ vars.HEADLESS_MODE}}
           METAMASK_SETUP_PRIVATE_KEY: ${{secrets.METAMASK_SETUP_PRIVATE_KEY}}
           METAMASK_TEST_ONE_PRIVATE_KEY: ${{secrets.METAMASK_TEST_ONE_PRIVATE_KEY}}
@@ -39,8 +36,8 @@ jobs:
           METAMASK_SETUP_PASSWORD: ${{secrets.METAMASK_SETUP_PASSWORD}}
           QASE_PW_API_TOKEN: ${{secrets.QASE_PW_API_TOKEN}}
           QASE_TESTOPS_API_TOKEN: ${{secrets.QASE_TESTOPS_API_TOKEN}}
-          QASE_TEST_RUN_NAME: CI Automation Tests Run - Regression at branch ${{ env.BRANCH_NAME }}
-          QASE_ENVIRONMENT: local-dev-apothem
+          QASE_TEST_RUN_NAME: CI Automation Tests Run - E2E Smoke
+          QASE_ENVIRONMENT: dev-apothem
       - uses: actions/upload-artifact@v3
         if: always()
         with:
