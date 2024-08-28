@@ -1,4 +1,4 @@
-name: smoke-tests-local-dev
+name: e2e-smoke-local-dev-apothem
 
 on:
   workflow_dispatch:
@@ -10,7 +10,7 @@ concurrency:
   group: e2e-dev-apothem
 
 jobs:
-  smoke-tests-local-dev:
+  e2e-smoke-local-dev-apothem:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
