@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - master
+      - dev
 
 concurrency:
   group: e2e-dev-apothem
