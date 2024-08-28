@@ -8,7 +8,7 @@ import {
   GraphOperationName,
   StablecoinCollateral,
 } from "../types";
-import { graphAPIEndpoints } from "../fixtures/api.data";
+import { graphAPIEndpoints } from "../test-data/api.data";
 import { extractNumericValue } from "../utils/helpers";
 
 export default class FxdPage extends BasePage {

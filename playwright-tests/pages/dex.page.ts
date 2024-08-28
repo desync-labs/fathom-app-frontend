@@ -8,7 +8,7 @@ import {
   formatNumberDexSuccessPopup,
 } from "../utils/helpers";
 import { DexTabs, DexTokenData, SwapData } from "../types";
-import { wxdcData, xdcData } from "../fixtures/dex.data";
+import { wxdcData, xdcData } from "../test-data/dex.data";
 
 export default class DexPage extends BasePage {
   readonly path: string;
