@@ -1,7 +1,8 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const HistoryMobileRowItem = () => {
   return (
@@ -15,15 +16,15 @@ const HistoryMobileRowItem = () => {
             gap: "8px",
           }}
         >
-          <Skeleton width={80} height={16} />
-          <Skeleton variant="circular" width={24} height={24} />
+          <CustomSkeleton width={80} height={16} animation={"wave"} />
+          <CustomSkeleton variant="circular" width={24} height={24} />
         </Box>
       </ListColumn>
 
       <ListColumn align="right">
         <Box sx={{ display: "flex", gap: 1 }}>
-          <Skeleton width={55} height={16} />
-          <Skeleton width={70} height={20} />
+          <CustomSkeleton width={55} height={16} animation={"wave"} />
+          <CustomSkeleton width={70} height={20} animation={"wave"} />
         </Box>
       </ListColumn>
     </ListItem>
@@ -35,7 +36,7 @@ export const HistoryMobileItemLoader = () => {
     <>
       <ListItem px={2} minHeight={35}>
         <ListColumn align="left">
-          <Skeleton width={80} height={16} />
+          <CustomSkeleton width={80} height={16} animation={"wave"} />
         </ListColumn>
       </ListItem>
       <HistoryMobileRowItem />

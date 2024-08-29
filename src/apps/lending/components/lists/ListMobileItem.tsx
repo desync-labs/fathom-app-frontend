@@ -1,4 +1,4 @@
-import { Box, Divider, Skeleton, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import { FC, ReactNode } from "react";
 import { IsolatedEnabledBadge } from "apps/lending/components/isolationMode/IsolatedBadge";
 import { useAssetCaps } from "apps/lending/hooks/useAssetCaps";
@@ -6,6 +6,7 @@ import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 interface ListMobileItemProps {
   warningComponent?: ReactNode;
@@ -44,9 +45,14 @@ export const ListMobileItem: FC<ListMobileItemProps> = ({
         <Box sx={{ mb: 2, display: "flex", alignItems: "center" }}>
           {loading ? (
             <Box sx={{ display: "inline-flex", alignItems: "center" }}>
-              <Skeleton variant="circular" width={40} height={40} />
+              <CustomSkeleton
+                variant="circular"
+                width={40}
+                height={40}
+                animation={"wave"}
+              />
               <Box sx={{ ml: 1 }}>
-                <Skeleton width={100} height={24} />
+                <CustomSkeleton width={100} height={24} animation={"wave"} />
               </Box>
             </Box>
           ) : (

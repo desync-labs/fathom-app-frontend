@@ -1,5 +1,5 @@
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { Box, Skeleton, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
+import { Box, SvgIcon, useMediaQuery, useTheme } from "@mui/material";
 import { CircleIcon } from "apps/lending/components/CircleIcon";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Link } from "apps/lending/components/primitives/Link";
@@ -13,6 +13,7 @@ import {
   useAppDataContext,
 } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { FC, memo } from "react";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 interface ReserveTopDetailsProps {
   underlyingAsset: string;
@@ -85,10 +86,11 @@ export const ReserveTopDetails: FC<ReserveTopDetailsProps> = memo(
               visibleDecimals={4}
             />
             {loading ? (
-              <Skeleton
+              <CustomSkeleton
                 width={16}
                 height={16}
-                sx={{ ml: 0.5, background: "#383D51" }}
+                sx={{ ml: 0.5 }}
+                animation={"wave"}
               />
             ) : (
               <CircleIcon
