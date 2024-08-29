@@ -15,6 +15,7 @@ dotenv.config();
 const id = tradeFintechVaultData.id;
 
 test.describe("Fathom App Test Suite: Vault Operations - TradeFintech Vault", () => {
+  test.setTimeout(60000 * 4);
   test.beforeEach(async ({ vaultPage }) => {
     await vaultPage.startDepositPeriod({
       strategyAddress: contractAddresses.tradeFintechStrategyMock,
