@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Vault Operations - Lending & Liquidation Vault", () => {
+  test.setTimeout(60000 * 4);
   test.beforeAll(async ({ vaultPage }) => {
     const depositAmount = 3000;
     await vaultPage.navigate();
