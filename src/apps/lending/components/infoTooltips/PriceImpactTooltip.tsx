@@ -1,4 +1,4 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 import BigNumber from "bignumber.js";
 import { GENERAL } from "apps/lending/utils/mixPanelEvents";
 
@@ -7,6 +7,7 @@ import {
   TextWithTooltip,
   TextWithTooltipProps,
 } from "apps/lending/components/TextWithTooltip";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 interface PriceImpactTooltipProps extends TextWithTooltipProps {
   loading: boolean;
@@ -44,10 +45,11 @@ export const PriceImpactTooltip = ({
           <>
             Price impact{" "}
             {loading ? (
-              <Skeleton
+              <CustomSkeleton
                 variant="rectangular"
                 height={12}
                 width={25}
+                animation={"wave"}
                 sx={{ borderRadius: "4px", display: "flex", marginLeft: "4px" }}
               />
             ) : (

@@ -2,7 +2,6 @@ import { ReserveIncentiveResponse } from "@into-the-fathom/lending-math-utils/di
 import {
   Box,
   FormControlLabel,
-  Skeleton,
   SvgIcon,
   Switch,
   Typography,
@@ -27,6 +26,7 @@ import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
 import { GasStation } from "apps/lending/components/transactions/GasStation/GasStation";
 
 import EastRoundedIcon from "@mui/icons-material/EastRounded";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 export interface TxModalDetailsProps {
   gasLimit?: string;
@@ -97,11 +97,12 @@ export const DetailsNumberLine: FC<DetailsNumberLineProps> = memo(
       <Row caption={description} captionVariant="description" mb={2}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {loading ? (
-            <Skeleton
+            <CustomSkeleton
               variant="rectangular"
               height={20}
               width={100}
               sx={{ borderRadius: "4px" }}
+              animation={"wave"}
             />
           ) : (
             <>
@@ -182,17 +183,19 @@ export const DetailsNumberLineWithSub: FC<DetailsNumberLineWithSubProps> = memo(
         >
           {loading ? (
             <>
-              <Skeleton
+              <CustomSkeleton
                 variant="rectangular"
                 height={20}
                 width={100}
                 sx={{ borderRadius: "4px" }}
+                animation={"wave"}
               />
-              <Skeleton
+              <CustomSkeleton
                 variant="rectangular"
                 height={15}
                 width={80}
                 sx={{ borderRadius: "4px", marginTop: "4px" }}
+                animation={"wave"}
               />
             </>
           ) : (
@@ -343,11 +346,12 @@ export const DetailsIncentivesLine: FC<DetailsIncentivesLineProps> = memo(
       >
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {loading ? (
-            <Skeleton
+            <CustomSkeleton
               variant="rectangular"
               height={20}
               width={100}
               sx={{ borderRadius: "4px" }}
+              animation={"wave"}
             />
           ) : (
             <>
@@ -399,11 +403,12 @@ export const DetailsHFLine: FC<DetailsHFLineProps> = memo(
             }}
           >
             {loading ? (
-              <Skeleton
+              <CustomSkeleton
                 variant="rectangular"
                 height={20}
                 width={80}
                 sx={{ borderRadius: "4px" }}
+                animation={"wave"}
               />
             ) : (
               <>

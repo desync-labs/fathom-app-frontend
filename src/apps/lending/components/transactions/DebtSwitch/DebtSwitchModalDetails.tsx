@@ -1,6 +1,6 @@
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Box, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
@@ -10,6 +10,7 @@ import { CustomMarket } from "apps/lending/ui-config/marketsConfig";
 
 import { ComputedUserReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
 import { GhoRange } from "./DebtSwitchModalContent";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 export type DebtSwitchModalDetailsProps = {
   switchSource: ComputedUserReserveData;
@@ -48,17 +49,19 @@ export const DebtSwitchModalDetails = ({
 
   const skeleton: JSX.Element = (
     <>
-      <Skeleton
+      <CustomSkeleton
         variant="rectangular"
         height={20}
         width={100}
         sx={{ borderRadius: "4px" }}
+        animation={"wave"}
       />
-      <Skeleton
+      <CustomSkeleton
         variant="rectangular"
         height={15}
         width={80}
         sx={{ borderRadius: "4px", marginTop: "4px" }}
+        animation={"wave"}
       />
     </>
   );
@@ -68,11 +71,12 @@ export const DebtSwitchModalDetails = ({
       <Row caption={<>Borrow apy</>} captionVariant="description" mb={4}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {loading ? (
-            <Skeleton
+            <CustomSkeleton
               variant="rectangular"
               height={20}
               width={100}
               sx={{ borderRadius: "4px" }}
+              animation={"wave"}
             />
           ) : (
             <>
@@ -117,11 +121,12 @@ export const DebtSwitchModalDetails = ({
             }}
           >
             {loading ? (
-              <Skeleton
+              <CustomSkeleton
                 variant="rectangular"
                 height={20}
                 width={100}
                 sx={{ borderRadius: "4px" }}
+                animation={"wave"}
               />
             ) : (
               <Box sx={{ display: "flex", alignItems: "center" }}>
