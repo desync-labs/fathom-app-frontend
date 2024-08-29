@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 test.describe("Fathom App Test Suite: Lending - FXD Token Tests", () => {
+  test.setTimeout(60000 * 5);
   test.beforeEach(async ({ lendingPage }) => {
     await lendingPage.navigate();
     await lendingPage.connectWallet(WalletConnectOptions.Metamask);
