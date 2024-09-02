@@ -72,6 +72,27 @@ export default class APIPage {
     return response;
   }
 
+  async sendFxdUserOperationRequest({
+    walletAddress,
+  }: {
+    walletAddress: string;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.stablecoinEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query:
+            "query FXDUser($walletAddress: String!, $chainId: String) {\n  users(where: {address: $walletAddress}) {\n    id\n    activePositionsCount\n    __typename\n  }\n}",
+          variables: {
+            walletAddress,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
   /*
    Validation Methods
   */
