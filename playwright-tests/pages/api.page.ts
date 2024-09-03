@@ -8,6 +8,9 @@ import {
   positionsExpectedDataDevApothem,
   positionsExpectedDataDevSepolia,
   positionsExpectedDataProdXDC,
+  positionsExpectedDataTwoDevApothem,
+  positionsExpectedDataTwoDevSepolia,
+  positionsExpectedDataTwoProdXDC,
 } from "../test-data/api.data";
 import {
   PoolDataApi,
@@ -28,6 +31,7 @@ export default class APIPage {
   readonly fxdUserQuery: string = `query FXDUser($walletAddress: String!, $chainId: String) {\n  users(where: {address: $walletAddress}) {\n    id\n    activePositionsCount\n    __typename\n  }\n}`;
   readonly fxdPositionQuery: string = `query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!, $chainId: String) {\n  positions(\n    first: $first\n    skip: $skip\n    orderBy: positionId\n    orderDirection: desc\n    where: {walletAddress: $walletAddress, positionStatus_in: [safe, unsafe]}\n  ) {\n    id\n    collateralPool\n    collateralPoolName\n    debtShare\n    debtValue\n    lockedCollateral\n    positionAddress\n    positionId\n    positionStatus\n    safetyBuffer\n    safetyBufferInPercent\n    tvl\n    walletAddress\n    __typename\n  }\n}`;
   readonly positionsExpectedDataArray: PositionDataExpectedApi[];
+  readonly positionsExpectedDataTwoArray: PositionDataExpectedApi[];
 
   constructor(request: APIRequestContext) {
     this.request = request;
@@ -37,14 +41,19 @@ export default class APIPage {
         case "https://graph.apothem.fathom.fi":
           this.poolsExpectedDataArray = poolsExpectedDataDevApothem;
           this.positionsExpectedDataArray = positionsExpectedDataDevApothem;
+          this.positionsExpectedDataTwoArray =
+            positionsExpectedDataTwoDevApothem;
           break;
         case "https://graph.sepolia.fathom.fi":
           this.poolsExpectedDataArray = poolsExpectedDataDevSepolia;
           this.positionsExpectedDataArray = positionsExpectedDataDevSepolia;
+          this.positionsExpectedDataTwoArray =
+            positionsExpectedDataTwoDevSepolia;
           break;
         case "https://graph.xinfin.fathom.fi":
           this.poolsExpectedDataArray = poolsExpectedDataProdXDC;
           this.positionsExpectedDataArray = positionsExpectedDataProdXDC;
+          this.positionsExpectedDataTwoArray = positionsExpectedDataTwoProdXDC;
           break;
         default:
           throw new Error("GRAPH_API_BASE_URL value is invalid");

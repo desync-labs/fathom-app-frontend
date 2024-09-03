@@ -131,7 +131,7 @@ test.describe("Stablecoin Subgraph API", () => {
             walletAddress = "0x6ae0a2dcf10723643ba54b7c641c34dc4b1e36c2";
             break;
           case "https://graph.sepolia.fathom.fi":
-            walletAddress = "0x8177c3ec5e28d05e1b0454e02548799dd0e64438";
+            walletAddress = "0x64be63cd7f8fe5f83ed45619dd496b41e99131f1";
             break;
           case "https://graph.xinfin.fathom.fi":
             walletAddress = "0xccaf653fbfc2effc092045c104cbb669b6dfcbce";
@@ -237,6 +237,93 @@ test.describe("Stablecoin Subgraph API", () => {
             expectedData: positionExpectedData,
           });
         }
+      });
+    }
+  );
+
+  test(
+    qase(
+      79,
+      "FXDPositions Operation - Querying first 4 positions with skip 4 for a wallet that has 5 different positions is successful and returns correct data"
+    ),
+    async ({ apiPage }) => {
+      await test.step("Step 1", async () => {
+        let walletAddress: string;
+        switch (apiPage.baseUrl) {
+          case "https://graph.apothem.fathom.fi":
+            walletAddress = "0xb61ff3e131f208298948cf1a58aee7c485d138be";
+            break;
+          case "https://graph.sepolia.fathom.fi":
+            walletAddress = "0x1867d2b96d255922d3f640ef75c7fcf226e13447";
+            break;
+          case "https://graph.xinfin.fathom.fi":
+            walletAddress = "0x0dc85d5bd14ea43a6a51c87d637b547da727aecc";
+            break;
+          default:
+            throw new Error("GRAPH_API_BASE_URL value is invalid");
+        }
+        const response = await apiPage.sendFxdPositionOperationRequest({
+          walletAddress,
+          first: 4,
+          skip: 4,
+        });
+        const responseJson = await response.json();
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("positions");
+        const positionsArray = responseJson.data.positions;
+        expect(Array.isArray(positionsArray)).toBe(true);
+        expect(positionsArray.length).toEqual(1);
+        // Positions' checks
+        for (const positionExpectedData of apiPage.positionsExpectedDataTwoArray) {
+          const currentPoolData = positionsArray.find(
+            (position: PositionDataApi) =>
+              position.id === positionExpectedData.id
+          );
+          apiPage.validatePositionData({
+            positionData: currentPoolData,
+            expectedData: positionExpectedData,
+          });
+        }
+      });
+    }
+  );
+
+  test(
+    qase(
+      80,
+      "FXDPositions Operation - Querying first 4 positions with skip 0 for a wallet that has no positions is successful and returns correct data"
+    ),
+    async ({ apiPage }) => {
+      await test.step("Step 1", async () => {
+        let walletAddress: string;
+        switch (apiPage.baseUrl) {
+          case "https://graph.apothem.fathom.fi":
+            walletAddress = "0x6Ae0A2dcf10723643bA54B7C641c34Dc4B1e36C2";
+            break;
+          case "https://graph.sepolia.fathom.fi":
+            walletAddress = "0x64be63cd7f8fe5f83ed45619dd496b41e99131f1";
+            break;
+          case "https://graph.xinfin.fathom.fi":
+            walletAddress = "0xCcaf653FBFC2effc092045c104cBb669b6DfCbce";
+            break;
+          default:
+            throw new Error("GRAPH_API_BASE_URL value is invalid");
+        }
+        const response = await apiPage.sendFxdPositionOperationRequest({
+          walletAddress,
+          first: 4,
+          skip: 0,
+        });
+        const responseJson = await response.json();
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("positions");
+        const positionsArray = responseJson.data.positions;
+        expect(Array.isArray(positionsArray)).toBe(true);
+        expect(positionsArray).toEqual([]);
       });
     }
   );

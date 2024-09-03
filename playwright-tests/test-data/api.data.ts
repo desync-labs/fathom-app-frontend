@@ -190,3 +190,45 @@ export const positionsExpectedDataDevSepolia: PositionDataExpectedApi[] = [
     __typename: "Position",
   },
 ];
+
+export const positionsExpectedDataTwoProdXDC: PositionDataExpectedApi[] = [
+  {
+    id: "0xa3eae97814ff995764d2b4a674364d9cd56e6e91",
+    collateralPool:
+      "0x5844430000000000000000000000000000000000000000000000000000000000",
+    collateralPoolName: "XDC",
+    positionAddress: "0xa3eae97814ff995764d2b4a674364d9cd56e6e91",
+    positionId: "768",
+    positionStatus: "safe",
+    walletAddress: "0x0dc85d5bd14ea43a6a51c87d637b547da727aecc",
+    __typename: "Position",
+  },
+];
+
+export const positionsExpectedDataTwoDevApothem: PositionDataExpectedApi[] = [
+  {
+    id: "0xcb7e25cc55d846d81b98be9a59396135a96cfc3a",
+    collateralPool:
+      "0x5844430000000000000000000000000000000000000000000000000000000000",
+    collateralPoolName: "XDC",
+    positionAddress: "0xcb7e25cc55d846d81b98be9a59396135a96cfc3a",
+    positionId: "518",
+    positionStatus: "safe",
+    walletAddress: "0xb61ff3e131f208298948cf1a58aee7c485d138be",
+    __typename: "Position",
+  },
+];
+
+export const positionsExpectedDataTwoDevSepolia: PositionDataExpectedApi[] = [
+  {
+    id: "0xe9f4a02be46a18a3bd0d7eda00a54f634a2cef21",
+    collateralPool:
+      "0x5844430000000000000000000000000000000000000000000000000000000000",
+    collateralPoolName: "XDC",
+    positionAddress: "0xe9f4a02be46a18a3bd0d7eda00a54f634a2cef21",
+    positionId: "31",
+    positionStatus: "safe",
+    walletAddress: "0x1867d2b96d255922d3f640ef75c7fcf226e13447",
+    __typename: "Position",
+  },
+];
