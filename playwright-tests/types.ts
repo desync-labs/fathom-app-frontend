@@ -133,3 +133,31 @@ export interface PoolDataExpectedApi {
   stabilityFeeRate: string;
   tokenAdapterAddress: string;
 }
+
+export interface PositionDataApi {
+  id: string;
+  collateralPool: string;
+  collateralPoolName: string;
+  debtShare: string;
+  debtValue: string;
+  lockedCollateral: string;
+  positionAddress: string;
+  positionId: string;
+  positionStatus: string;
+  safetyBuffer: string;
+  safetyBufferInPercent: string;
+  tvl: string;
+  walletAddress: string;
+  __typename: string;
+}
+
+export interface PositionDataExpectedApi {
+  id: string;
+  collateralPool: string;
+  collateralPoolName: string;
+  positionAddress: string;
+  positionId: string;
+  positionStatus: string;
+  walletAddress: string;
+  __typename: string;
+}

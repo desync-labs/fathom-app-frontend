@@ -5,8 +5,16 @@ import {
   poolsExpectedDataDevApothem,
   poolsExpectedDataDevSepolia,
   poolsExpectedDataProdXDC,
+  positionsExpectedDataDevApothem,
+  positionsExpectedDataDevSepolia,
+  positionsExpectedDataProdXDC,
 } from "../test-data/api.data";
-import { PoolDataApi, PoolDataExpectedApi } from "../types";
+import {
+  PoolDataApi,
+  PoolDataExpectedApi,
+  PositionDataApi,
+  PositionDataExpectedApi,
+} from "../types";
 dotenv.config();
 
 export default class APIPage {
@@ -15,6 +23,11 @@ export default class APIPage {
   readonly vaultEndpoint: string = graphAPIEndpoints.vaultsSubgraph;
   readonly baseUrl: string;
   readonly poolsExpectedDataArray: PoolDataExpectedApi[];
+  readonly fxdStatsQuery: string = `query FxdStats($chainId: String) {\n  protocolStat(id: "fathom_stats") {\n    id\n    totalSupply\n    tvl\n    __typename\n  }\n}`;
+  readonly fxdPoolsQuery: string = `query FXDPools($chainId: String) {\n  pools {\n    rawPrice\n    collateralLastPrice\n    collateralPrice\n    debtAccumulatedRate\n    debtCeiling\n    id\n    liquidationRatio\n    lockedCollateral\n    poolName\n    priceWithSafetyMargin\n    stabilityFeeRate\n    totalAvailable\n    totalBorrowed\n    tvl\n    tokenAdapterAddress\n    __typename\n  }\n}`;
+  readonly fxdUserQuery: string = `query FXDUser($walletAddress: String!, $chainId: String) {\n  users(where: {address: $walletAddress}) {\n    id\n    activePositionsCount\n    __typename\n  }\n}`;
+  readonly fxdPositionQuery: string = `query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!, $chainId: String) {\n  positions(\n    first: $first\n    skip: $skip\n    orderBy: positionId\n    orderDirection: desc\n    where: {walletAddress: $walletAddress, positionStatus_in: [safe, unsafe]}\n  ) {\n    id\n    collateralPool\n    collateralPoolName\n    debtShare\n    debtValue\n    lockedCollateral\n    positionAddress\n    positionId\n    positionStatus\n    safetyBuffer\n    safetyBufferInPercent\n    tvl\n    walletAddress\n    __typename\n  }\n}`;
+  readonly positionsExpectedDataArray: PositionDataExpectedApi[];
 
   constructor(request: APIRequestContext) {
     this.request = request;
@@ -23,12 +36,15 @@ export default class APIPage {
       switch (this.baseUrl) {
         case "https://graph.apothem.fathom.fi":
           this.poolsExpectedDataArray = poolsExpectedDataDevApothem;
+          this.positionsExpectedDataArray = positionsExpectedDataDevApothem;
           break;
         case "https://graph.sepolia.fathom.fi":
           this.poolsExpectedDataArray = poolsExpectedDataDevSepolia;
+          this.positionsExpectedDataArray = positionsExpectedDataDevSepolia;
           break;
         case "https://graph.xinfin.fathom.fi":
           this.poolsExpectedDataArray = poolsExpectedDataProdXDC;
+          this.positionsExpectedDataArray = positionsExpectedDataProdXDC;
           break;
         default:
           throw new Error("GRAPH_API_BASE_URL value is invalid");
@@ -48,8 +64,7 @@ export default class APIPage {
       {
         headers: { "Content-Type": "application/json" },
         data: {
-          query:
-            'query FxdStats($chainId: String) {\n  protocolStat(id: "fathom_stats") {\n    id\n    totalSupply\n    tvl\n    __typename\n  }\n}',
+          query: this.fxdStatsQuery,
           variables: {},
         },
       }
@@ -63,8 +78,7 @@ export default class APIPage {
       {
         headers: { "Content-Type": "application/json" },
         data: {
-          query:
-            "query FXDPools($chainId: String) {\n  pools {\n    rawPrice\n    collateralLastPrice\n    collateralPrice\n    debtAccumulatedRate\n    debtCeiling\n    id\n    liquidationRatio\n    lockedCollateral\n    poolName\n    priceWithSafetyMargin\n    stabilityFeeRate\n    totalAvailable\n    totalBorrowed\n    tvl\n    tokenAdapterAddress\n    __typename\n  }\n}",
+          query: this.fxdPoolsQuery,
           variables: {},
         },
       }
@@ -82,9 +96,34 @@ export default class APIPage {
       {
         headers: { "Content-Type": "application/json" },
         data: {
-          query:
-            "query FXDUser($walletAddress: String!, $chainId: String) {\n  users(where: {address: $walletAddress}) {\n    id\n    activePositionsCount\n    __typename\n  }\n}",
+          query: this.fxdUserQuery,
           variables: {
+            walletAddress,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendFxdPositionOperationRequest({
+    first,
+    skip,
+    walletAddress,
+  }: {
+    first: number;
+    skip: number;
+    walletAddress: string;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.stablecoinEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.fxdPositionQuery,
+          variables: {
+            first,
+            skip,
             walletAddress,
           },
         },
@@ -177,6 +216,75 @@ export default class APIPage {
       parentObject: poolData,
       propertyName: "__typename",
       expectedValue: "Pool",
+    });
+  }
+
+  validatePositionData({
+    positionData,
+    expectedData,
+  }: {
+    positionData: PositionDataApi;
+    expectedData: PositionDataExpectedApi;
+  }): void {
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "id",
+      expectedValue: expectedData.id,
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "collateralPool",
+      expectedValue: expectedData.collateralPool,
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "collateralPoolName",
+      expectedValue: expectedData.collateralPoolName,
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: positionData,
+      propertyName: "debtShare",
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: positionData,
+      propertyName: "debtValue",
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: positionData,
+      propertyName: "lockedCollateral",
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "positionAddress",
+      expectedValue: expectedData.positionAddress,
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "positionId",
+      expectedValue: expectedData.positionId,
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "positionStatus",
+      expectedValue: expectedData.positionStatus,
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: positionData,
+      propertyName: "safetyBuffer",
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: positionData,
+      propertyName: "tvl",
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "walletAddress",
+      expectedValue: expectedData.walletAddress,
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: positionData,
+      propertyName: "__typename",
+      expectedValue: expectedData.__typename,
     });
   }
 
