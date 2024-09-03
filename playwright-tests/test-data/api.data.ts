@@ -232,3 +232,5 @@ export const positionsExpectedDataTwoDevSepolia: PositionDataExpectedApi[] = [
     __typename: "Position",
   },
 ];
+
+export const zeroAddress = "0x0000000000000000000000000000000000000000";

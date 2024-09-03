@@ -1,6 +1,7 @@
 import { qase } from "playwright-qase-reporter";
 import { test, expect } from "../../fixtures/apiFixture";
 import { PoolDataApi, PositionDataApi } from "../../types";
+import { zeroAddress } from "../../test-data/api.data";
 
 test.describe("Stablecoin Subgraph API", () => {
   test(
@@ -178,7 +179,7 @@ test.describe("Stablecoin Subgraph API", () => {
     async ({ apiPage }) => {
       await test.step("Step 1", async () => {
         const response = await apiPage.sendFxdUserOperationRequest({
-          walletAddress: "0x0000000000000000000000000000000000000000",
+          walletAddress: zeroAddress,
         });
         const responseJson = await response.json();
         expect(response.status()).toBe(200);
@@ -313,6 +314,30 @@ test.describe("Stablecoin Subgraph API", () => {
         }
         const response = await apiPage.sendFxdPositionOperationRequest({
           walletAddress,
+          first: 4,
+          skip: 0,
+        });
+        const responseJson = await response.json();
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("positions");
+        const positionsArray = responseJson.data.positions;
+        expect(Array.isArray(positionsArray)).toBe(true);
+        expect(positionsArray).toEqual([]);
+      });
+    }
+  );
+
+  test(
+    qase(
+      81,
+      "FXDPositions Operation - Querying first 4 positions with skip 0 for an all 0s address is successful and returns correct data"
+    ),
+    async ({ apiPage }) => {
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendFxdPositionOperationRequest({
+          walletAddress: zeroAddress,
           first: 4,
           skip: 0,
         });
