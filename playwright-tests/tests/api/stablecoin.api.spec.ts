@@ -6,7 +6,7 @@ test.describe("Stablecoin Subgraph API", () => {
   test(
     qase(
       71,
-      "FXDStats Operation - Querying the operation with valid inputs is successful"
+      "FXDStats Operation - Querying the operation with valid inputs is successful and returns correct data"
     ),
     async ({ apiPage }) => {
       await test.step("Step 1", async () => {
@@ -39,7 +39,7 @@ test.describe("Stablecoin Subgraph API", () => {
   test(
     qase(
       73,
-      "FXDPools Operation - Querying the operation with valid inputs is successful"
+      "FXDPools Operation - Querying the operation with valid inputs is successful and returns correct data"
     ),
     async ({ apiPage }) => {
       await test.step("Step 1", async () => {
@@ -121,14 +121,14 @@ test.describe("Stablecoin Subgraph API", () => {
   test(
     qase(
       76,
-      "FXDUser Operation - Querying with a valid proxy wallet address and no active positions is successful"
+      "FXDUser Operation - Querying with a valid proxy wallet address and no active positions is successful and returns correct data"
     ),
     async ({ apiPage }) => {
       await test.step("Step 1", async () => {
         let walletAddress: string;
         switch (apiPage.baseUrl) {
           case "https://graph.apothem.fathom.fi":
-            walletAddress = "TBD";
+            walletAddress = "0x6ae0a2dcf10723643ba54b7c641c34dc4b1e36c2";
             break;
           case "https://graph.sepolia.fathom.fi":
             walletAddress = "0x8177c3ec5e28d05e1b0454e02548799dd0e64438";
