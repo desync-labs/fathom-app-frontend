@@ -12,6 +12,7 @@ const DashboardContent = () => {
     positionsItemsCount,
     setPositionCurrentPage,
     loadingPositions,
+    loadingUserStats,
     fetchProxyWallet,
   } = useDashboard();
 
@@ -27,6 +28,7 @@ const DashboardContent = () => {
         fetchProxyWallet={fetchProxyWallet}
       />
       <PositionsList
+        loadingUserStats={loadingUserStats}
         loadingPositions={loadingPositions}
         positionCurrentPage={positionCurrentPage}
         positionsItemsCount={positionsItemsCount}

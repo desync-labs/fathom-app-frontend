@@ -9,6 +9,7 @@ import {
 import useDashboardContext from "hooks/General/useDashboardContext";
 
 export type UseFxdContextReturn = {
+  loadingUserStats: boolean;
   loadingStats: boolean;
   loadingPositions: boolean;
   loadingPools: boolean;
