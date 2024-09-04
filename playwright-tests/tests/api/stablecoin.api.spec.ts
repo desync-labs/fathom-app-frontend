@@ -352,4 +352,90 @@ test.describe("Stablecoin Subgraph API", () => {
       });
     }
   );
+
+  test(
+    qase(
+      82,
+      "FXDActivities Operation - Querying first 1000 transactions of a proxy wallet address that has at least one transaction is successful"
+    ),
+    async ({ apiPage }) => {
+      test.setTimeout(20000);
+      test.skip(
+        apiPage.baseUrl === "https://graph.sepolia.fathom.fi",
+        "Sepolia transactions is throwing an error currently"
+      );
+      await test.step("Step 1", async () => {
+        let walletAddress: string;
+        let expectedCount: number;
+        switch (apiPage.baseUrl) {
+          case "https://graph.apothem.fathom.fi":
+            walletAddress = "0x79754D3bE7E04Fd671F49ae39AEbB1b1F786881B";
+            expectedCount = 1000;
+            break;
+          case "https://graph.sepolia.fathom.fi":
+            walletAddress = "0xbbc0A0F92be8bC6De8AD26422bC4b2e2c4206bc5";
+            expectedCount = 1;
+            break;
+          case "https://graph.xinfin.fathom.fi":
+            walletAddress = "0x8Bb48f8dB08b7Fa41333586415E2de5639200569";
+            expectedCount = 84;
+            break;
+          default:
+            throw new Error("GRAPH_API_BASE_URL value is invalid");
+        }
+        const response = await apiPage.sendFxdActivitiesOperationRequest({
+          activityState: ["created", "topup", "repay", "liquidation", "closed"],
+          first: 1000,
+          orderBy: "blockNumber",
+          orderDirection: "desc",
+          proxyWallet: walletAddress,
+        });
+        const responseJson = await response.json();
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("positionActivities");
+        const positionActivitiesArray = responseJson.data.positionActivities;
+        expect(Array.isArray(positionActivitiesArray)).toBe(true);
+        expect(positionActivitiesArray.length).toBeGreaterThanOrEqual(
+          expectedCount
+        );
+        for (const currentActivity of positionActivitiesArray) {
+          apiPage.validateActivityData({
+            activityData: currentActivity,
+          });
+        }
+      });
+    }
+  );
+
+  test(
+    qase(
+      83,
+      "FXDActivities Operation - Querying first 1000 transactions with all 0s address is successful"
+    ),
+    async ({ apiPage }) => {
+      test.skip(
+        apiPage.baseUrl === "https://graph.sepolia.fathom.fi",
+        "Sepolia transactions is throwing an error currently"
+      );
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendFxdActivitiesOperationRequest({
+          activityState: ["created", "topup", "repay", "liquidation", "closed"],
+          first: 1000,
+          orderBy: "blockNumber",
+          orderDirection: "desc",
+          proxyWallet: zeroAddress,
+        });
+        const responseJson = await response.json();
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("positionActivities");
+        const positionActivitiesArray = responseJson.data.positionActivities;
+        expect(Array.isArray(positionActivitiesArray)).toBe(true);
+        expect(positionActivitiesArray).toEqual([]);
+      });
+    }
+  );
 });

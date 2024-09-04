@@ -30,6 +30,7 @@ export default class APIPage {
   readonly fxdPoolsQuery: string = `query FXDPools($chainId: String) {\n  pools {\n    rawPrice\n    collateralLastPrice\n    collateralPrice\n    debtAccumulatedRate\n    debtCeiling\n    id\n    liquidationRatio\n    lockedCollateral\n    poolName\n    priceWithSafetyMargin\n    stabilityFeeRate\n    totalAvailable\n    totalBorrowed\n    tvl\n    tokenAdapterAddress\n    __typename\n  }\n}`;
   readonly fxdUserQuery: string = `query FXDUser($walletAddress: String!, $chainId: String) {\n  users(where: {address: $walletAddress}) {\n    id\n    activePositionsCount\n    __typename\n  }\n}`;
   readonly fxdPositionQuery: string = `query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!, $chainId: String) {\n  positions(\n    first: $first\n    skip: $skip\n    orderBy: positionId\n    orderDirection: desc\n    where: {walletAddress: $walletAddress, positionStatus_in: [safe, unsafe]}\n  ) {\n    id\n    collateralPool\n    collateralPoolName\n    debtShare\n    debtValue\n    lockedCollateral\n    positionAddress\n    positionId\n    positionStatus\n    safetyBuffer\n    safetyBufferInPercent\n    tvl\n    walletAddress\n    __typename\n  }\n}`;
+  readonly fxdActivitiesQuery: string = `query FXDActivities($first: Int!, $proxyWallet: String!, $orderBy: String, $orderDirection: String, $chainId: String, $activityState: [String!]) {\n  positionActivities(\n    first: $first\n    orderBy: $orderBy\n    orderDirection: $orderDirection\n    where: {position_: {userAddress: $proxyWallet}, activityState_in: $activityState}\n  ) {\n    id\n    blockNumber\n    activityState\n    blockNumber\n    blockTimestamp\n    collateralAmount\n    debtAmount\n    transaction\n    position {\n      positionId\n      lockedCollateral\n      debtValue\n      debtShare\n      collateralPool\n      collateralPoolName\n      __typename\n    }\n    __typename\n  }\n}`;
   readonly positionsExpectedDataArray: PositionDataExpectedApi[];
   readonly positionsExpectedDataTwoArray: PositionDataExpectedApi[];
 
@@ -134,6 +135,38 @@ export default class APIPage {
             first,
             skip,
             walletAddress,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendFxdActivitiesOperationRequest({
+    activityState,
+    first,
+    orderBy,
+    orderDirection,
+    proxyWallet,
+  }: {
+    activityState: string[];
+    first: number;
+    orderBy: string;
+    orderDirection: string;
+    proxyWallet: string;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.stablecoinEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.fxdActivitiesQuery,
+          variables: {
+            activityState,
+            first,
+            orderBy,
+            orderDirection,
+            proxyWallet,
           },
         },
       }
@@ -297,9 +330,87 @@ export default class APIPage {
     });
   }
 
+  validateActivityData({ activityData }: { activityData: any }): void {
+    this.assertStringPropertyExists({
+      parentObject: activityData,
+      propertyName: "activityState",
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: activityData,
+      propertyName: "blockNumber",
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: activityData,
+      propertyName: "blockTimestamp",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData,
+      propertyName: "collateralAmount",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData,
+      propertyName: "debtAmount",
+    });
+    this.assertStringPropertyExistsAndValueContains({
+      parentObject: activityData,
+      propertyName: "id",
+      expectedString: "position-activity-0x",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData,
+      propertyName: "transaction",
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: activityData,
+      propertyName: "__typename",
+      expectedValue: "PositionActivity",
+    });
+    expect(activityData).toHaveProperty("position");
+    this.assertStringPropertyExists({
+      parentObject: activityData.position,
+      propertyName: "collateralPool",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData.position,
+      propertyName: "collateralPoolName",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData.position,
+      propertyName: "debtShare",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData.position,
+      propertyName: "debtValue",
+    });
+    this.assertStringPropertyExists({
+      parentObject: activityData.position,
+      propertyName: "lockedCollateral",
+    });
+    this.assertStringPropertyExistsAndBiggerThanZero({
+      parentObject: activityData.position,
+      propertyName: "positionId",
+    });
+    this.assertStringPropertyExistsAndValueEquals({
+      parentObject: activityData.position,
+      propertyName: "__typename",
+      expectedValue: "Position",
+    });
+  }
+
   /*
    Helpers
   */
+
+  assertStringPropertyExists({
+    parentObject,
+    propertyName,
+  }: {
+    parentObject: any;
+    propertyName: string;
+  }): void {
+    expect.soft(parentObject).toHaveProperty(propertyName);
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
+  }
 
   assertStringPropertyExistsAndBiggerThanZero({
     parentObject,
@@ -325,6 +436,20 @@ export default class APIPage {
     expect.soft(parentObject).toHaveProperty(propertyName);
     expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
     expect.soft(parentObject[`${propertyName}`]).toEqual(expectedValue);
+  }
+
+  assertStringPropertyExistsAndValueContains({
+    parentObject,
+    propertyName,
+    expectedString,
+  }: {
+    parentObject: any;
+    propertyName: string;
+    expectedString: string;
+  }): void {
+    expect.soft(parentObject).toHaveProperty(propertyName);
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
+    expect.soft(parentObject[`${propertyName}`]).toContain(expectedString);
   }
 
   assertResponseBodyNotEmpty({ responseBody }: { responseBody: any }): void {
