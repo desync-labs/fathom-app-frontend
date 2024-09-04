@@ -37,14 +37,14 @@ const useDashboardContext = () => {
   const [positionsItemsCount, setPositionsItemsCount] = useState<number>(0);
   const [proxyWallet, setProxyWallet] = useState<string>("");
 
-  const [loadUserStats, { refetch: refetchUserStats }] = useLazyQuery(
-    FXD_USER,
-    {
-      context: { clientName: "stable", chainId },
-      fetchPolicy: "cache-first",
-      variables: { chainId },
-    }
-  );
+  const [
+    loadUserStats,
+    { refetch: refetchUserStats, loading: loadingUserStats },
+  ] = useLazyQuery(FXD_USER, {
+    context: { clientName: "stable", chainId },
+    fetchPolicy: "network-only",
+    variables: { chainId },
+  });
 
   const fetchUserStatsAndProxyWallet = async () => {
     const proxyWallet = await positionService.getProxyWallet(account);
@@ -134,6 +134,7 @@ const useDashboardContext = () => {
   }, [syncFXD, prevSyncFxd, refetchData]);
 
   return {
+    loadingUserStats,
     loadingStats,
     loadingPositions,
     loadingPools,
