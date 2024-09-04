@@ -17,6 +17,7 @@ import {
   BaseListStakingStats,
 } from "components/Base/List/StyledList";
 import {
+  BaseButtonOutlined,
   BaseButtonPrimary,
   BaseButtonPrimaryLink,
 } from "components/Base/Buttons/StyledButtons";
@@ -306,7 +307,7 @@ const StreamStats: FC = () => {
         >
           Claim all rewards
         </BaseButtonPrimary>
-        <BaseButtonPrimary
+        <BaseButtonOutlined
           disabled={
             !stake ||
             !BigNumber(Number(seconds)).isLessThanOrEqualTo(0) ||
@@ -315,7 +316,7 @@ const StreamStats: FC = () => {
           onClick={() => processFlow(FlowType.WITHDRAW)}
         >
           Withdraw
-        </BaseButtonPrimary>
+        </BaseButtonOutlined>
       </BulkActionBtnWrapper>
     </BasePaper>
   );

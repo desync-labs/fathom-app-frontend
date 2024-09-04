@@ -6,7 +6,7 @@ import { DialogActions, FlowType } from "hooks/Staking/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/AppComponents/AppBox/AppBox";
-import { Box, CircularProgress, Grid, Pagination } from "@mui/material";
+import { Box, CircularProgress, Pagination } from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
 import UnstakeCoolDownDialog from "components/Staking/Dialog/UnstakeCoolDownDialog";
@@ -15,6 +15,13 @@ import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
+
+const StakingViewList = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+`;
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -54,13 +61,13 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                 You have no open positions.
               </NoResults>
             ) : isLoading ? (
-              <Grid container>
-                <Grid item xs={12} sx={{ textAlign: "center" }}>
+              <StakingViewList>
+                <Box sx={{ textAlign: "center" }}>
                   <CircularProgress size={30} />
-                </Grid>
-              </Grid>
+                </Box>
+              </StakingViewList>
             ) : (
-              <Grid container sx={{ gap: "12px" }} mt={isMobile ? 2 : 3}>
+              <StakingViewList>
                 {lockPositions.map((lockPosition: ILockPosition) => (
                   <StakingViewItem
                     key={lockPosition.lockId}
@@ -68,7 +75,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                     lockPosition={lockPosition}
                   />
                 ))}
-              </Grid>
+              </StakingViewList>
             )}
             {itemCount > COUNT_PER_PAGE && (
               <PaginationWrapper>

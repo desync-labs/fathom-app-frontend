@@ -51,16 +51,27 @@ const ConfirmButton = styled(ButtonPrimary)`
 `;
 
 export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
-  width: auto;
-  margin: 20px 15px;
+  width: 100%;
+  margin: 40px 0 0;
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: center;
 
   > button {
     height: 48px;
-    width: ${({ singleBtn }) => (singleBtn ? "100%" : "calc(50% - 3px)")};
-    height: 48px;
+    width: auto;
+    padding: 8px 32px;
+
+    &:first-child {
+      ${({ singleBtn }) =>
+        singleBtn
+          ? "width: 100%;"
+          : "flex-grow: 0; flex-shrink: 0; width: auto;"};
+    }
+
+    &:last-child {
+      ${({ singleBtn }) => !singleBtn && "flex-grow: 1;"};
+    }
   }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {

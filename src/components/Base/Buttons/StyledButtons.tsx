@@ -1,5 +1,10 @@
 import { styled } from "@mui/material/styles";
-import { Box, IconButton as MuiButton, ToggleButtonGroup } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  IconButton as MuiButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 
 export const BaseButtonsSwitcherGroup = styled(Box)`
@@ -43,6 +48,47 @@ export const BaseButtonPrimary = styled(MuiButton, {
     fontWeight: "bold",
     color: "#00332F",
     border: "1px solid #B3FFF9",
+    height: "40px",
+    "&:hover": {
+      background: "transparent",
+      color: "#B3FFF9",
+      border: "1px solid #B3FFF9",
+      cursor: "pointer",
+      pointerEvents: "all !important",
+      svg: {
+        color: "#B3FFF9",
+      },
+    },
+    "> .MuiCircularProgress-root": {
+      color: "#1D2D49",
+    },
+  };
+
+  if (!isLoading) {
+    (styles as any)["&:disabled"] = {
+      color: "#B7C8E5",
+      background: "transparent",
+      borderColor: "#6D86B2",
+      cursor: "not-allowed !important",
+      pointerEvents: "all !important",
+    };
+  }
+
+  return styles;
+});
+
+export const BaseButtonOutlined = styled(MuiButton, {
+  shouldForwardProp: (prop) => prop !== "isLoading",
+})<{ isLoading?: boolean }>(({ isLoading = false }) => {
+  const styles = {
+    borderRadius: "8px",
+    background: "transparent",
+    padding: "8, 12, 8, 12",
+    fontSize: "13px",
+    lineHeight: "16px",
+    fontWeight: "bold",
+    color: "#43FFF1",
+    border: "1px solid #43FFF1",
     height: "40px",
     "&:hover": {
       background: "transparent",
@@ -211,5 +257,21 @@ export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
     &:hover {
       background: rgba(79, 101, 140, 0.1);
     }
+  }
+`;
+
+export const BaseCancelButton = styled(IconButton)`
+  height: 48px;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  color: #43fff1;
+  border: 1px solid #43fff1;
+  border-radius: 8px;
+
+  &:hover {
+    background: transparent;
+    color: #b3fff9;
+    border: 1px solid #b3fff9;
   }
 `;
