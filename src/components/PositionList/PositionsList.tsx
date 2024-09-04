@@ -28,6 +28,7 @@ import {
   PositionListItemSkeleton,
 } from "components/Base/Skeletons/StablecoinSkeletons";
 import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
+import useConnector from "context/connector";
 
 const PositionsTitle = styled(TitleSecondary)`
   font-size: 20px;
@@ -43,6 +44,7 @@ type PositionsListProps = {
   proxyWallet: string;
   positionCurrentPage: number;
   loadingPositions: boolean;
+  loadingUserStats: boolean;
   setPositionCurrentPage: Dispatch<number>;
 };
 
@@ -52,6 +54,7 @@ const PositionsList: FC<PositionsListProps> = ({
   positionCurrentPage,
   setPositionCurrentPage,
   loadingPositions,
+  loadingUserStats,
 }) => {
   const {
     topUpPositionPool,
@@ -65,18 +68,23 @@ const PositionsList: FC<PositionsListProps> = ({
     setTopUpPosition,
   } = useOpenPositionList(setPositionCurrentPage, proxyWallet);
   const { isMobile } = useSharedContext();
+  const { account } = useConnector();
 
   const [listLoading, setListLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setListLoading(loadingPositions || loading);
+      setListLoading(loadingPositions || loading || loadingUserStats);
     }, 300);
 
     return () => {
       clearTimeout(timeout);
     };
-  }, [setListLoading, loadingPositions, loading]);
+  }, [setListLoading, loadingPositions, loading, loadingUserStats]);
+
+  useEffect(() => {
+    setListLoading(true);
+  }, [account]);
 
   const pageCount = useMemo(() => {
     return Math.ceil(positionsItemsCount / COUNT_PER_PAGE);

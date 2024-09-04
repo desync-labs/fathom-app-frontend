@@ -4,7 +4,7 @@ import { EthereumProviderOptions } from "@walletconnect/ethereum-provider/dist/t
 import { JsonRpcProvider, Web3Provider } from "@into-the-fathom/providers";
 import { DEFAULT_CHAIN_ID } from "utils/Constants";
 
-export const APOTHEM_RPC = "https://erpc.apothem.network/";
+export const APOTHEM_RPC = "https://earpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
 export const SEPOLIA_RPC = "https://eth-sepolia.public.blastapi.io/";
 
