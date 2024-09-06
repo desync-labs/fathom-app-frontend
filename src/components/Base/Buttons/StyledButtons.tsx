@@ -275,3 +275,14 @@ export const BaseCancelButton = styled(IconButton)`
     border: 1px solid #b3fff9;
   }
 `;
+
+export const BaseSkipButton = styled(MuiButton)`
+  background: rgba(143, 36, 36, 0.25);
+  border-radius: 8px;
+  height: 48px;
+  width: 100%;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 24px;
+  color: #df3838;
+`;

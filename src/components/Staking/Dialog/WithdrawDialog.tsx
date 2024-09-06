@@ -10,7 +10,7 @@ import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import {
   BaseDialogContentWrapper,
   BaseDialogDescription,
-  BaseDialogWrapper,
+  BaseDialogWrapperLight,
 } from "components/Base/Dialog/StyledDialog";
 import {
   BaseButtonPrimary,
@@ -19,14 +19,6 @@ import {
 
 const ConfirmButton = styled(BaseButtonPrimary)`
   font-size: 17px;
-`;
-
-const Dialog = styled(BaseDialogWrapper)`
-  & .MuiDialog-paper {
-    border: 1px solid #3d5580;
-    background: #2c4066;
-    box-shadow: 0 12px 32px 0 rgba(0, 7, 21, 0.5);
-  }
 `;
 
 type WithdrawDialogProps = {
@@ -43,7 +35,7 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
   }, [action]);
 
   return (
-    <Dialog
+    <BaseDialogWrapperLight
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
@@ -82,7 +74,7 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
           )}
         </ButtonsWrapper>
       </DialogContent>
-    </Dialog>
+    </BaseDialogWrapperLight>
   );
 };
 

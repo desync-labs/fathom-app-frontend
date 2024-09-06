@@ -1,28 +1,30 @@
 import { FC, memo, useMemo } from "react";
 import {
-  AppDialog,
-  DialogContentWrapper,
-} from "components/AppComponents/AppDialog/AppDialog";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
   Box,
   CircularProgress,
   DialogContent,
   Typography,
 } from "@mui/material";
-import {
-  ButtonPrimary,
-  CancelButton,
-  SkipButton,
-} from "components/AppComponents/AppButton/AppButton";
-import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { styled } from "@mui/material/styles";
-import { getTokenLogoURL } from "utils/tokenLogo";
 import InfoIcon from "@mui/icons-material/Info";
+import BigNumber from "bignumber.js";
+
+import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
 import useStakingContext from "context/staking";
-import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
+import { BaseInfoBox } from "components/Base/Boxes/StyledBoxes";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
+import {
+  BaseDialogContentWrapper,
+  BaseDialogDescription,
+  BaseDialogWrapperLight,
+} from "components/Base/Dialog/StyledDialog";
+import {
+  BaseButtonPrimary,
+  BaseCancelButton,
+  BaseSkipButton,
+} from "components/Base/Buttons/StyledButtons";
 
 export const InfoMessageWrapper = styled(Box)`
   display: flex;
@@ -42,7 +44,7 @@ export const InfoMessageWrapper = styled(Box)`
   }
 `;
 
-const ConfirmButton = styled(ButtonPrimary)`
+const ConfirmButton = styled(BaseButtonPrimary)`
   width: 100%;
   height: 48px;
   font-weight: 600;
@@ -52,10 +54,11 @@ const ConfirmButton = styled(ButtonPrimary)`
 
 export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
   width: 100%;
-  margin: 40px 0 0;
   display: flex;
   gap: 8px;
   align-items: center;
+
+  ${({ singleBtn }) => (singleBtn ? "margin: 20px 0 0;" : "margin: 40px 0 0;")};
 
   > button {
     height: 48px;
@@ -104,26 +107,24 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
   const isLoading = useMemo(() => action?.type === "claim", [action]);
 
   return (
-    <AppDialog
+    <BaseDialogWrapperLight
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
       maxWidth="sm"
-      color="primary"
     >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Claim Rewards
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
-        <ModalDescription>
-          Claim Rewards only is available for all positions at the moment.{" "}
-          <br />
-          You will lose the rewards of the position you proceed to unstake
-          without claiming it here first.
-        </ModalDescription>
-        <DialogContentWrapper>
+        <BaseDialogDescription>
+          Claim Rewards only is available for all positions at the moment. You
+          will lose the rewards of the position you proceed to unstake without
+          claiming it here first.
+        </BaseDialogDescription>
+        <BaseDialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
@@ -136,13 +137,13 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
             </Box>
             <span>{token}</span>
           </Box>
-        </DialogContentWrapper>
+        </BaseDialogContentWrapper>
         <ButtonsWrapper>
           {!isMobile &&
             (onSkip ? (
-              <SkipButton onClick={onSkip}>Skip</SkipButton>
+              <BaseSkipButton onClick={onSkip}>Skip</BaseSkipButton>
             ) : (
-              <CancelButton onClick={onClose}>Cancel</CancelButton>
+              <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
             ))}
 
           <ConfirmButton
@@ -155,19 +156,19 @@ const ClaimRewardsDialog: FC<ClaimRewardsDialogProps> = ({
 
           {isMobile &&
             (onSkip ? (
-              <SkipButton onClick={onSkip}>Skip</SkipButton>
+              <BaseSkipButton onClick={onSkip}>Skip</BaseSkipButton>
             ) : (
-              <CancelButton onClick={onClose}>Cancel</CancelButton>
+              <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
             ))}
         </ButtonsWrapper>
-        <InfoMessageWrapper>
-          <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
+        <BaseInfoBox sx={{ marginTop: "20px" }}>
+          <InfoIcon sx={{ fontSize: "18px" }} />
           <Typography>
             Proceeding will prompt you to sign 1 txn in MetaMask.
           </Typography>
-        </InfoMessageWrapper>
+        </BaseInfoBox>
       </DialogContent>
-    </AppDialog>
+    </BaseDialogWrapperLight>
   );
 };
 

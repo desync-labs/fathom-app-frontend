@@ -88,9 +88,10 @@ const BulkActionBtnWrapper = styled(Grid)`
 `;
 
 const CooldownCountDown = styled(Box)`
-  color: #5a81ff;
+  color: #f5953d;
   font-size: 14px;
-  padding: 10px 0;
+  font-weight: 600;
+  line-height: 20px;
 `;
 
 const NoCooldownText = styled(Box)`
@@ -100,7 +101,6 @@ const NoCooldownText = styled(Box)`
   line-height: 16px;
   letter-spacing: 0.5px;
   text-transform: capitalize;
-  padding-top: 16px;
 `;
 
 const StreamStats: FC = () => {
@@ -285,20 +285,18 @@ const StreamStats: FC = () => {
         </BaseListItem>
       </BaseListStakingStats>
 
-      {BigNumber(Number(seconds)).isGreaterThan(0) ? (
-        <>
-          <Box>Cooldown in progress</Box>
-          <CooldownCountDown>
-            <StakingCountdown timeObject={secondsToTime(Number(seconds))} />
-          </CooldownCountDown>
-          <strong>
-            {formatPercentage(stake.claimedAmount / 10 ** 18)} FTHM
-          </strong>
-          <span>${formatPercentage(cooldownInUsd)}</span>
-        </>
-      ) : (
-        <NoCooldownText>You have no cooldown</NoCooldownText>
-      )}
+      <BaseFlexBox sx={{ paddingTop: "16px" }}>
+        {BigNumber(Number(seconds)).isGreaterThan(0) ? (
+          <>
+            <NoCooldownText>Cooldown in progress</NoCooldownText>
+            <CooldownCountDown>
+              <StakingCountdown timeObject={secondsToTime(Number(seconds))} />
+            </CooldownCountDown>
+          </>
+        ) : (
+          <NoCooldownText>You have no cooldown</NoCooldownText>
+        )}
+      </BaseFlexBox>
 
       <BulkActionBtnWrapper>
         <BaseButtonPrimary

@@ -38,6 +38,14 @@ export const BaseDialogWrapper = styled(
   lineHeight: "20px",
 }));
 
+export const BaseDialogWrapperLight = styled(BaseDialogWrapper)`
+  & .MuiDialog-paper {
+    border: 1px solid #3d5580;
+    background: #2c4066;
+    box-shadow: 0 12px 32px 0 rgba(0, 7, 21, 0.5);
+  }
+`;
+
 export const BaseDialogNavWrapper = styled(Box)`
   width: fit-content;
   border-bottom: 1.5px solid #1d2d49;
