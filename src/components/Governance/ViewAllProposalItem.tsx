@@ -104,45 +104,43 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
     useViewProposalItem(proposal);
 
   return (
-    <Grid item xs={12} key={proposal.id}>
-      <ProposalItemWrapper
-        to={`/dao/governance/proposal/${proposal.id}`}
-        key={proposal.id}
-      >
-        <ProposalIdTooltip title={proposal.proposalId} placement="top">
-          <ProposalItemProposalId>
-            Proposal №{" "}
-            {proposal.proposalId.substring(0, 4) +
-              " ... " +
-              proposal.proposalId.slice(-4)}
-          </ProposalItemProposalId>
-        </ProposalIdTooltip>
+    <ProposalItemWrapper
+      to={`/dao/governance/proposal/${proposal.id}`}
+      key={proposal.id}
+    >
+      <ProposalIdTooltip title={proposal.proposalId} placement="top">
+        <ProposalItemProposalId>
+          Proposal №{" "}
+          {proposal.proposalId.substring(0, 4) +
+            " ... " +
+            proposal.proposalId.slice(-4)}
+        </ProposalItemProposalId>
+      </ProposalIdTooltip>
 
-        <ProposalItemTitle>{proposalTitle}</ProposalItemTitle>
-        {useMemo(
-          () =>
-            seconds > 0 ? (
-              <ProposalItemTimeLeft className={"in-progress"}>
-                Voting end in{" "}
-                <StakingCountdown timeObject={secondsToTime(seconds)} />
-              </ProposalItemTimeLeft>
-            ) : (
-              <ProposalItemTimeLeft>
-                Vote ended at {new Date(timestamp * 1000).toLocaleString()}
-              </ProposalItemTimeLeft>
-            ),
-          [seconds, timestamp]
-        )}
-        {status && (
-          <ProposalItemStatus className={status?.toLowerCase()}>
-            {["Defeated", "Succeeded"].includes(status) ? (
-              <img src={ImageSrc[status]} alt={status} />
-            ) : null}
-            {quorumError ? "Voting quorum was not reached" : status}
-          </ProposalItemStatus>
-        )}
-      </ProposalItemWrapper>
-    </Grid>
+      <ProposalItemTitle>{proposalTitle}</ProposalItemTitle>
+      {useMemo(
+        () =>
+          seconds > 0 ? (
+            <ProposalItemTimeLeft className={"in-progress"}>
+              Voting end in{" "}
+              <StakingCountdown timeObject={secondsToTime(seconds)} />
+            </ProposalItemTimeLeft>
+          ) : (
+            <ProposalItemTimeLeft>
+              Vote ended at {new Date(timestamp * 1000).toLocaleString()}
+            </ProposalItemTimeLeft>
+          ),
+        [seconds, timestamp]
+      )}
+      {status && (
+        <ProposalItemStatus className={status?.toLowerCase()}>
+          {["Defeated", "Succeeded"].includes(status) ? (
+            <img src={ImageSrc[status]} alt={status} />
+          ) : null}
+          {quorumError ? "Voting quorum was not reached" : status}
+        </ProposalItemStatus>
+      )}
+    </ProposalItemWrapper>
   );
 };
 
