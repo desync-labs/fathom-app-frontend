@@ -106,3 +106,58 @@ export enum TradeFiPeriod {
   Lock = "Lock",
   LockEnded = "Lock Ended",
 }
+
+export interface PoolDataApi {
+  rawPrice: string;
+  collateralLastPrice: string;
+  collateralPrice: string;
+  debtAccumulatedRate: string;
+  debtCeiling: string;
+  id: string;
+  liquidationRatio: string;
+  lockedCollateral: string;
+  poolName: string;
+  priceWithSafetyMargin: string;
+  stabilityFeeRate: string;
+  totalAvailable: string;
+  totalBorrowed: string;
+  tvl: string;
+  tokenAdapterAddress: string;
+  __typename: string;
+}
+
+export interface PoolDataExpectedApi {
+  id: string;
+  liquidationRatio: string;
+  poolName: string;
+  stabilityFeeRate: string;
+  tokenAdapterAddress: string;
+}
+
+export interface PositionDataApi {
+  id: string;
+  collateralPool: string;
+  collateralPoolName: string;
+  debtShare: string;
+  debtValue: string;
+  lockedCollateral: string;
+  positionAddress: string;
+  positionId: string;
+  positionStatus: string;
+  safetyBuffer: string;
+  safetyBufferInPercent: string;
+  tvl: string;
+  walletAddress: string;
+  __typename: string;
+}
+
+export interface PositionDataExpectedApi {
+  id: string;
+  collateralPool: string;
+  collateralPoolName: string;
+  positionAddress: string;
+  positionId: string;
+  positionStatus: string;
+  walletAddress: string;
+  __typename: string;
+}

@@ -112,6 +112,7 @@ export default class DaoPage extends BasePage {
 
   async getMyWalletFTHMBalanceValue(): Promise<number> {
     await expect(this.myWalletBalanceFTHM).toBeVisible();
+    await this.page.waitForTimeout(2000);
     const walletBalanceText =
       (await this.myWalletBalanceFTHM.textContent()) as string;
     const walletBalanceValue = extractNumericValue(walletBalanceText) as number;
@@ -127,6 +128,7 @@ export default class DaoPage extends BasePage {
   }): Promise<number> {
     await this.enterStakingAmount({ stakingAmount });
     await this.enterLockPeriod({ lockPeriod });
+    await this.page.waitForTimeout(2000);
     await this.btnStake.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);
