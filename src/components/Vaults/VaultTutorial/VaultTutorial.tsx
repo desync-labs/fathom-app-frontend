@@ -1,4 +1,4 @@
-import { styled } from "@mui/material";
+import { Grid, styled } from "@mui/material";
 import ReactPlayer from "react-player";
 import BasePageHeader from "components/Base/PageHeader";
 
@@ -17,14 +17,30 @@ const VaultTutorial = () => {
   return (
     <>
       <BasePageHeader title={"Vault Tutorial"} />
-      <EmbedVideoWrapper>
-        <ResponsiveReactPlayer
-          url={"/videos/vaults/vault-tutorial.mp4"}
-          controls={true}
-          width="100%"
-          height="100%"
-        />
-      </EmbedVideoWrapper>
+      <Grid container spacing={3} marginTop={3}>
+        <Grid item xs={12} sm={6}>
+          <EmbedVideoWrapper>
+            <ResponsiveReactPlayer
+              url={"/videos/vaults/vault-tutorial.mp4"}
+              controls={true}
+              width="100%"
+              height="100%"
+            />
+          </EmbedVideoWrapper>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <EmbedVideoWrapper>
+            <ResponsiveReactPlayer
+              url={
+                "https://www.youtube.com/embed/AnQbJyvJNk4?si=-k_iRQeh4N6u63ZV"
+              }
+              controls={true}
+              width="100%"
+              height="100%"
+            />
+          </EmbedVideoWrapper>
+        </Grid>
+      </Grid>
     </>
   );
 };
