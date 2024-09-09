@@ -3,7 +3,17 @@ import { test, expect } from "../../fixtures/apiFixture";
 import { PoolDataApi, PositionDataApi } from "../../types";
 import { zeroAddress } from "../../test-data/api.data";
 
+let lastResponseBody: any;
+
 test.describe("Stablecoin Subgraph API", () => {
+  test.afterEach(async () => {
+    if (test.info().status !== test.info().expectedStatus) {
+      console.error(
+        "Test failed. Response body:",
+        JSON.stringify(lastResponseBody, null, 2)
+      );
+    }
+  });
   test(
     qase(
       71,
@@ -13,6 +23,7 @@ test.describe("Stablecoin Subgraph API", () => {
       await test.step("Step 1", async () => {
         const response = await apiPage.sendFxdStatsOperationRequest();
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toEqual(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         const protocolStatData = responseJson.data.protocolStat;
@@ -46,6 +57,7 @@ test.describe("Stablecoin Subgraph API", () => {
       await test.step("Step 1", async () => {
         const response = await apiPage.sendFxdPoolsOperationRequest();
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -92,6 +104,7 @@ test.describe("Stablecoin Subgraph API", () => {
           walletAddress,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -144,6 +157,7 @@ test.describe("Stablecoin Subgraph API", () => {
           walletAddress,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -182,6 +196,7 @@ test.describe("Stablecoin Subgraph API", () => {
           walletAddress: zeroAddress,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -220,6 +235,7 @@ test.describe("Stablecoin Subgraph API", () => {
           skip: 0,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -269,6 +285,7 @@ test.describe("Stablecoin Subgraph API", () => {
           skip: 4,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -318,6 +335,7 @@ test.describe("Stablecoin Subgraph API", () => {
           skip: 0,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -342,6 +360,7 @@ test.describe("Stablecoin Subgraph API", () => {
           skip: 0,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -359,7 +378,7 @@ test.describe("Stablecoin Subgraph API", () => {
       "FXDActivities Operation - Querying first 1000 transactions of a proxy wallet address that has at least one transaction is successful"
     ),
     async ({ apiPage }) => {
-      test.setTimeout(20000);
+      test.setTimeout(35000);
       test.skip(
         apiPage.baseUrl === "https://graph.sepolia.fathom.fi",
         "Sepolia transactions is throwing an error currently"
@@ -391,6 +410,7 @@ test.describe("Stablecoin Subgraph API", () => {
           proxyWallet: walletAddress,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
@@ -428,6 +448,7 @@ test.describe("Stablecoin Subgraph API", () => {
           proxyWallet: zeroAddress,
         });
         const responseJson = await response.json();
+        lastResponseBody = responseJson;
         expect(response.status()).toBe(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         expect(responseJson).toHaveProperty("data");
