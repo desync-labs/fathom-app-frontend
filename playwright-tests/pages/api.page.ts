@@ -31,6 +31,13 @@ export default class APIPage {
   readonly fxdUserQuery: string = `query FXDUser($walletAddress: String!, $chainId: String) {\n  users(where: {address: $walletAddress}) {\n    id\n    activePositionsCount\n    __typename\n  }\n}`;
   readonly fxdPositionQuery: string = `query FXDPositions($walletAddress: String!, $first: Int!, $skip: Int!, $chainId: String) {\n  positions(\n    first: $first\n    skip: $skip\n    orderBy: positionId\n    orderDirection: desc\n    where: {walletAddress: $walletAddress, positionStatus_in: [safe, unsafe]}\n  ) {\n    id\n    collateralPool\n    collateralPoolName\n    debtShare\n    debtValue\n    lockedCollateral\n    positionAddress\n    positionId\n    positionStatus\n    safetyBuffer\n    safetyBufferInPercent\n    tvl\n    walletAddress\n    __typename\n  }\n}`;
   readonly fxdActivitiesQuery: string = `query FXDActivities($first: Int!, $proxyWallet: String!, $orderBy: String, $orderDirection: String, $chainId: String, $activityState: [String!]) {\n  positionActivities(\n    first: $first\n    orderBy: $orderBy\n    orderDirection: $orderDirection\n    where: {position_: {userAddress: $proxyWallet}, activityState_in: $activityState}\n  ) {\n    id\n    blockNumber\n    activityState\n    blockNumber\n    blockTimestamp\n    collateralAmount\n    debtAmount\n    transaction\n    position {\n      positionId\n      lockedCollateral\n      debtValue\n      debtShare\n      collateralPool\n      collateralPoolName\n      __typename\n    }\n    __typename\n  }\n}`;
+  readonly vaultFactoriesQuery: string = `query VaultFactories($chainId: String) {\n  factories {\n    id\n    feeRecipient\n    protocolFee\n    timestamp\n    vaultPackage\n    vaults\n    __typename\n  }\n  accountants {\n    id\n    feeRecipient\n    performanceFee\n    timestamp\n    __typename\n  }\n}`;
+  readonly vaultsQuery: string = `query Vaults($first: Int!, $skip: Int!, $shutdown: Boolean, $chainId: String) {\n  vaults(first: $first, skip: $skip, where: {shutdown: $shutdown}) {\n    id\n    token {\n      id\n      decimals\n      name\n      symbol\n      __typename\n    }\n    shareToken {\n      id\n      decimals\n      name\n      symbol\n      __typename\n    }\n    sharesSupply\n    balanceTokens\n    balanceTokensIdle\n    depositLimit\n    apr\n    shutdown\n    strategies(orderBy: activation, orderDirection: asc) {\n      id\n      delegatedAssets\n      currentDebt\n      maxDebt\n      apr\n      __typename\n    }\n    __typename\n  }\n}`;
+  readonly vaultAccountDepositsQuery: string = `query VaultAccountDeposits($account: String!, $chainId: String, $first: Int, $skip: Int) {\n  deposits(\n    where: {account_contains_nocase: $account}\n    orderBy: blockNumber\n    first: $first\n    skip: $skip\n  ) {\n    id\n    timestamp\n    sharesMinted\n    tokenAmount\n    blockNumber\n    __typename\n  }\n}`;
+  readonly vaultAccountWithdrawalsQuery: string = `query VaultAccountWithdrawals($account: String!, $chainId: String, $first: Int, $skip: Int) {\n  withdrawals(\n    where: {account_contains_nocase: $account}\n    orderBy: blockNumber\n    first: $first\n    skip: $skip\n  ) {\n    id\n    timestamp\n    sharesBurnt\n    tokenAmount\n    blockNumber\n    __typename\n  }\n}`;
+  readonly vaultAccountVaultPositionsQuery: string = `query AccountVaultPositions($account: String!, $chainId: String, $first: Int!) {\n  accountVaultPositions(where: {account: $account}, first: $first) {\n    id\n    balancePosition\n    balanceProfit\n    balanceShares\n    balanceTokens\n    vault {\n      id\n      __typename\n    }\n    token {\n      id\n      symbol\n      name\n      __typename\n    }\n    shareToken {\n      id\n      symbol\n      name\n      __typename\n    }\n    __typename\n  }\n}`;
+  readonly vaultVaultQuery: string = `query Vault($id: ID, $chainId: String) {\n  vault(id: $id) {\n    id\n    token {\n      id\n      decimals\n      name\n      symbol\n      __typename\n    }\n    shareToken {\n      id\n      decimals\n      name\n      symbol\n      __typename\n    }\n    sharesSupply\n    balanceTokens\n    balanceTokensIdle\n    depositLimit\n    apr\n    shutdown\n    strategies(orderBy: activation, orderDirection: asc) {\n      id\n      delegatedAssets\n      currentDebt\n      maxDebt\n      apr\n      __typename\n    }\n    __typename\n  }\n}`;
+  readonly vaultVaultPositionTransactions: string = `query VaultPositionTransactions($account: String!, $vault: String!, $chainId: String, $first: Int) {\n  deposits(\n    where: {account_contains_nocase: $account, vault_contains_nocase: $vault}\n    first: $first\n    orderBy: blockNumber\n  ) {\n    id\n    timestamp\n    sharesMinted\n    tokenAmount\n    blockNumber\n    __typename\n  }\n  withdrawals(\n    where: {account_contains_nocase: $account, vault_contains_nocase: $vault}\n    first: $first\n    orderBy: blockNumber\n  ) {\n    id\n    timestamp\n    sharesBurnt\n    tokenAmount\n    blockNumber\n    __typename\n  }\n}`;
   readonly positionsExpectedDataArray: PositionDataExpectedApi[];
   readonly positionsExpectedDataTwoArray: PositionDataExpectedApi[];
 
@@ -167,6 +174,166 @@ export default class APIPage {
             orderBy,
             orderDirection,
             proxyWallet,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendVaultFactoriesOperationRequest(): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultFactoriesQuery,
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendVaultsOperationRequest({
+    first,
+    shutdown,
+    skip,
+  }: {
+    first: number;
+    shutdown: boolean;
+    skip: number;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultsQuery,
+          variables: {
+            first,
+            shutdown,
+            skip,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendVaultAccountDepositsOperationRequest({
+    account,
+    first,
+    skip,
+  }: {
+    account: string;
+    first: number;
+    skip: number;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultAccountDepositsQuery,
+          variables: {
+            account,
+            first,
+            skip,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendVaultAccountWithdrawalsOperationRequest({
+    account,
+    first,
+    skip,
+  }: {
+    account: string;
+    first: number;
+    skip: number;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultAccountWithdrawalsQuery,
+          variables: {
+            account,
+            first,
+            skip,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendAccountVaultPositionsOperationRequest({
+    account,
+    first,
+  }: {
+    account: string;
+    first: number;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultAccountVaultPositionsQuery,
+          variables: {
+            account,
+            first,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendVaultOperationRequest({
+    id,
+  }: {
+    id: string;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultVaultQuery,
+          variables: {
+            id,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
+  async sendAccountPositionTransactionsOperationRequest({
+    account,
+    first,
+    vault,
+  }: {
+    account: string;
+    first: number;
+    vault: string;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultAccountVaultPositionsQuery,
+          variables: {
+            account,
+            first,
+            vault,
           },
         },
       }
