@@ -352,76 +352,93 @@ export default class APIPage {
     poolData: PoolDataApi;
     expectedData: PoolDataExpectedApi;
   }): void {
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "rawPrice",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "collateralLastPrice",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "collateralPrice",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "debtAccumulatedRate",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "debtCeiling",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: poolData,
       propertyName: "id",
       expectedValue: expectedData.id,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: poolData,
       propertyName: "liquidationRatio",
       expectedValue: expectedData.liquidationRatio,
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "lockedCollateral",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: poolData,
       propertyName: "poolName",
       expectedValue: expectedData.poolName,
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "priceWithSafetyMargin",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "rawPrice",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: poolData,
       propertyName: "stabilityFeeRate",
       expectedValue: expectedData.stabilityFeeRate,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: poolData,
       propertyName: "tokenAdapterAddress",
       expectedValue: expectedData.tokenAdapterAddress,
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "totalAvailable",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "totalBorrowed",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: poolData,
       propertyName: "tvl",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: poolData,
       propertyName: "__typename",
       expectedValue: "Pool",
@@ -435,62 +452,75 @@ export default class APIPage {
     positionData: PositionDataApi;
     expectedData: PositionDataExpectedApi;
   }): void {
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "id",
       expectedValue: expectedData.id,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "collateralPool",
       expectedValue: expectedData.collateralPool,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "collateralPoolName",
       expectedValue: expectedData.collateralPoolName,
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: positionData,
       propertyName: "debtShare",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: positionData,
       propertyName: "debtValue",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: positionData,
       propertyName: "lockedCollateral",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "positionAddress",
       expectedValue: expectedData.positionAddress,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "positionId",
       expectedValue: expectedData.positionId,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "positionStatus",
       expectedValue: expectedData.positionStatus,
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: positionData,
       propertyName: "safetyBuffer",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: positionData,
       propertyName: "tvl",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "walletAddress",
       expectedValue: expectedData.walletAddress,
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: positionData,
       propertyName: "__typename",
       expectedValue: expectedData.__typename,
@@ -498,66 +528,81 @@ export default class APIPage {
   }
 
   validateActivityData({ activityData }: { activityData: any }): void {
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData,
       propertyName: "activityState",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: activityData,
       propertyName: "blockNumber",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: activityData,
       propertyName: "blockTimestamp",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData,
       propertyName: "collateralAmount",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData,
       propertyName: "debtAmount",
     });
-    this.assertStringPropertyExistsAndValueContains({
+    this.assertPropertyOfTypeExistsAndValueContains({
+      type: "string",
       parentObject: activityData,
       propertyName: "id",
       expectedString: "position-activity-0x",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData,
       propertyName: "transaction",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: activityData,
       propertyName: "__typename",
       expectedValue: "PositionActivity",
     });
     expect(activityData).toHaveProperty("position");
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "collateralPool",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "collateralPoolName",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "debtShare",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "debtValue",
     });
-    this.assertStringPropertyExists({
+    this.assertPropertyOfTypeExists({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "lockedCollateral",
     });
-    this.assertStringPropertyExistsAndBiggerThanZero({
+    this.assertPropertyOfTypeExistsAndBiggerThanZero({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "positionId",
     });
-    this.assertStringPropertyExistsAndValueEquals({
+    this.assertPropertyOfTypeExistsAndValueEquals({
+      type: "string",
       parentObject: activityData.position,
       propertyName: "__typename",
       expectedValue: "Position",
@@ -568,54 +613,62 @@ export default class APIPage {
    Helpers
   */
 
-  assertStringPropertyExists({
+  assertPropertyOfTypeExists({
+    type,
     parentObject,
     propertyName,
   }: {
+    type: string;
     parentObject: any;
     propertyName: string;
   }): void {
     expect.soft(parentObject).toHaveProperty(propertyName);
-    expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe(type);
   }
 
-  assertStringPropertyExistsAndBiggerThanZero({
+  assertPropertyOfTypeExistsAndBiggerThanZero({
+    type,
     parentObject,
     propertyName,
   }: {
+    type: string;
     parentObject: any;
     propertyName: string;
   }): void {
     expect.soft(parentObject).toHaveProperty(propertyName);
-    expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe(type);
     expect.soft(Number(parentObject[`${propertyName}`])).toBeGreaterThan(0);
   }
 
-  assertStringPropertyExistsAndValueEquals({
+  assertPropertyOfTypeExistsAndValueEquals({
+    type,
     parentObject,
     propertyName,
     expectedValue,
   }: {
+    type: string;
     parentObject: any;
     propertyName: string;
-    expectedValue: string;
+    expectedValue: string | number;
   }): void {
     expect.soft(parentObject).toHaveProperty(propertyName);
-    expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe(type);
     expect.soft(parentObject[`${propertyName}`]).toEqual(expectedValue);
   }
 
-  assertStringPropertyExistsAndValueContains({
+  assertPropertyOfTypeExistsAndValueContains({
+    type,
     parentObject,
     propertyName,
     expectedString,
   }: {
+    type: string;
     parentObject: any;
     propertyName: string;
     expectedString: string;
   }): void {
     expect.soft(parentObject).toHaveProperty(propertyName);
-    expect.soft(typeof parentObject[`${propertyName}`]).toBe("string");
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe(type);
     expect.soft(parentObject[`${propertyName}`]).toContain(expectedString);
   }
 
@@ -623,5 +676,20 @@ export default class APIPage {
     expect(responseBody).not.toEqual({});
     expect(responseBody).not.toEqual([]);
     expect(responseBody).toBeTruthy();
+  }
+
+  assertPropertyOfTypeExistsAndIsAddress({
+    type,
+    parentObject,
+    propertyName,
+  }: {
+    type: string;
+    parentObject: any;
+    propertyName: string;
+  }): void {
+    expect.soft(parentObject).toHaveProperty(propertyName);
+    expect.soft(typeof parentObject[`${propertyName}`]).toBe(type);
+    expect.soft(parentObject[`${propertyName}`].substring(0, 2)).toEqual("0x");
+    expect.soft(parentObject[`${propertyName}`]).toHaveLength(42);
   }
 }

@@ -27,20 +27,24 @@ test.describe("Stablecoin Subgraph API", () => {
         expect(response.status()).toEqual(200);
         apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
         const protocolStatData = responseJson.data.protocolStat;
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: protocolStatData,
           propertyName: "id",
           expectedValue: "fathom_stats",
         });
-        apiPage.assertStringPropertyExistsAndBiggerThanZero({
+        apiPage.assertPropertyOfTypeExistsAndBiggerThanZero({
+          type: "string",
           parentObject: protocolStatData,
           propertyName: "totalSupply",
         });
-        apiPage.assertStringPropertyExistsAndBiggerThanZero({
+        apiPage.assertPropertyOfTypeExistsAndBiggerThanZero({
+          type: "string",
           parentObject: protocolStatData,
           propertyName: "tvl",
         });
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: protocolStatData,
           propertyName: "__typename",
           expectedValue: "ProtocolStat",
@@ -113,17 +117,20 @@ test.describe("Stablecoin Subgraph API", () => {
         expect(Array.isArray(usersArray)).toBe(true);
         expect(usersArray.length).toEqual(1);
         const userFirst = usersArray[0];
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: userFirst,
           propertyName: "activePositionsCount",
           expectedValue: "5",
         });
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: userFirst,
           propertyName: "id",
           expectedValue: walletAddress,
         });
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: userFirst,
           propertyName: "__typename",
           expectedValue: "User",
@@ -166,17 +173,20 @@ test.describe("Stablecoin Subgraph API", () => {
         expect(Array.isArray(usersArray)).toBe(true);
         expect(usersArray.length).toEqual(1);
         const userFirst = usersArray[0];
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: userFirst,
           propertyName: "activePositionsCount",
           expectedValue: "0",
         });
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: userFirst,
           propertyName: "id",
           expectedValue: walletAddress,
         });
-        apiPage.assertStringPropertyExistsAndValueEquals({
+        apiPage.assertPropertyOfTypeExistsAndValueEquals({
+          type: "string",
           parentObject: userFirst,
           propertyName: "__typename",
           expectedValue: "User",
