@@ -16,7 +16,7 @@ import {
 import BasePageHeader from "../Base/PageHeader";
 import BasePageContainer from "../Base/PageContainer";
 
-const ProposalListWraper = styled(Box)`
+const ProposalListWrapper = styled(Box)`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -52,49 +52,51 @@ const AllProposalsView = () => {
         title="Governance"
         description="Fathom is a decentralized, community governed protocol. Locking FTHM tokens in our DAO vault will <br/> allow you to put forward forum-vetted proposals and vote on them."
       />
-      <ProposalFilters
-        search={search}
-        setSearch={setSearch}
-        time={time}
-        setTime={setTime}
-        proposals={proposals}
-        setProposals={setProposals}
-        setCreateProposal={setCreateProposal}
-      />
-      <ProposalListWraper>
-        {useMemo(
-          () =>
-            fetchedProposals.length ? (
-              fetchedProposals.map((proposal: IProposal, index: number) => (
-                <ViewAllProposalItem
-                  proposal={proposal}
-                  key={proposal.proposalId}
-                  index={index}
-                />
-              ))
-            ) : (
-              <NoResults>
-                {fetchProposalsPending ? (
-                  <CircleWrapper>
-                    <CircularProgress size={30} />
-                  </CircleWrapper>
-                ) : (
-                  "No opened any proposals."
-                )}
-              </NoResults>
-            ),
-          [fetchedProposals, fetchProposalsPending]
+      <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
+        <ProposalFilters
+          search={search}
+          setSearch={setSearch}
+          time={time}
+          setTime={setTime}
+          proposals={proposals}
+          setProposals={setProposals}
+          setCreateProposal={setCreateProposal}
+        />
+        <ProposalListWrapper>
+          {useMemo(
+            () =>
+              fetchedProposals.length ? (
+                fetchedProposals.map((proposal: IProposal, index: number) => (
+                  <ViewAllProposalItem
+                    proposal={proposal}
+                    key={proposal.proposalId}
+                    index={index}
+                  />
+                ))
+              ) : (
+                <NoResults>
+                  {fetchProposalsPending ? (
+                    <CircleWrapper>
+                      <CircularProgress size={30} />
+                    </CircleWrapper>
+                  ) : (
+                    "No opened any proposals."
+                  )}
+                </NoResults>
+              ),
+            [fetchedProposals, fetchProposalsPending]
+          )}
+        </ProposalListWrapper>
+        {!fetchProposalsPending && fetchedProposals.length > 0 && (
+          <PaginationWrapper>
+            <Pagination
+              count={Math.ceil(itemsCount / COUNT_PER_PAGE)}
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </PaginationWrapper>
         )}
-      </ProposalListWraper>
-      {!fetchProposalsPending && fetchedProposals.length > 0 && (
-        <PaginationWrapper>
-          <Pagination
-            count={Math.ceil(itemsCount / COUNT_PER_PAGE)}
-            page={currentPage}
-            onChange={handlePageChange}
-          />
-        </PaginationWrapper>
-      )}
+      </Box>
       {createProposal && <Propose onClose={() => setCreateProposal(false)} />}
     </BasePageContainer>
   );

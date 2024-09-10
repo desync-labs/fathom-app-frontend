@@ -8,7 +8,7 @@ import {
   formatNumberDexSuccessPopup,
 } from "../utils/helpers";
 import { DexTabs, DexTokenData, SwapData } from "../types";
-import { wxdcData, xdcData } from "../fixtures/dex.data";
+import { wxdcData, xdcData } from "../test-data/dex.data";
 
 export default class DexPage extends BasePage {
   readonly path: string;
@@ -330,14 +330,26 @@ export default class DexPage extends BasePage {
     return transactionHash as string;
   }
 
+  getTransactionListItemByHash({
+    transactionHash,
+  }: {
+    transactionHash: string;
+  }): Locator {
+    const transactionListItem = this.page.locator(
+      `li:has(a[href*="${transactionHash}"])`
+    );
+    return transactionListItem;
+  }
+
   getTransactionStatusTextLocatorByHash({
     transactionHash,
   }: {
     transactionHash: string;
   }): Locator {
-    const transactionStatusText = this.page.locator(
-      `#transaction-list [href*='${transactionHash}'] > div > div`
-    );
+    const transactionStatusText = this.getTransactionListItemByHash({
+      transactionHash,
+    }).locator("> div[class*='MuiStack-root'] > div:nth-child(1) > span");
+
     return transactionStatusText;
   }
 
@@ -358,9 +370,9 @@ export default class DexPage extends BasePage {
   }: {
     transactionHash: string;
   }): Locator {
-    const transactionStatusSuccessIcon = this.page
-      .locator(`#transaction-list [href*='${transactionHash}']`)
-      .getByTestId("TaskAltIcon");
+    const transactionStatusSuccessIcon = this.getTransactionListItemByHash({
+      transactionHash,
+    }).getByTestId("TaskAltIcon");
     return transactionStatusSuccessIcon;
   }
 

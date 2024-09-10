@@ -1,11 +1,6 @@
-import {
-  Box,
-  Skeleton,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { FC, ReactNode } from "react";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 interface TopInfoPanelItemProps {
   icon?: ReactNode;
@@ -89,10 +84,10 @@ export const TopInfoPanelItem: FC<TopInfoPanelItemProps> = ({
         </Box>
 
         {loading ? (
-          <Skeleton
+          <CustomSkeleton
             width={60}
             height={upToSM ? 28 : 24}
-            sx={{ background: "#383D51" }}
+            animation={"wave"}
           />
         ) : (
           children

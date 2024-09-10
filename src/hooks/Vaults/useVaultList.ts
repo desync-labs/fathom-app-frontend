@@ -86,7 +86,7 @@ const useVaultList = () => {
   });
 
   useEffect(() => {
-    if (account && vaultService && chainId) {
+    if (account && vaultService) {
       loadPositions({ variables: { account: account.toLowerCase() } }).then(
         (res) => {
           if (
@@ -113,12 +113,14 @@ const useVaultList = () => {
             Promise.all(promises).then((balances) => {
               const vaultPositions = res.data.accountVaultPositions.map(
                 (position: IVaultPosition, index: number) => {
-                  balancePositionsPromises.push(
-                    vaultService.previewRedeem(
-                      balances[index].toString(),
-                      position.vault.id
-                    )
-                  );
+                  BigNumber(balances[index].toString()).isGreaterThan(0)
+                    ? balancePositionsPromises.push(
+                        vaultService.previewRedeem(
+                          balances[index].toString(),
+                          position.vault.id
+                        )
+                      )
+                    : balancePositionsPromises.push(Promise.resolve(0));
                   return {
                     ...position,
                     balanceShares: balances[index].toString(),

@@ -58,17 +58,19 @@ const usePositionFormAiAssist = (
   }, [minPricePrediction, loadingPricePrediction, borrowInput]);
 
   useEffect(() => {
-    const values = [
-      Number(pool.collateralPrice),
-      pricesPrediction["1m"] as number,
-    ];
+    const values = [Number(pool.collateralPrice)];
 
-    for (const item of Object.entries(PERIODS_RELATIONS)) {
-      const [period, days] = item;
-      if (BigNumber(range).isGreaterThanOrEqualTo(days)) {
-        if (pricesPrediction[period as keyof PriceData])
-          values.push(pricesPrediction[period as keyof PriceData] as number);
-      }
+    if (pricesPrediction["1m"] !== null) {
+      values.push(pricesPrediction["1m"] as number);
+    }
+    if (range > PERIODS_RELATIONS["1m"] && pricesPrediction["2m"] !== null) {
+      values.push(pricesPrediction["2m"] as number);
+    }
+    if (range > PERIODS_RELATIONS["2m"] && pricesPrediction["3m"] !== null) {
+      values.push(pricesPrediction["3m"] as number);
+    }
+    if (range > PERIODS_RELATIONS["3m"] && pricesPrediction["6m"] !== null) {
+      values.push(pricesPrediction["6m"] as number);
     }
 
     if (values.length) {

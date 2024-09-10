@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Divider,
-  Skeleton,
   SvgIcon,
   Typography,
   useMediaQuery,
@@ -28,6 +27,7 @@ import { TokenLinkDropdown } from "apps/lending/modules/reserve-overview/TokenLi
 import { useNavigate } from "react-router-dom";
 import { FC, memo, useCallback } from "react";
 import { lendingContainerProps } from "apps/lending/components/ContentContainer";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 interface ReserveTopDetailsProps {
   underlyingAsset: string;
@@ -66,11 +66,11 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
           }}
         >
           {loading ? (
-            <Skeleton
+            <CustomSkeleton
               variant="circular"
               width={40}
               height={40}
-              sx={{ background: "#383D51" }}
+              animation={"wave"}
             />
           ) : (
             <img
@@ -86,7 +86,7 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
 
     const ReserveName = () => {
       return loading ? (
-        <Skeleton width={60} height={28} sx={{ background: "#383D51" }} />
+        <CustomSkeleton width={60} height={28} animation={"wave"} />
       ) : (
         <Typography variant={valueTypographyVariant}>
           {poolReserve.name}
@@ -147,10 +147,11 @@ export const ReserveTopDetailsWrapper: FC<ReserveTopDetailsProps> = memo(
                   <Box sx={{ display: "inline-flex", alignItems: "center" }}>
                     <ReserveName />
                     {loading ? (
-                      <Skeleton
+                      <CustomSkeleton
                         width={160}
                         height={16}
-                        sx={{ ml: 0.5, background: "#383D51" }}
+                        sx={{ ml: 0.5 }}
+                        animation={"wave"}
                       />
                     ) : (
                       <Box sx={{ display: "flex" }}>

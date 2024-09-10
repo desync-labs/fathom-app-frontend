@@ -38,6 +38,7 @@ const PositionActivityList = () => {
     isLoading,
     setFilterByType,
     setSearchValue,
+    setIsLoading,
   } = usePositionsTransactionList();
 
   return (
@@ -48,6 +49,7 @@ const PositionActivityList = () => {
         handleFilterByType={handleFilterByType}
         searchValue={searchValue}
         setSearchValue={setSearchValue}
+        setIsLoading={setIsLoading}
       />
       <BaseTableContainer>
         <Table aria-label="pools table">
@@ -97,6 +99,7 @@ const PositionActivityList = () => {
                       onClick={() => {
                         setFilterByType("all");
                         setSearchValue("");
+                        setIsLoading(true);
                       }}
                     >
                       Reset Filters
@@ -140,7 +143,10 @@ const PositionActivityList = () => {
                     ))}
                   </>
                 )}
-                {fxdActivities && !fxdActivities.length && !filterActive ? (
+                {fxdActivities &&
+                !fxdActivities.length &&
+                !filterActive &&
+                !isLoading ? (
                   <Typography
                     sx={{ my: 12 }}
                     textAlign={"center"}

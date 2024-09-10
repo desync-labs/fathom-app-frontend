@@ -13,7 +13,6 @@ import {
   CircularProgress,
   Divider,
   Paper,
-  Skeleton,
   Stack,
   Typography,
   useTheme,
@@ -45,6 +44,7 @@ import { CapType } from "apps/lending/components/caps/helper";
 import { AvailableTooltip } from "apps/lending/components/infoTooltips/AvailableTooltip";
 import { Link, ROUTES } from "apps/lending/components/primitives/Link";
 import { useReserveActionState } from "apps/lending/hooks/useReserveActionState";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const amountToUSD = (
   amount: BigNumberValue,
@@ -231,7 +231,7 @@ const FrozenWarning = () => {
 const ActionsSkeleton = () => {
   const RowSkeleton = (
     <Stack>
-      <Skeleton width={150} height={14} />
+      <CustomSkeleton width={150} height={14} animation={"wave"} />
       <Stack
         sx={{ height: "44px" }}
         direction="row"
@@ -239,10 +239,15 @@ const ActionsSkeleton = () => {
         alignItems="center"
       >
         <Box>
-          <Skeleton width={100} height={14} sx={{ mt: 0.5, mb: 1 }} />
-          <Skeleton width={75} height={12} />
+          <CustomSkeleton
+            width={100}
+            height={14}
+            sx={{ mt: 0.5, mb: 1 }}
+            animation={"wave"}
+          />
+          <CustomSkeleton width={75} height={12} animation={"wave"} />
         </Box>
-        <Skeleton height={36} width={96} />
+        <CustomSkeleton height={36} width={96} animation={"wave"} />
       </Stack>
     </Stack>
   );
@@ -250,10 +255,20 @@ const ActionsSkeleton = () => {
   return (
     <PaperWrapper>
       <Stack direction="row" gap={1.5}>
-        <Skeleton width={42} height={42} sx={{ borderRadius: "12px" }} />
+        <CustomSkeleton
+          width={42}
+          height={42}
+          sx={{ borderRadius: "12px" }}
+          animation={"wave"}
+        />
         <Box>
-          <Skeleton width={100} height={12} sx={{ mt: 0.5, mb: 1 }} />
-          <Skeleton width={100} height={14} />
+          <CustomSkeleton
+            width={100}
+            height={12}
+            sx={{ mt: 0.5, mb: 1 }}
+            animation={"wave"}
+          />
+          <CustomSkeleton width={100} height={14} animation={"wave"} />
         </Box>
       </Stack>
       <Divider sx={{ my: 3 }} />

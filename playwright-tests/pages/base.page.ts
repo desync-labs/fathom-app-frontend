@@ -13,9 +13,9 @@ import {
   type WalletConnectOptions,
 } from "../types";
 import { ethers } from "fathom-ethers";
-import FathomStablecoin from "../fixtures/abis/FathomStablecoin.json";
-import { contractAddresses } from "../fixtures/global.data";
-import { APOTHEM_RPC_INTERNAL } from "../fixtures/global.data";
+import FathomStablecoin from "../test-data/abis/FathomStablecoin.json";
+import { contractAddresses } from "../test-data/global.data";
+import { APOTHEM_RPC_INTERNAL } from "../test-data/global.data";
 dotenv.config();
 
 export default class BasePage {
@@ -35,10 +35,9 @@ export default class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-
     switch (process.env.ENVIRONMENT_URL) {
       case "https://dapp.fathom.fi":
-        this.graphAPIBaseUrl = "https://xinfin-graph.fathom.fi";
+        this.graphAPIBaseUrl = "https://graph.xinfin.fathom.fi";
         break;
       case "https://dev-app-frontend-wpa8a.ondigitalocean.app" ||
         "http://127.0.0.1:3000":

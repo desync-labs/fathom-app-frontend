@@ -22,14 +22,31 @@ export default defineConfig({
   /* Retry on CI only */
   retries: process.env.CI != null ? 0 : 0,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI != null ? 1 : 1,
+  workers: process.env.GRAPH_API_BASE_URL ? 2 : 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ["list"],
     ["html", { outputFolder: "playwright-tests/test-report", open: "never" }],
     ["json", { outputFile: "playwright-tests/test-report/results.json" }],
+    [
+      "playwright-qase-reporter",
+      {
+        testops: {
+          api: {
+            token: process.env.QASE_PW_API_TOKEN,
+          },
+          project: "FATHOM",
+          uploadAttachments: true,
+          environment: process.env.QASE_ENVIRONMENT,
+          basePath: "playwright-tests/test-results",
+          run: {
+            complete: true,
+            title: `${process.env.QASE_TEST_RUN_NAME}`,
+          },
+        },
+      },
+    ],
   ],
-  timeout: process.env.CI ? 150000 : 120000,
   outputDir: "./playwright-tests/test-results",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -46,53 +63,23 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "wallet-connectivity-tests",
+      name: "e2e",
       use: {
         ...devices["Desktop Chrome"],
       },
-      testDir: "./playwright-tests/tests/",
-      testMatch: "wallet.spec.ts",
-    },
-    {
-      name: "fxd-tests",
-      use: {
-        ...devices["Desktop Chrome"],
-      },
-      testDir: "./playwright-tests/tests/",
-      testMatch: "fxd-positions.spec.ts",
-    },
-    {
-      name: "vault-tests",
-      use: {
-        ...devices["Desktop Chrome"],
-      },
-      testDir: "./playwright-tests/tests/",
-      testMatch: "vaults.spec.ts",
-    },
-    {
-      name: "dex-tests",
-      use: {
-        ...devices["Desktop Chrome"],
-      },
-      testDir: "./playwright-tests/tests/dex",
+      timeout: process.env.CI ? 150000 : 120000,
+      testDir: "./playwright-tests/tests/e2e",
       testMatch: "**.spec.ts",
     },
     {
-      name: "lending-tests",
+      name: "api",
       use: {
-        ...devices["Desktop Chrome"],
+        trace: "off",
+        screenshot: "off",
       },
-      timeout: 60000 * 5,
-      testDir: "./playwright-tests/tests/lending",
-      testMatch: "**.spec.ts",
-    },
-    {
-      name: "dao-tests",
-      use: {
-        ...devices["Desktop Chrome"],
-      },
-      testDir: "./playwright-tests/tests/dao",
-      testMatch: "**.spec.ts",
+      testDir: "./playwright-tests/tests/api",
+      testMatch: "**.api.spec.ts",
+      timeout: 15000,
     },
   ],
 

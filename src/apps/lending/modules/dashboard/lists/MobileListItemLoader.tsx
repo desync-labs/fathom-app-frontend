@@ -1,36 +1,37 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { Row } from "apps/lending/components/primitives/Row";
 import { ListMobileItemWrapper } from "apps/lending/modules/dashboard/lists/ListMobileItemWrapper";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 export const MobileListItemLoader = () => {
   return (
     <ListMobileItemWrapper loading>
       <Row
-        caption={<Skeleton width={100} height={20} />}
+        caption={<CustomSkeleton width={100} height={20} animation={"wave"} />}
         align="flex-start"
         captionVariant="description"
         mb={2}
       >
-        <Skeleton width={70} height={20} />
+        <CustomSkeleton width={70} height={20} animation={"wave"} />
       </Row>
 
       <Row
-        caption={<Skeleton width={100} height={20} />}
+        caption={<CustomSkeleton width={100} height={20} animation={"wave"} />}
         align="flex-start"
         captionVariant="description"
         mb={2}
       >
-        <Skeleton width={70} height={20} />
+        <CustomSkeleton width={70} height={20} animation={"wave"} />
       </Row>
 
       <Row
-        caption={<Skeleton width={100} height={20} />}
+        caption={<CustomSkeleton width={100} height={20} animation={"wave"} />}
         align="flex-start"
         captionVariant="description"
         mb={2}
       >
-        <Skeleton width={70} height={20} />
+        <CustomSkeleton width={70} height={20} animation={"wave"} />
       </Row>
 
       <Box
@@ -41,8 +42,13 @@ export const MobileListItemLoader = () => {
           mt: 5,
         }}
       >
-        <Skeleton width="100%" height={36} sx={{ mr: 1.5 }} />
-        <Skeleton width="100%" height={36} />
+        <CustomSkeleton
+          width="100%"
+          height={36}
+          sx={{ mr: 1.5 }}
+          animation={"wave"}
+        />
+        <CustomSkeleton width="100%" height={36} animation={"wave"} />
       </Box>
     </ListMobileItemWrapper>
   );

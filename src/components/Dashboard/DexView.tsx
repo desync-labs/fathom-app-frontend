@@ -11,13 +11,11 @@ import {
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
 import LocalLoader from "apps/charts/components/LocalLoader";
-import useConnector from "context/connector";
 
 import DexIndexComponent from "apps/dex/index";
 
 const DexView: FC = () => {
   const location = useLocation();
-  const { account } = useConnector();
 
   const isSwapActive = useMemo(
     () => ["/swap"].includes(location.pathname),
@@ -52,7 +50,7 @@ const DexView: FC = () => {
           <PoolIcon isactive={isPoolActive ? "active" : ""} />
           Pool
         </NestedRouteLink>
-        {account && (
+        {localStorage.getItem("isConnected") && (
           <NestedRouteLink
             span={2}
             className={isTransactionsActive ? "active" : ""}

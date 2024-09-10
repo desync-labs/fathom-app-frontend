@@ -244,8 +244,13 @@ export const USER_POSITIONS = gql`
 `;
 
 export const USER_TRANSACTIONS = gql`
-  query transactions($user: ID!) {
-    mints(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
+  query transactions($user: ID!, $first: Int!) {
+    mints(
+      orderBy: timestamp
+      orderDirection: desc
+      first: $first
+      where: { to: $user }
+    ) {
       id
       transaction {
         id
@@ -268,7 +273,12 @@ export const USER_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    burns(orderBy: timestamp, orderDirection: desc, where: { sender: $user }) {
+    burns(
+      orderBy: timestamp
+      orderDirection: desc
+      first: $first
+      where: { sender: $user }
+    ) {
       id
       transaction {
         id
@@ -290,7 +300,12 @@ export const USER_TRANSACTIONS = gql`
       amount1
       amountUSD
     }
-    swaps(orderBy: timestamp, orderDirection: desc, where: { to: $user }) {
+    swaps(
+      orderBy: timestamp
+      orderDirection: desc
+      first: $first
+      where: { to: $user }
+    ) {
       id
       transaction {
         id

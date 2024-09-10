@@ -212,6 +212,7 @@ const usePositionsTransactionList = () => {
     refetchActivities,
     setFilterByType,
     setSearchValue,
+    setIsLoading,
   };
 };
 

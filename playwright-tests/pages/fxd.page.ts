@@ -6,8 +6,9 @@ import {
   PositionData,
   type OpenPositionParams,
   GraphOperationName,
+  StablecoinCollateral,
 } from "../types";
-import { graphAPIEndpoints } from "../fixtures/api.data";
+import { graphAPIEndpoints } from "../test-data/api.data";
 import { extractNumericValue } from "../utils/helpers";
 
 export default class FxdPage extends BasePage {
@@ -46,6 +47,7 @@ export default class FxdPage extends BasePage {
   readonly headingFourModal: Locator;
   readonly spanBodyOneModal: Locator;
   readonly spanBodyTwoModal: Locator;
+  readonly btnCGOOpenPosition: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -63,6 +65,9 @@ export default class FxdPage extends BasePage {
     );
     this.btnXDCOpenPosition = this.page
       .locator("//p[text()='XDC']//ancestor::tr")
+      .getByText("Open position");
+    this.btnCGOOpenPosition = this.page
+      .locator("//p[text()='CGO']//ancestor::tr")
       .getByText("Open position");
     this.btnConfirmOpenPosition = this.dialogOpenNewPosition.locator(
       '//button[text()="Open this position"]'
@@ -173,8 +178,13 @@ export default class FxdPage extends BasePage {
   async openPosition({
     collateralAmount,
     borrowAmount,
+    collateral,
   }: OpenPositionParams): Promise<PositionData> {
-    await this.btnXDCOpenPosition.click();
+    if (collateral === StablecoinCollateral.XDC) {
+      await this.btnXDCOpenPosition.click();
+    } else if (collateral === StablecoinCollateral.CGO) {
+      await this.btnCGOOpenPosition.click();
+    }
     if (collateralAmount === "max") {
       await this.btnMax.click();
     } else {
@@ -474,11 +484,13 @@ export default class FxdPage extends BasePage {
   }
 
   async validateLatestPositionDisplayedData({
+    collateral,
     positionIdExpected,
     collateralAmountExpected,
     borrowAmountExpected,
     safetyBufferPercentageExpected,
   }: {
+    collateral: StablecoinCollateral;
     positionIdExpected: number;
     collateralAmountExpected: number;
     borrowAmountExpected: number;
@@ -505,7 +517,9 @@ export default class FxdPage extends BasePage {
     expect
       .soft(Math.round(collateralAmounActual * 100) / 100)
       .toEqual(Math.round(collateralAmountExpected * 100) / 100);
-    expect.soft(collateralAmountLatestPositionDisplayed).toContainText("XDC");
+    expect
+      .soft(collateralAmountLatestPositionDisplayed)
+      .toContainText(`${collateral}`);
     const safetyBufferPercentageLatestPositionDisplayed =
       this.safetyBufferLatestPositionRow;
     const safetyBufferPercentageLatestPositionDisplayedText =

@@ -24,6 +24,7 @@ type PositionsTransactionFiltersProps = {
   handleFilterByType: (event: SelectChangeEvent<unknown>) => void;
   searchValue: string;
   setSearchValue: (value: string) => void;
+  setIsLoading: (value: boolean) => void;
 };
 
 const PositionActivityFilters: FC<PositionsTransactionFiltersProps> = ({
@@ -31,6 +32,7 @@ const PositionActivityFilters: FC<PositionsTransactionFiltersProps> = ({
   handleFilterByType,
   searchValue,
   setSearchValue,
+  setIsLoading,
 }) => {
   const filterOptions = Object.values(FilterTxType);
   const filterValues = Object.keys(FilterTxType);
@@ -59,7 +61,10 @@ const PositionActivityFilters: FC<PositionsTransactionFiltersProps> = ({
       <BaseSortSelect
         autoWidth
         value={filterByType}
-        onChange={handleFilterByType}
+        onChange={(event: SelectChangeEvent<unknown>) => {
+          handleFilterByType(event);
+          setIsLoading(true);
+        }}
         sx={{ minWidth: isMobile ? "40%" : "210px" }}
       >
         {filterOptions.map((option, index) => (

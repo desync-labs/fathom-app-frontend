@@ -16,8 +16,8 @@ import useProposalContext from "context/proposal";
 import useSharedContext from "context/shared";
 import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
-  ImageSrc,
   ProposalItemStatus,
+  StatusIcon,
 } from "components/Governance/ViewAllProposalItem";
 import { VotingEndedButton } from "components/AppComponents/AppButton/AppButton";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
@@ -163,13 +163,8 @@ const ProposalVoting = () => {
       <AppPaper sx={{ padding: isMobile ? "20px 12px 25px" : "24px" }}>
         <Box sx={{ width: "100%" }}>
           <ProposalStatusBox>Proposal Status</ProposalStatusBox>
-          <ProposalDetailsStatus
-            className={status?.toLowerCase()}
-            sx={{ margin: "10px 0" }}
-          >
-            {["Defeated", "Succeeded"].includes(status as string) ? (
-              <img src={ImageSrc[status as string]} alt={status} />
-            ) : null}
+          <ProposalDetailsStatus status={status} sx={{ margin: "10px 0" }}>
+            <StatusIcon status={status} />
             {quorumError ? "Voting quorum was not reached" : status}
           </ProposalDetailsStatus>
           <Box sx={{ margin: "30px 0" }}>

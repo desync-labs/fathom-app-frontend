@@ -1,6 +1,6 @@
 import { valueToBigNumber } from "@into-the-fathom/lending-math-utils";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { Box, Skeleton, SvgIcon } from "@mui/material";
+import { Box, SvgIcon } from "@mui/material";
 import { FormattedNumber } from "apps/lending/components/primitives/FormattedNumber";
 import { Row } from "apps/lending/components/primitives/Row";
 import { TokenIcon } from "apps/lending/components/primitives/TokenIcon";
@@ -13,6 +13,7 @@ import {
 import { CollateralType } from "apps/lending/helpers/types";
 
 import { ComputedUserReserveData } from "apps/lending/hooks/app-data-provider/useAppDataProvider";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 export type SupplyModalDetailsProps = {
   showHealthFactor: boolean;
@@ -45,17 +46,19 @@ export const SwapModalDetails = ({
 
   const skeleton: JSX.Element = (
     <>
-      <Skeleton
+      <CustomSkeleton
         variant="rectangular"
         height={20}
         width={100}
         sx={{ borderRadius: "4px" }}
+        animation={"wave"}
       />
-      <Skeleton
+      <CustomSkeleton
         variant="rectangular"
         height={15}
         width={80}
         sx={{ borderRadius: "4px", marginTop: "4px" }}
+        animation={"wave"}
       />
     </>
   );
@@ -87,11 +90,12 @@ export const SwapModalDetails = ({
           }}
         >
           {loading ? (
-            <Skeleton
+            <CustomSkeleton
               variant="rectangular"
               height={20}
               width={100}
               sx={{ borderRadius: "4px" }}
+              animation={"wave"}
             />
           ) : (
             <>

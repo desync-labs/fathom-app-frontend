@@ -22,7 +22,7 @@ const useProposalItem = () => {
 
   const [seconds, setSeconds] = useState<number>(0);
 
-  const [status, setStatus] = useState<string>();
+  const [status, setStatus] = useState<ProposalStatus>(ProposalStatus.Pending);
 
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);

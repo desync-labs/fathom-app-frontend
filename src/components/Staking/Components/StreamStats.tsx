@@ -2,6 +2,7 @@ import { FC, useMemo } from "react";
 import BigNumber from "bignumber.js";
 import { Box, Grid, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { XDC_ADDRESSES, APOTHEM_ADDRESSES } from "fathom-sdk";
 
 import { formatCompact, formatNumber, formatPercentage } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
@@ -26,6 +27,7 @@ import PercentSrc from "assets/svg/percent.svg";
 import LockedSrc from "assets/svg/locked.svg";
 import RewardsSrc from "assets/svg/rewards.svg";
 import PriceSrc from "assets/svg/price.svg";
+import useConnector from "context/connector";
 
 const StatsBlocks = styled(Box)`
   display: flex;
@@ -112,6 +114,11 @@ const StreamStats: FC = () => {
     fthmPriceFormatted,
     processFlow,
   } = useStreamStats();
+  const { chainId } = useConnector();
+
+  const addresses = useMemo(() => {
+    return chainId === 50 ? XDC_ADDRESSES : APOTHEM_ADDRESSES;
+  }, [chainId]);
 
   const cooldownInUsd = useMemo(() => {
     return stake ? (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted : 0;
@@ -130,7 +137,9 @@ const StreamStats: FC = () => {
     <BasePaper>
       <BaseFlexBox>
         <StakingPaperTitle>FTHM Stream</StakingPaperTitle>
-        <BaseButtonPrimaryLink href="#/swap">
+        <BaseButtonPrimaryLink
+          href={`#/swap?inputCurrency=${addresses["FXD"]}&outputCurrency=${addresses["FTHM_TOKEN"]}`}
+        >
           Buy FTHM on DEX
         </BaseButtonPrimaryLink>
       </BaseFlexBox>

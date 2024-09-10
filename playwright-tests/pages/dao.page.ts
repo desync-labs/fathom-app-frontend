@@ -2,10 +2,10 @@ import { type Page, type Locator, expect } from "@playwright/test";
 import BasePage from "./base.page";
 // @ts-ignore
 import * as metamask from "@synthetixio/synpress/commands/metamask";
-import { graphAPIEndpoints } from "../fixtures/api.data";
+import { graphAPIEndpoints } from "../test-data/api.data";
 import { GraphOperationName, WalletConnectOptions } from "../types";
 import { extractNumericValue } from "../utils/helpers";
-import { logoLinks } from "../fixtures/global.data";
+import { logoLinks } from "../test-data/global.data";
 
 export default class DaoPage extends BasePage {
   readonly stakingPath: string;
@@ -112,6 +112,7 @@ export default class DaoPage extends BasePage {
 
   async getMyWalletFTHMBalanceValue(): Promise<number> {
     await expect(this.myWalletBalanceFTHM).toBeVisible();
+    await this.page.waitForTimeout(2000);
     const walletBalanceText =
       (await this.myWalletBalanceFTHM.textContent()) as string;
     const walletBalanceValue = extractNumericValue(walletBalanceText) as number;
@@ -127,6 +128,7 @@ export default class DaoPage extends BasePage {
   }): Promise<number> {
     await this.enterStakingAmount({ stakingAmount });
     await this.enterLockPeriod({ lockPeriod });
+    await this.page.waitForTimeout(2000);
     await this.btnStake.click();
     await expect.soft(this.progressBar).toBeVisible();
     await this.page.waitForTimeout(1000);

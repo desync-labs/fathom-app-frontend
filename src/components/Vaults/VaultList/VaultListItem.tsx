@@ -14,9 +14,10 @@ import VaultListItemDepositModal from "components/Vaults/VaultList/VaultListItem
 import VaultListItemManageModal from "components/Vaults/VaultList/VaultListItemManageModal";
 
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
+import { BaseTableItemRow } from "components/Base/Table/StyledTable";
+
 import LockAquaSrc from "assets/svg/lock-aqua.svg";
 import LockSrc from "assets/svg/lock.svg";
-import { BaseTableItemRow } from "../../Base/Table/StyledTable";
 
 export const VaultTitle = styled("div")`
   display: flex;

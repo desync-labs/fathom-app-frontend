@@ -137,9 +137,9 @@ const useOpenPosition = (
   const minCollateralAmount = useMemo(() => {
     return BigNumber(1)
       .dividedBy(
-        BigNumber(pool.priceWithSafetyMargin)
-          .multipliedBy(BigNumber(100).minus(DANGER_SAFETY_BUFFER * 100))
-          .dividedBy(100)
+        BigNumber(pool.priceWithSafetyMargin).multipliedBy(
+          1 - DANGER_SAFETY_BUFFER
+        )
       )
       .decimalPlaces(6, BigNumber.ROUND_UP)
       .toNumber();
@@ -268,7 +268,11 @@ const useOpenPosition = (
         .dividedBy(collateralInput)
         .precision(10, BigNumber.ROUND_FLOOR);
 
-      setSafetyBuffer(safetyBuffer.isNaN() ? "0" : safetyBuffer.toString());
+      setSafetyBuffer(
+        safetyBuffer.isNaN() || !isFinite(safetyBuffer.toNumber())
+          ? "0"
+          : safetyBuffer.toString()
+      );
 
       /**
        * LIQUIDATION PRICE
@@ -278,7 +282,9 @@ const useOpenPosition = (
         .multipliedBy(pool.liquidationRatio);
 
       setLiquidationPrice(
-        liquidationPrice.isNaN() ? "0" : liquidationPrice.toString()
+        liquidationPrice.isNaN() || !isFinite(liquidationPrice.toNumber())
+          ? "0"
+          : liquidationPrice.toString()
       );
 
       /**
@@ -487,7 +493,13 @@ const useOpenPosition = (
   }, [chainId, account, getCollateralTokenAndBalance, getPositionDebtCeiling]);
 
   const setAiPredictionCollateral = (recommendedCollateral: string) => {
-    setValue("collateral", recommendedCollateral, { shouldValidate: true });
+    const formattedRecommendedCollateral = BigNumber(recommendedCollateral)
+      .decimalPlaces(6, BigNumber.ROUND_UP)
+      .toString();
+
+    setValue("collateral", formattedRecommendedCollateral, {
+      shouldValidate: true,
+    });
   };
 
   return {

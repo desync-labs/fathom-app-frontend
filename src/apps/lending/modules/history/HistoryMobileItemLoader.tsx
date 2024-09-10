@@ -1,22 +1,30 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { ListColumn } from "apps/lending/components/lists/ListColumn";
 import { ListItem } from "apps/lending/components/lists/ListItem";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const HistoryMobileRowItem = () => {
   return (
-    <ListItem px={6} minHeight={68}>
+    <ListItem px={2} minHeight={66} sx={{ alignItems: "start" }}>
       <ListColumn isRow maxWidth={280}>
-        <Skeleton variant="circular" width={24} height={24} />
-        <Box sx={{ pl: 6, overflow: "hidden" }}>
-          <Skeleton width={48} height={14} />
+        <Box
+          sx={{
+            overflow: "hidden",
+            flexDirection: "column",
+            display: "flex",
+            gap: "8px",
+          }}
+        >
+          <CustomSkeleton width={80} height={16} animation={"wave"} />
+          <CustomSkeleton variant="circular" width={24} height={24} />
         </Box>
       </ListColumn>
 
       <ListColumn align="right">
         <Box sx={{ display: "flex", gap: 1 }}>
-          <Skeleton width={48} height={12} />
-          <Skeleton width={120} height={12} />
+          <CustomSkeleton width={55} height={16} animation={"wave"} />
+          <CustomSkeleton width={70} height={20} animation={"wave"} />
         </Box>
       </ListColumn>
     </ListItem>
@@ -26,13 +34,9 @@ const HistoryMobileRowItem = () => {
 export const HistoryMobileItemLoader = () => {
   return (
     <>
-      <ListItem px={6} minHeight={68}>
+      <ListItem px={2} minHeight={35}>
         <ListColumn align="left">
-          <Skeleton
-            width={80}
-            height={16}
-            sx={{ transform: "translateY(8px)" }}
-          />
+          <CustomSkeleton width={80} height={16} animation={"wave"} />
         </ListColumn>
       </ListItem>
       <HistoryMobileRowItem />

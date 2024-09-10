@@ -57,7 +57,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
   return (
     <ListItem
       px={2}
-      minHeight={50}
+      minHeight={35}
       sx={{
         borderWidth: `1px 0 0 0`,
         borderStyle: `solid`,
@@ -80,7 +80,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
             justifyContent: "space-between",
             alignItems: "center",
             width: "100%",
-            pt: "14px",
+            pt: "4px",
           }}
         >
           <Box sx={{ display: "flex", gap: 1 }}>
@@ -107,6 +107,7 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
                 gap: "5px",
                 pl: 0.5,
                 pr: 0.5,
+                mt: transaction.action !== "ClaimRewardsCall" ? 0.5 : 0,
               }}
               variant="outlined"
               href={explorerLink}
@@ -122,11 +123,10 @@ const TransactionMobileRowItem: FC<TransactionHistoryItemProps> = ({
             </Button>
           </Box>
         </Box>
-        {transaction.action !== "ClaimRewardsCall" && (
-          <Box sx={{ py: "8px" }}>
-            <ActionDetails transaction={transaction} iconSize="24px" />
-          </Box>
-        )}
+
+        <Box sx={{ py: "4px" }}>
+          <ActionDetails transaction={transaction} iconSize="24px" />
+        </Box>
       </Box>
     </ListItem>
   );

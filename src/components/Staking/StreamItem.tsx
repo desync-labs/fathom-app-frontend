@@ -5,7 +5,7 @@ import ClaimRewardsDialog from "components/Staking/Dialog/ClaimRewardsDialog";
 import { DialogActions, FlowType } from "hooks/Staking/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
-import { NoResults } from "components/AppComponents/AppBox/AppBox";
+import { NoResults } from "components/Base/Typography/StyledTypography";
 import { Box, CircularProgress, Pagination } from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
