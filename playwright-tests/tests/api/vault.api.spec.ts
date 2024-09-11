@@ -1,9 +1,11 @@
 import { qase } from "playwright-qase-reporter";
 import { test, expect } from "../../fixtures/apiFixture";
+import Ajv from "ajv";
 
 let lastResponseBody: any;
 
 test.describe("Vault Subgraph API", () => {
+  const ajv = new Ajv({ allErrors: true });
   test.afterEach(async () => {
     if (test.info().status !== test.info().expectedStatus) {
       console.error(
@@ -125,6 +127,68 @@ test.describe("Vault Subgraph API", () => {
           propertyName: "__typename",
           expectedValue: "Accountant",
         });
+      });
+    }
+  );
+
+  test(
+    qase(
+      85,
+      "Vaults Operation - Querying first 20 active vaults is successful and response body matches the valid json schema"
+    ),
+    async ({ apiPage }) => {
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendVaultsOperationRequest({
+          first: 20,
+          skip: 0,
+          shutdown: false,
+        });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/vaults-active.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
+      });
+    }
+  );
+
+  test(
+    qase(
+      86,
+      "Vaults Operation - Querying first 20 inactive vaults is successful and response body matches the valid json schema"
+    ),
+    async ({ apiPage }) => {
+      test.skip(
+        apiPage.baseUrl === "https://graph.sepolia.fathom.fi",
+        "No inactive vaults currently on Sepolia environment"
+      );
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendVaultsOperationRequest({
+          first: 20,
+          skip: 0,
+          shutdown: true,
+        });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/vaults-inactive.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
       });
     }
   );
