@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useServices } from "context/services";
 import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
-import { IProposal } from "fathom-sdk";
+import { IProposal, SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
@@ -14,7 +14,7 @@ const useProposalItem = () => {
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();
-  const { proposalService } = useServices();
+  const { proposalService, poolService } = useServices();
 
   const [votePending, setVotePending] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -26,6 +26,7 @@ const useProposalItem = () => {
 
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
+  const [vFTHMTotalSupply, setFTHMTotalSupply] = useState<string>("0");
 
   const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext();
 
@@ -41,6 +42,15 @@ const useProposalItem = () => {
       refetch();
     }
   }, [syncDao, prevSyncDao, refetch]);
+
+  useEffect(() => {
+    if (chainId) {
+      const vFathom = SmartContractFactory.vFathom(chainId);
+      poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
+        setFTHMTotalSupply(totalSupply.toString());
+      });
+    }
+  }, [chainId, poolService, setFTHMTotalSupply]);
 
   const fetchHasVoted = useCallback(async () => {
     const hasVoted = await proposalService.hasVoted(
@@ -328,6 +338,7 @@ const useProposalItem = () => {
     votingEndTime,
     quorumError,
     secondsLeft: seconds,
+    vFTHMTotalSupply,
   };
 };
 

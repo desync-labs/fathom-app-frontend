@@ -7,7 +7,6 @@ import { useAllProposals } from "hooks/Governance/useAllProposals";
 import { COUNT_PER_PAGE } from "utils/Constants";
 
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
-import Propose from "components/Governance/Propose";
 import ProposalFilters from "components/Governance/ProposalFilters";
 import {
   CircleWrapper,
@@ -39,8 +38,6 @@ const AllProposalsView = () => {
     fetchedProposals,
     proposals,
     setProposals,
-    createProposal,
-    setCreateProposal,
     itemsCount,
     currentPage,
     handlePageChange,
@@ -60,7 +57,6 @@ const AllProposalsView = () => {
           setTime={setTime}
           proposals={proposals}
           setProposals={setProposals}
-          setCreateProposal={setCreateProposal}
         />
         <ProposalListWrapper>
           {useMemo(
@@ -87,7 +83,7 @@ const AllProposalsView = () => {
             [fetchedProposals, fetchProposalsPending]
           )}
         </ProposalListWrapper>
-        {!fetchProposalsPending && fetchedProposals.length > 0 && (
+        {!fetchProposalsPending && fetchedProposals.length > COUNT_PER_PAGE && (
           <PaginationWrapper>
             <Pagination
               count={Math.ceil(itemsCount / COUNT_PER_PAGE)}
@@ -97,7 +93,6 @@ const AllProposalsView = () => {
           </PaginationWrapper>
         )}
       </Box>
-      {createProposal && <Propose onClose={() => setCreateProposal(false)} />}
     </BasePageContainer>
   );
 };

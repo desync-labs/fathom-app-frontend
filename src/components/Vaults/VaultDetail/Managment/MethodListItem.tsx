@@ -18,14 +18,12 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import useConnector from "context/connector";
 import useRpcError from "hooks/General/useRpcError";
-import {
-  AppFormLabel,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
+import { AppFormLabel } from "components/AppComponents/AppForm/AppForm";
 import { ApproveButton } from "components/AppComponents/AppButton/AppButton";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import TransactionResponseDataList from "components/Vaults/VaultDetail/Managment/TransactionResponseDataList";
 import { STATE_MUTABILITY_TRANSACTIONS } from "components/Vaults/VaultDetail/Managment/ManagementVaultMethodList";
+import { BaseTextField } from "components/Base/Form/StyledForm";
 
 enum MethodType {
   View = "view",
@@ -374,7 +372,12 @@ const MethodListItem: FC<{
                   <AppFormLabel>{`${input.name} (${input.type}${
                     input.type === "uint256" ? " in wei" : ""
                   })`}</AppFormLabel>
-                  <AppTextField error={!!error} multiline rows={1} {...field} />
+                  <BaseTextField
+                    error={!!error}
+                    multiline
+                    rows={1}
+                    {...field}
+                  />
                 </MethodInputFormGroup>
               )}
             />
@@ -388,7 +391,12 @@ const MethodListItem: FC<{
               render={({ field, fieldState: { error } }) => (
                 <MethodInputFormGroup>
                   <AppFormLabel>XDC value</AppFormLabel>
-                  <AppTextField error={!!error} multiline rows={1} {...field} />
+                  <BaseTextField
+                    error={!!error}
+                    multiline
+                    rows={1}
+                    {...field}
+                  />
                 </MethodInputFormGroup>
               )}
             />

@@ -3,51 +3,56 @@ import { Controller, FormProvider } from "react-hook-form";
 import {
   Box,
   CircularProgress,
-  DialogContent,
   FormControlLabel,
   FormGroup,
   Grid,
   Icon,
   Stack,
   Switch,
+  Typography,
 } from "@mui/material";
-
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  AppFormLabel,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
 import {
   ButtonPrimary,
   ButtonSecondary,
 } from "components/AppComponents/AppButton/AppButton";
-import { getTokenLogoURL } from "utils/tokenLogo";
+
 import useCreateProposal from "hooks/Governance/useCreateProposal";
 
 import MuiInfoIcon from "@mui/icons-material/Info";
 import { styled } from "@mui/material/styles";
 
-import requiredSrc from "assets/svg/required.svg";
 import { ErrorBox, ErrorMessage } from "components/AppComponents/AppBox/AppBox";
 
 import { formatNumber } from "utils/format";
+import { getTokenLogoURL } from "utils/tokenLogo";
+
 import ProposeActionFields from "components/Governance/Propose/ProposeActionFields";
 import ProposeNotices from "components/Governance/Propose/ProposeNotices";
-import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import BasePageContainer from "components/Base/PageContainer";
+import { BasePaper } from "components/Base/Paper/StyledPaper";
+import {
+  BaseCheckbox,
+  BaseFormInputLabel,
+  BaseTextField,
+} from "components/Base/Form/StyledForm";
 
-export const ProposeLabel = styled(AppFormLabel)`
-  float: none;
-  width: 100%;
-  font-size: 11px;
-  line-height: 18px;
-  color: #7d91b5;
-  height: 26px;
-  display: inline-flex;
-  align-items: end;
-  padding: 0;
+import BigNumber from "bignumber.js";
+
+import requiredSrc from "assets/svg/required.svg";
+import PlusSm from "assets/svg/PlusSm.svg";
+
+export const ProposeLabel = styled(BaseFormInputLabel)`
+  color: #fff;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  text-transform: none;
+  display: flex;
+  align-items: center;
+  padding-bottom: 3px;
 `;
 
 const CurrencyBox = styled(Box)`
@@ -69,13 +74,23 @@ const ProposeButtonPrimary = styled(ButtonPrimary)`
 const ProposeButtonSecondary = styled(ButtonSecondary)`
   height: 48px;
   font-size: 17px;
-  color: #fff;
-  border: 1px solid #324567;
+  border: 1px solid #43fff1;
+  color: #43fff1;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
 `;
 
 const Required = () => (
-  <Icon sx={{ width: "20px", height: "26px" }}>
-    <img alt="staking-icon" src={requiredSrc} />
+  <Icon
+    sx={{
+      width: "12px",
+      height: "12px",
+      display: "flex",
+      justifyContent: "right",
+    }}
+  >
+    <img alt="staking-icon" src={requiredSrc} width={6} height={6} />
   </Icon>
 );
 
@@ -90,19 +105,22 @@ const OptionalBox = styled(Box)`
 
 const GridContainer = styled(Grid)`
   padding: 0 8px;
-
   ${({ theme }) => theme.breakpoints.down("sm")} {
     padding: 0;
   }
 `;
 
-const AddMoreActionButtonGrid = styled(Grid)`
-  display: flex;
-  justify-content: right;
-  margin-top: 10px;
+const AddMoreActionButton = styled(ButtonPrimary)`
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 24px;
+  &:hover {
+    border: none;
+  }
 `;
-
-const AddMoreActionButton = styled(ButtonPrimary)``;
 
 const Optional = () => <OptionalBox>(Optional)</OptionalBox>;
 
@@ -112,11 +130,34 @@ export const InfoIcon: FC<{ sx?: Record<string, any> }> = ({ sx }) => (
   />
 );
 
-export type ProposeProps = {
-  onClose: () => void;
-};
+const RequiredErrorMessage = styled("p")`
+  font-weight: 400;
+  font-size: 0.75rem;
+  line-height: 1.66;
+  letter-spacing: 0.03333em;
+  text-align: left;
+  color: #dd3c3c;
+  margin: 0;
+`;
 
-const Propose: FC<ProposeProps> = ({ onClose }) => {
+const ProposalTitle = styled(Typography)`
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  margin-bottom: 20px;
+`;
+
+const ProposalPaper = styled(BasePaper)`
+  border-radius: 12px;
+  background: #1e2f4d;
+
+  form {
+    width: 100%;
+  }
+`;
+
+const Propose: FC = () => {
   const {
     minimumVBalance,
     isLoading,
@@ -133,173 +174,167 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
     methods,
     appendAction,
     removeAction,
-  } = useCreateProposal(onClose);
+  } = useCreateProposal();
   const { isMobile } = useSharedContext();
 
   return (
-    <FormProvider {...methods}>
-      <AppDialog
-        aria-labelledby="customized-dialog-title"
-        open={true}
-        fullWidth
-        maxWidth="md"
-        color="primary"
-        sx={{ "> .MuiDialog-container > .MuiPaper-root": { width: "700px" } }}
-      >
-        <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
-          New Proposal
-        </AppDialogTitle>
-        <DialogContent sx={{ marginTop: "20px" }}>
-          <GridContainer container gap={2}>
-            <Grid item xs={12}>
-              <ProposeLabel>Wallet balance</ProposeLabel>
-              <Stack
-                direction="row"
-                justifyContent="start"
-                alignItems="center"
-                spacing={1}
-              >
-                <img
-                  src={getTokenLogoURL("FTHM")}
-                  alt="vFTHM-Token"
-                  width={20}
-                />
-                {vBalance && (
-                  <BalanceBox component="span">
-                    {formatNumber(
-                      BigNumber(vBalance as string)
-                        .dividedBy(10 ** 18)
-                        .toNumber()
+    <BasePageContainer>
+      <BasePaper>
+        <ProposalTitle>Proposal Creation</ProposalTitle>
+        <FormProvider {...methods}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            noValidate
+            autoComplete="off"
+          >
+            <ProposalPaper>
+              <GridContainer container gap={2}>
+                <Grid item xs={12}>
+                  <ProposeLabel>Wallet balance</ProposeLabel>
+                  <Stack
+                    direction="row"
+                    justifyContent="start"
+                    alignItems="center"
+                    spacing={1}
+                  >
+                    <img
+                      src={getTokenLogoURL("FTHM")}
+                      alt="vFTHM-Token"
+                      width={20}
+                    />
+                    {vBalance && (
+                      <BalanceBox component="span">
+                        {formatNumber(
+                          BigNumber(vBalance as string)
+                            .dividedBy(10 ** 18)
+                            .toNumber()
+                        )}
+                      </BalanceBox>
                     )}
-                  </BalanceBox>
-                )}
-                {!account && <BalanceBox component="span">0</BalanceBox>}
-                <CurrencyBox component="span">vFTHM</CurrencyBox>
-              </Stack>
-            </Grid>
-            <Box
-              component="form"
-              onSubmit={handleSubmit(onSubmit)}
-              noValidate
-              autoComplete="off"
-            >
-              <Grid item xs={12}>
-                <Grid container spacing={1}>
-                  <Grid item xs={12}>
-                    <Controller
-                      control={control}
-                      name="descriptionTitle"
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <FormGroup>
-                          <ProposeLabel>
-                            Title <Required />
-                          </ProposeLabel>
-                          <AppTextField
-                            error={!!error}
-                            id="outlined-textarea"
-                            multiline
-                            rows={1}
-                            placeholder={"Ex: More stream staking rewards"}
-                            value={value}
-                            onChange={onChange}
-                            helperText={error ? "Field Title is required" : ""}
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      control={control}
-                      name="description"
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <FormGroup>
-                          <ProposeLabel>
-                            Description <Required />
-                          </ProposeLabel>
-                          <AppTextField
-                            error={!!error}
-                            id="outlined-textarea"
-                            multiline
-                            rows={3}
-                            placeholder={
-                              "Ex: Describe how you propose new way in details..."
-                            }
-                            value={value}
-                            onChange={onChange}
-                            helperText={
-                              error && "Field Description is required"
-                            }
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Controller
-                      control={control}
-                      name="link"
-                      rules={{ required: false }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <FormGroup>
-                          <ProposeLabel>
-                            Discussion / Detail / Forum link <Optional />
-                          </ProposeLabel>
-                          <AppTextField
-                            error={!!error}
-                            id="outlined-textarea"
-                            multiline
-                            rows={1}
-                            placeholder={"Ex: Discord / Twitter / Medium ..."}
-                            value={value}
-                            onChange={onChange}
-                            helperText={
-                              <Stack
-                                direction={"row"}
-                                alignItems={"center"}
-                                component={"span"}
-                              >
-                                <InfoIcon />
-                                Forum discussion will be auto-created if this is
-                                left empty
-                              </Stack>
-                            }
-                          />
-                        </FormGroup>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormGroup sx={{ margin: "10px 0 0" }}>
+                    {!account && <BalanceBox component="span">0</BalanceBox>}
+                    <CurrencyBox component="span">vFTHM</CurrencyBox>
+                  </Stack>
+                </Grid>
+
+                <Grid item xs={12}>
+                  <Grid container spacing={1.5}>
+                    <Grid item xs={12}>
                       <Controller
                         control={control}
-                        name="withAction"
-                        render={({ field: { onChange, value } }) => (
-                          <FormControlLabel
-                            control={
-                              <Switch onChange={onChange} checked={!!value} />
-                            }
-                            label="Actionable Proposal"
-                          />
+                        name="descriptionTitle"
+                        rules={{ required: true }}
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <FormGroup>
+                            <ProposeLabel>
+                              Title <Required />
+                            </ProposeLabel>
+                            <BaseTextField
+                              error={!!error}
+                              id="outlined-textarea"
+                              multiline
+                              rows={1}
+                              placeholder={"Enter the title of your proposal"}
+                              value={value}
+                              onChange={onChange}
+                              helperText={
+                                error ? "Field Title is required" : ""
+                              }
+                            />
+                          </FormGroup>
                         )}
                       />
-                    </FormGroup>
-                  </Grid>
-                  {withAction && (
-                    <>
-                      <Grid item xs={12}>
-                        <Box sx={{ marginTop: "10px" }}>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        control={control}
+                        name="description"
+                        rules={{ required: true }}
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <FormGroup>
+                            <ProposeLabel>
+                              Description <Required />
+                            </ProposeLabel>
+                            <BaseTextField
+                              error={!!error}
+                              id="outlined-textarea"
+                              multiline
+                              rows={3}
+                              placeholder={
+                                "Ex: Describe how you propose new way in details..."
+                              }
+                              value={value}
+                              onChange={onChange}
+                              helperText={
+                                error && "Field Description is required"
+                              }
+                            />
+                          </FormGroup>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Controller
+                        control={control}
+                        name="link"
+                        rules={{ required: false }}
+                        render={({
+                          field: { onChange, value },
+                          fieldState: { error },
+                        }) => (
+                          <FormGroup>
+                            <ProposeLabel>
+                              Discussion / Detail / Forum link <Optional />
+                            </ProposeLabel>
+                            <BaseTextField
+                              error={!!error}
+                              id="outlined-textarea"
+                              multiline
+                              rows={1}
+                              placeholder={"Ex: Discord / Twitter / Medium ..."}
+                              value={value}
+                              onChange={onChange}
+                              helperText={
+                                <Stack
+                                  direction={"row"}
+                                  alignItems={"center"}
+                                  component={"span"}
+                                >
+                                  <InfoIcon />
+                                  Forum discussion will be auto-created if this
+                                  is left empty
+                                </Stack>
+                              }
+                            />
+                          </FormGroup>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormGroup>
+                        <Controller
+                          control={control}
+                          name="withAction"
+                          render={({ field: { onChange, value } }) => (
+                            <FormControlLabel
+                              control={
+                                <Switch onChange={onChange} checked={!!value} />
+                              }
+                              label="Actionable Proposal"
+                            />
+                          )}
+                        />
+                      </FormGroup>
+                    </Grid>
+                    {withAction && (
+                      <>
+                        <Grid item xs={12}>
                           {fields.map((field, index) => {
                             return (
                               <ProposeActionFields
@@ -309,77 +344,115 @@ const Propose: FC<ProposeProps> = ({ onClose }) => {
                               />
                             );
                           })}
-                        </Box>
-                      </Grid>
-                      <AddMoreActionButtonGrid item xs={12}>
+                        </Grid>
                         <AddMoreActionButton onClick={appendAction}>
-                          Add More Action
+                          <img src={PlusSm} alt="plus" width={24} height={24} />
+                          Add Action
                         </AddMoreActionButton>
-                      </AddMoreActionButtonGrid>
-                    </>
-                  )}
-                </Grid>
-                <ProposeNotices
-                  vBalance={vBalance}
-                  vBalanceError={vBalanceError}
-                  minimumVBalance={minimumVBalance as number}
-                />
-                {useMemo(
-                  () =>
-                    BigNumber(notAllowTimestamp).isGreaterThan(0) ? (
-                      <ErrorBox sx={{ my: 3 }}>
-                        <InfoIcon />
-                        <ErrorMessage>
-                          You can't create new proposal until{" "}
-                          {new Date(
-                            BigNumber(notAllowTimestamp)
-                              .multipliedBy(1000)
-                              .toNumber()
-                          ).toLocaleString()}
-                        </ErrorMessage>
-                      </ErrorBox>
-                    ) : null,
-                  [notAllowTimestamp]
-                )}
-              </Grid>
-              <Grid item xs={12}>
-                <Grid
-                  container
-                  spacing={1}
-                  flexDirection={isMobile ? "column-reverse" : "row"}
-                >
-                  <Grid item xs={12} sm={4}>
-                    <ProposeButtonSecondary
-                      type="button"
-                      sx={{ width: "100%" }}
-                      onClick={saveForLater}
-                    >
-                      Save for later
-                    </ProposeButtonSecondary>
-                  </Grid>
-                  <Grid item xs={12} sm={8}>
-                    {account ? (
-                      <ProposeButtonPrimary
-                        type="submit"
-                        sx={{ width: "100%" }}
-                      >
-                        {isLoading ? (
-                          <CircularProgress size={30} />
-                        ) : (
-                          "Submit proposal"
-                        )}
-                      </ProposeButtonPrimary>
-                    ) : (
-                      <WalletConnectBtn fullwidth sx={{ height: "48px" }} />
+                      </>
                     )}
                   </Grid>
+                  <ProposeNotices
+                    vBalance={vBalance}
+                    vBalanceError={vBalanceError}
+                    minimumVBalance={minimumVBalance as number}
+                  />
+                  <Grid item xs={12}>
+                    <Controller
+                      control={control}
+                      name="isApproved"
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <FormGroup sx={{ marginY: "8px" }}>
+                          <Typography
+                            fontSize="14px"
+                            color="#fff"
+                            fontWeight={600}
+                          >
+                            Confirm Transaction Details
+                          </Typography>
+                          <FormControlLabel
+                            control={
+                              <BaseCheckbox
+                                checked={value}
+                                onChange={(e) => onChange(e.target.checked)}
+                                name="isApproved"
+                              />
+                            }
+                            label="I have reviewed the contents of my proposal and am ready to submit."
+                            sx={{
+                              color: "#fff",
+                              "& .MuiTypography-root": {
+                                fontSize: "14px",
+                              },
+                            }}
+                          />
+                          {error && (
+                            <RequiredErrorMessage>
+                              This field is required
+                            </RequiredErrorMessage>
+                          )}
+                        </FormGroup>
+                      )}
+                    />
+                  </Grid>
+                  {useMemo(
+                    () =>
+                      BigNumber(notAllowTimestamp).isGreaterThan(0) ? (
+                        <ErrorBox sx={{ my: 3 }}>
+                          <InfoIcon />
+                          <ErrorMessage>
+                            You can't create new proposal until{" "}
+                            {new Date(
+                              BigNumber(notAllowTimestamp)
+                                .multipliedBy(1000)
+                                .toNumber()
+                            ).toLocaleString()}
+                          </ErrorMessage>
+                        </ErrorBox>
+                      ) : null,
+                    [notAllowTimestamp]
+                  )}
                 </Grid>
+              </GridContainer>
+            </ProposalPaper>
+
+            <Grid
+              sx={{ marginTop: "20px" }}
+              container
+              spacing={1}
+              flexDirection={isMobile ? "column-reverse" : "row"}
+            >
+              <Grid item xs={12} sm={3}>
+                <ProposeButtonSecondary
+                  type="button"
+                  sx={{ width: "100%" }}
+                  onClick={saveForLater}
+                >
+                  Save for later
+                </ProposeButtonSecondary>
               </Grid>
-            </Box>
-          </GridContainer>
-        </DialogContent>
-      </AppDialog>
-    </FormProvider>
+              <Grid item xs={12} sm={3}>
+                {account ? (
+                  <ProposeButtonPrimary type="submit" sx={{ width: "100%" }}>
+                    {isLoading ? (
+                      <CircularProgress size={30} />
+                    ) : (
+                      "Submit proposal"
+                    )}
+                  </ProposeButtonPrimary>
+                ) : (
+                  <WalletConnectBtn fullwidth sx={{ height: "48px" }} />
+                )}
+              </Grid>
+            </Grid>
+          </Box>
+        </FormProvider>
+      </BasePaper>
+    </BasePageContainer>
   );
 };
 

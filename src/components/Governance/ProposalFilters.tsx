@@ -1,22 +1,27 @@
-import { Grid, MenuItem, Select } from "@mui/material";
+import {
+  Grid,
+  // MenuItem,
+  // Select
+} from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Dispatch, FC, memo } from "react";
 import { styled } from "@mui/material/styles";
 import {
   AppFormInputWrapper,
-  AppTextField,
-} from "../AppComponents/AppForm/AppForm";
+  // AppTextField,
+} from "components/AppComponents/AppForm/AppForm";
+import { useNavigate } from "react-router-dom";
 
-const ProposalSelect = styled(Select)`
-  padding: 8px 12px;
-  gap: 8px;
-  height: 40px;
-  background: #253656;
-  border: 1px solid #324567;
-  border-radius: 8px;
-  width: 100%;
-`;
+// const ProposalSelect = styled(Select)`
+//   padding: 8px 12px;
+//   gap: 8px;
+//   height: 40px;
+//   background: #253656;
+//   border: 1px solid #324567;
+//   border-radius: 8px;
+//   width: 100%;
+// `;
 
 type ProposalFiltersType = {
   search: string;
@@ -25,7 +30,6 @@ type ProposalFiltersType = {
   setTime: Dispatch<string>;
   proposals: string;
   setProposals: Dispatch<string>;
-  setCreateProposal: Dispatch<boolean>;
 };
 
 const AddProposalButton = styled(ButtonPrimary)`
@@ -37,25 +41,18 @@ const AddProposalButton = styled(ButtonPrimary)`
   }
 `;
 
-const ProposalFilters: FC<ProposalFiltersType> = ({
-  search,
-  setSearch,
-  time,
-  setTime,
-  proposals,
-  setProposals,
-  setCreateProposal,
-}) => {
+const ProposalFilters: FC<ProposalFiltersType> = () => {
+  const navigate = useNavigate();
   return (
     <Grid container spacing={1} alignItems={"center"}>
       <Grid item xs={3}>
         <AppFormInputWrapper sx={{ margin: 0 }}>
-          <AppTextField
-            id="outlined-helperText"
-            placeholder="Search by ID, name, address..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+          {/*<AppTextField*/}
+          {/*  id="outlined-helperText"*/}
+          {/*  placeholder="Search by ID, name, address..."*/}
+          {/*  value={search}*/}
+          {/*  onChange={(e) => setSearch(e.target.value)}*/}
+          {/*/>*/}
           {/*<AppFormInputLogo*/}
           {/*  sx={{ top: "10px", left: "9px" }}*/}
           {/*  src={SearchSrc}*/}
@@ -64,31 +61,33 @@ const ProposalFilters: FC<ProposalFiltersType> = ({
         </AppFormInputWrapper>
       </Grid>
       <Grid item xs={2}>
-        <ProposalSelect
-          value={time}
-          onChange={(event) => {
-            setTime(event.target.value as string);
-          }}
-        >
-          <MenuItem value="all">All time</MenuItem>
-          <MenuItem value={1}>1</MenuItem>
-          <MenuItem value={2}>2</MenuItem>
-        </ProposalSelect>
+        {/*<ProposalSelect*/}
+        {/*  value={time}*/}
+        {/*  onChange={(event) => {*/}
+        {/*    setTime(event.target.value as string);*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <MenuItem value="all">All time</MenuItem>*/}
+        {/*  <MenuItem value={1}>1</MenuItem>*/}
+        {/*  <MenuItem value={2}>2</MenuItem>*/}
+        {/*</ProposalSelect>*/}
       </Grid>
       <Grid item xs={2}>
-        <ProposalSelect
-          value={proposals}
-          onChange={(event) => {
-            setProposals(event.target.value as string);
-          }}
-        >
-          <MenuItem value="all">All proposals</MenuItem>
-          <MenuItem value={1}>All proposals 1</MenuItem>
-          <MenuItem value={2}>All proposals 2</MenuItem>
-        </ProposalSelect>
+        {/*<ProposalSelect*/}
+        {/*  value={proposals}*/}
+        {/*  onChange={(event) => {*/}
+        {/*    setProposals(event.target.value as string);*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <MenuItem value="all">All proposals</MenuItem>*/}
+        {/*  <MenuItem value={1}>All proposals 1</MenuItem>*/}
+        {/*  <MenuItem value={2}>All proposals 2</MenuItem>*/}
+        {/*</ProposalSelect>*/}
       </Grid>
       <Grid item xs={5}>
-        <AddProposalButton onClick={() => setCreateProposal(true)}>
+        <AddProposalButton
+          onClick={() => navigate("/dao/governance/proposal/create")}
+        >
           <AddCircleIcon
             sx={{
               color: "#005C55",

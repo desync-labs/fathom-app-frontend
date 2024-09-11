@@ -27,6 +27,7 @@ export type UseProposalContextReturnType = {
   votingEndTime: string | null;
   quorumError: boolean;
   secondsLeft: number;
+  vFTHMTotalSupply: string;
 };
 
 export const ProposalContext = createContext<UseProposalContextReturnType>(

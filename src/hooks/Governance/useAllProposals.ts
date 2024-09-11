@@ -11,7 +11,6 @@ export const useAllProposals = () => {
   const [time, setTime] = useState<string>("all");
   const [proposals, setProposals] = useState<string>("all");
 
-  const [createProposal, setCreateProposal] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const { syncDao, prevSyncDao } = useSyncContext();
@@ -69,8 +68,6 @@ export const useAllProposals = () => {
     setTime,
     proposals,
     setProposals,
-    createProposal,
-    setCreateProposal,
     fetchedProposals: loading ? [] : data.proposals,
     currentPage,
     itemsCount:

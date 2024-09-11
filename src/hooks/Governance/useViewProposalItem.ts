@@ -129,9 +129,17 @@ const useViewProposalItem = (proposal: IProposal) => {
     return title.substring(0, 50) + (title.length > 50 ? "... " : "");
   }, [proposal.description]);
 
+  const proposalDescription = useMemo(() => {
+    const description = proposal.description.split("----------------")[1];
+    return (
+      description.substring(0, 150) + (description.length > 150 ? "... " : "")
+    );
+  }, [proposal.description]);
+
   return {
     quorumError,
     proposalTitle,
+    proposalDescription,
     timestamp,
     seconds,
     status,

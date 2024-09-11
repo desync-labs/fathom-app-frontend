@@ -10,6 +10,7 @@ export const BasePaper = styled(Paper)`
     padding: 16px;
   }
 `;
+
 export const BasePreviewModalPaper = styled(BasePaper)`
   padding: 0;
   ${({ theme }) => theme.breakpoints.down("sm")} {

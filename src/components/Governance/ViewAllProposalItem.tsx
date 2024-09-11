@@ -4,8 +4,6 @@ import { Box, Tooltip } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { tooltipClasses, TooltipProps } from "@mui/material/Tooltip";
 
-import { Link } from "react-router-dom";
-
 import StakingCountdown from "components/Staking/StakingCountdown";
 import { secondsToTime } from "utils/secondsToTime";
 import useViewProposalItem from "hooks/Governance/useViewProposalItem";
@@ -17,25 +15,17 @@ import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import CancelRoundedIcon from "@mui/icons-material/CancelRounded";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RecommendIcon from "@mui/icons-material/Recommend";
+import { BasePaper } from "components/Base/Paper/StyledPaper";
+import { useNavigate } from "react-router-dom";
 
 type ViewAllProposalItemProps = {
   proposal: IProposal;
   index: number;
 };
 
-const ProposalItemWrapper = styled(Link)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 4px;
-  align-self: stretch;
-  width: 100%;
-  background: #132340;
-  border-radius: 8px;
+const ProposalItemWrapper = styled(BasePaper)`
   cursor: pointer;
-  padding: 16px 20px;
-
+  padding: 16px 18px;
   & .MuiListItemButton-root {
     padding: 8px 16px;
   }
@@ -63,7 +53,8 @@ const ProposalLabel = styled(Box)`
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
-  line-height: 20px; /* 142.857% */
+  line-height: 20px;
+  margin-top: 10px;
 `;
 
 const ProposalValue = styled(Box)`
@@ -137,13 +128,21 @@ export const StatusIcon: FC<{ status: ProposalStatus }> = ({ status }) => {
 };
 
 const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
-  const { proposalTitle, timestamp, seconds, status, quorumError } =
-    useViewProposalItem(proposal);
+  const {
+    proposalTitle,
+    proposalDescription,
+    timestamp,
+    seconds,
+    status,
+    quorumError,
+  } = useViewProposalItem(proposal);
+
+  const navigate = useNavigate();
 
   return (
     <ProposalItemWrapper
-      to={`/dao/governance/proposal/${proposal.id}`}
       key={proposal.id}
+      onClick={() => navigate(`/dao/governance/proposal/${proposal.id}`)}
     >
       <BaseFlexBox width={"100%"}>
         <ProposalIdTooltip title={proposal.proposalId} placement="top">
@@ -176,7 +175,7 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
       <ProposalLabel>Title</ProposalLabel>
       <ProposalValue>{proposalTitle}</ProposalValue>
       <ProposalLabel>Description</ProposalLabel>
-      <ProposalValue>{proposal.description}</ProposalValue>
+      <ProposalValue>{proposalDescription}</ProposalValue>
     </ProposalItemWrapper>
   );
 };
