@@ -1,3 +1,4 @@
+import { FC } from "react";
 import {
   Box,
   Divider,
@@ -5,18 +6,21 @@ import {
   ListItem,
   ListItemText,
   Typography,
+  styled,
 } from "@mui/material";
 import useProposalContext from "context/proposal";
-import { styled } from "@mui/material/styles";
-import { FC } from "react";
+
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
 import StakingCountdown from "components/Staking/StakingCountdown";
-import { secondsToTime } from "utils/secondsToTime";
-import { ZERO_ADDRESS } from "utils/Constants";
+
 import useConnector from "context/connector";
-import { getAccountUrl } from "utils/explorer";
+
 import { ChainId } from "connectors/networks";
+
+import { getAccountUrl } from "utils/explorer";
+import { ZERO_ADDRESS } from "utils/Constants";
+import { secondsToTime } from "utils/secondsToTime";
 
 const ProposalTitle = styled(Typography)`
   color: #fff;
@@ -111,12 +115,12 @@ const ProposalInfo: FC = () => {
         {getTitleDescription(fetchedProposal.description, 0)}
       </ProposalTitle>
       <BaseFlexBox sx={{ justifyContent: "flex-start", alignItems: "start" }}>
-        <Box width={"35%"}>
+        <Box width={"25%"}>
           <TimeLabel>Submit time</TimeLabel>
           <TimeValue>{submitTime}</TimeValue>
         </Box>
 
-        <Box width={"35%"}>
+        <Box width={"25%"}>
           <TimeLabel>Exp. Voting starts:</TimeLabel>
           <TimeValue>{votingStartsTime}</TimeValue>
           <TimeBlock>Start block: {fetchedProposal.startBlock}</TimeBlock>

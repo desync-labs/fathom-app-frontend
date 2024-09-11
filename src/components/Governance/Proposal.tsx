@@ -3,6 +3,7 @@ import ProposalInfo from "components/Governance/Proposal/ProposalInfo";
 import ProposalVoting from "components/Governance/Proposal/ProposalVoting";
 import useSharedContext from "context/shared";
 import ProposalViewTopBar from "components/Governance/Proposal/ProposalViewTopBar";
+import ProposalHistory from "./Proposal/ProposalHistory";
 
 const ProposalView = () => {
   const { isMobile } = useSharedContext();
@@ -20,6 +21,7 @@ const ProposalView = () => {
         <Grid xs={0.2}></Grid>
         <Grid item xs={4}>
           <ProposalVoting />
+          <ProposalHistory />
         </Grid>
       </Grid>
     </Container>

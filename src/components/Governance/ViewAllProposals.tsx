@@ -83,7 +83,7 @@ const AllProposalsView = () => {
             [fetchedProposals, fetchProposalsPending]
           )}
         </ProposalListWrapper>
-        {!fetchProposalsPending && fetchedProposals.length > COUNT_PER_PAGE && (
+        {!fetchProposalsPending && itemsCount > COUNT_PER_PAGE && (
           <PaginationWrapper>
             <Pagination
               count={Math.ceil(itemsCount / COUNT_PER_PAGE)}

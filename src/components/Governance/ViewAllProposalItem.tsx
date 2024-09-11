@@ -78,6 +78,7 @@ const ProposalItemTimeLeft = styled(Box)`
   color: #6379a1;
   margin-top: -4px;
   font-size: 14px;
+  padding-top: 4px;
   &.in-progress {
     color: #f5953d;
   }

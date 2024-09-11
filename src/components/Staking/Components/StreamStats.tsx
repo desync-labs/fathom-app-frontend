@@ -47,6 +47,13 @@ const StatsBlock = styled(Box)`
   width: calc(50% - 4px);
   gap: 8px;
   padding: 0;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    width: calc(45% - 4px);
+    &:nth-child(2n) {
+        width: 52%;
+    },
+  }
 `;
 
 const StatsLabel = styled("span")`
@@ -74,6 +81,12 @@ const StatsValue = styled(Box)`
     font-size: 14px;
     line-height: 20px;
     color: #9fadc6;
+  }
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    align-items: start;
+    gap: 0;
   }
 `;
 
@@ -164,10 +177,12 @@ const StreamStats: FC = () => {
             <StatsLabel>Total Value Locked</StatsLabel>
             {protocolStatsInfo && (
               <StatsValue>
-                <strong>
-                  {formatNumber(protocolStatsInfo.totalStakeFTHM / 10 ** 18)}
-                </strong>
-                FTHM
+                <Box>
+                  <strong>
+                    {formatNumber(protocolStatsInfo.totalStakeFTHM / 10 ** 18)}
+                  </strong>{" "}
+                  FTHM
+                </Box>
                 <span>
                   $
                   {formatCompact(

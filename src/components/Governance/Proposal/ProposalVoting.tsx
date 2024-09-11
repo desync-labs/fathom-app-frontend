@@ -1,209 +1,108 @@
 import { FC } from "react";
-import { styled } from "@mui/material/styles";
 import {
-  // Button,
-  // ButtonGroup,
-  // CircularProgress,
+  Button,
+  CircularProgress,
   Typography,
+  Box,
+  Divider,
+  ButtonGroup,
+  LinearProgress,
+  linearProgressClasses,
+  styled,
 } from "@mui/material";
-// import { ProposalStatus } from "utils/Constants";
 import useProposalContext from "context/proposal";
 import {
   ProposalItemStatus,
   StatusIcon,
 } from "components/Governance/ViewAllProposalItem";
-// import { VotingEndedButton } from "components/AppComponents/AppButton/AppButton";
-// import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import { VotingEndedButton } from "components/AppComponents/AppButton/AppButton";
+import WalletConnectBtn from "components/Common/WalletConnectBtn";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
+import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 
-// const VoteButtonGroup = styled(ButtonGroup)`
-//   width: 100%;
-//   height: 48px;
-//
-//   button {
-//     background: #324567;
-//     width: 33.33%;
-//     border: 1px solid #4f658c;
-//     font-weight: 600;
-//     font-size: 17px;
-//     line-height: 24px;
-//     color: #fff;
-//     text-transform: none;
-//
-//     :hover {
-//       background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
-//       border: 1px solid #b3fff9;
-//       color: #00332f;
-//     }
-//   }
-// `;
+import BigNumber from "bignumber.js";
+import { formatNumber } from "utils/format";
+import { ProposalStatus } from "utils/Constants";
 
-// const VotingWrapperBox = styled(Box)`
-//   background: rgba(79, 101, 140, 0.2);
-//   border-radius: 8px;
-//   padding: 12px;
-//   margin-bottom: 10px;
-//   > div {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//   }
-//
-//   > div > p {
-//     color: #fff;
-//   }
-//
-//   > div > p:first-of-type {
-//     text-transform: uppercase;
-//     font-size: 15px;
-//     font-weight: bold;
-//   }
-//   ,
-//   > div > p:last-child {
-//     font-size: 14px;
-//   }
-// `;
+const VoteButtonGroup = styled(ButtonGroup)`
+  width: 100%;
+  height: 48px;
+
+  button {
+    background: #324567;
+    width: 33.33%;
+    border: 1px solid #4f658c;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 24px;
+    color: #fff;
+    text-transform: none;
+
+    :hover {
+      background: linear-gradient(104.04deg, #b3fff9 0%, #00dbcb 100%);
+      border: 1px solid #b3fff9;
+      color: #00332f;
+    }
+  }
+`;
 
 const ProposalDetailsStatus = styled(ProposalItemStatus)`
   max-width: 100%;
 `;
 
-// type ButtonsProps = {
-//   account: string | null | undefined;
-//   hasVoted: boolean;
-//   fetchedProposalState: string;
-//   vote: (support: string) => void;
-//   votePending: string;
-// };
+type ButtonsProps = {
+  account: string | null | undefined;
+  hasVoted: boolean;
+  fetchedProposalState: string;
+  vote: (support: string) => void;
+  votePending: string;
+};
 
-// const Buttons: FC<ButtonsProps> = ({
-//   account,
-//   hasVoted,
-//   fetchedProposalState,
-//   votePending,
-//   vote,
-// }) => {
-//   if (fetchedProposalState === ProposalStatus.OpenToVote && !account) {
-//     return <WalletConnectBtn fullwidth />;
-//   }
-//
-//   if (fetchedProposalState === ProposalStatus.Pending) {
-//     return (
-//       <VotingEndedButton disabled={true}>
-//         Voting hasn't started yet
-//       </VotingEndedButton>
-//     );
-//   }
-//
-//   if (fetchedProposalState !== ProposalStatus.OpenToVote) {
-//     return <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>;
-//   }
-//
-//   if (hasVoted) {
-//     return (
-//       <VotingEndedButton disabled={true}>
-//         You have already voted.
-//       </VotingEndedButton>
-//     );
-//   }
-//
-//   return (
-//     <VoteButtonGroup variant="outlined">
-//       <Button onClick={() => vote("1")}>
-//         {votePending === "1" ? <CircularProgress size={25} /> : "For"}
-//       </Button>
-//       <Button onClick={() => vote("0")}>
-//         {votePending === "0" ? <CircularProgress size={25} /> : "Against"}
-//       </Button>
-//       <Button onClick={() => vote("2")}>
-//         {votePending === "2" ? <CircularProgress size={25} /> : "Abstain"}
-//       </Button>
-//     </VoteButtonGroup>
-//   );
-// };
+const Buttons: FC<ButtonsProps> = ({
+  account,
+  hasVoted,
+  fetchedProposalState,
+  votePending,
+  vote,
+}) => {
+  if (fetchedProposalState === ProposalStatus.OpenToVote && !account) {
+    return <WalletConnectBtn fullwidth />;
+  }
 
-// const ProposalVoting = () => {
-//   const {
-//     account,
-//     hasVoted,
-//     votePending,
-//     forVotes,
-//     abstainVotes,
-//     againstVotes,
-//     vote,
-//     status,
-//     quorumError,
-//   } = useProposalContext();
-//
-//   return (
-//     <BasePaper>
-//       <Box sx={{ width: "100%" }}>
-//         <ProposalStatusBox>Proposal Status</ProposalStatusBox>
-//         <ProposalDetailsStatus status={status} sx={{ margin: "10px 0" }}>
-//           <StatusIcon status={status} />
-//           {quorumError ? "Voting quorum was not reached" : status}
-//         </ProposalDetailsStatus>
-//         <Box sx={{ margin: "30px 0" }}>
-//           <VotingWrapperBox>
-//             <Box>
-//               <Typography gutterBottom>For</Typography>
-//               <Typography>{Math.round(forVotes)}%</Typography>
-//             </Box>
-//
-//             <LinearProgress
-//               variant="determinate"
-//               color={"success"}
-//               value={forVotes}
-//             />
-//           </VotingWrapperBox>
-//
-//           <VotingWrapperBox>
-//             <Box>
-//               <Typography gutterBottom>Against</Typography>
-//               <Typography>{Math.round(againstVotes)}%</Typography>
-//             </Box>
-//
-//             <LinearProgress
-//               variant="determinate"
-//               color={"error"}
-//               value={againstVotes}
-//             />
-//           </VotingWrapperBox>
-//
-//           <VotingWrapperBox>
-//             <Box>
-//               <Typography gutterBottom>Abstains</Typography>
-//               <Typography variant={"body2"} color="text.secondary">
-//                 {Math.round(abstainVotes)}%
-//               </Typography>
-//             </Box>
-//
-//             <LinearProgress
-//               variant="determinate"
-//               color={"info"}
-//               value={abstainVotes}
-//             />
-//           </VotingWrapperBox>
-//         </Box>
-//       </Box>
-//       <Buttons
-//         account={account}
-//         hasVoted={hasVoted}
-//         fetchedProposalState={status as string}
-//         vote={vote}
-//         votePending={votePending as string}
-//       />
-//     </BasePaper>
-//   );
-// };
-//
-// export default ProposalVoting;
+  if (fetchedProposalState === ProposalStatus.Pending) {
+    return (
+      <VotingEndedButton disabled={true}>
+        Voting hasn't started yet
+      </VotingEndedButton>
+    );
+  }
 
-import { Divider, LinearProgress, linearProgressClasses } from "@mui/material";
-import Box from "@mui/material/Box";
-import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
-import BigNumber from "bignumber.js";
-import { formatNumber } from "utils/format";
+  if (fetchedProposalState !== ProposalStatus.OpenToVote) {
+    return <VotingEndedButton disabled={true}>Voting Ended</VotingEndedButton>;
+  }
+
+  if (hasVoted) {
+    return (
+      <VotingEndedButton disabled={true}>
+        You have already voted.
+      </VotingEndedButton>
+    );
+  }
+
+  return (
+    <VoteButtonGroup variant="outlined">
+      <Button onClick={() => vote("1")}>
+        {votePending === "1" ? <CircularProgress size={25} /> : "For"}
+      </Button>
+      <Button onClick={() => vote("0")}>
+        {votePending === "0" ? <CircularProgress size={25} /> : "Against"}
+      </Button>
+      <Button onClick={() => vote("2")}>
+        {votePending === "2" ? <CircularProgress size={25} /> : "Abstain"}
+      </Button>
+    </VoteButtonGroup>
+  );
+};
 
 const VotingTitle = styled(Typography)`
   color: #fff;
@@ -285,15 +184,15 @@ export const LinearProgressAbstainsVoted = styled(LinearProgress)(() => ({
 
 const ProposalVoting: FC = () => {
   const {
-    // account,
-    // hasVoted,
-    // votePending,
+    account,
+    hasVoted,
+    votePending,
     forVotes,
     abstainVotes,
     againstVotes,
     fetchedProposal,
     fetchedTotalVotes,
-    // vote,
+    vote,
     status,
     quorumError,
     vFTHMTotalSupply,
@@ -336,7 +235,7 @@ const ProposalVoting: FC = () => {
           flexDirection: "column",
           alignItems: "stretch",
           gap: 1,
-          marginY: "24px",
+          marginTop: "24px",
         }}
       >
         <VoteProgressItem>
@@ -417,6 +316,14 @@ const ProposalVoting: FC = () => {
             />
           </Box>
         </VoteProgressItem>
+
+        <Buttons
+          account={account}
+          hasVoted={hasVoted}
+          fetchedProposalState={status as string}
+          vote={vote}
+          votePending={votePending as string}
+        />
       </BaseFlexBox>
     </BasePaper>
   );

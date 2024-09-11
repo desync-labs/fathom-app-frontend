@@ -40,7 +40,7 @@ const ProposalViewTopBar: FC = () => {
   const { fetchedProposal } = useProposalContext();
 
   return (
-    <BaseFlexBox sx={{ marginBottom: "40px" }}>
+    <BaseFlexBox sx={{ marginBottom: "25px" }}>
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb"

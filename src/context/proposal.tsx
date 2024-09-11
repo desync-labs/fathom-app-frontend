@@ -1,7 +1,7 @@
 import { createContext, FC, ReactElement, useContext } from "react";
 import useProposalItem from "hooks/Governance/useProposalItem";
 import { ChainId } from "connectors/networks";
-import { ProposalStatus } from "../utils/Constants";
+import { ProposalStatus } from "utils/Constants";
 
 export type ProposalContextType = {
   children: ReactElement;
@@ -28,6 +28,7 @@ export type UseProposalContextReturnType = {
   quorumError: boolean;
   secondsLeft: number;
   vFTHMTotalSupply: string;
+  currentBlock: number;
 };
 
 export const ProposalContext = createContext<UseProposalContextReturnType>(

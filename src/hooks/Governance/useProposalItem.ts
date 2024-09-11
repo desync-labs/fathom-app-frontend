@@ -27,6 +27,7 @@ const useProposalItem = () => {
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
   const [vFTHMTotalSupply, setFTHMTotalSupply] = useState<string>("0");
+  const [currentBlock, setCurrentBlock] = useState<number>(0);
 
   const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext();
 
@@ -66,6 +67,9 @@ const useProposalItem = () => {
         proposalService.viewProposalState(data.proposal.proposalId),
         library.getBlockNumber(),
       ]);
+
+      setCurrentBlock(currentBlock);
+
       if (
         BigNumber(currentBlock).isGreaterThan(data?.proposal.endBlock) &&
         [0, 1].includes(status)
@@ -75,7 +79,7 @@ const useProposalItem = () => {
         setStatus((Object.values(ProposalStatus) as any)[status]);
       }
     }
-  }, [proposalService, data, account, setStatus]);
+  }, [proposalService, data, account, setStatus, setCurrentBlock]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data?.proposal) {
@@ -107,8 +111,8 @@ const useProposalItem = () => {
   const getVotingEndTime = useCallback(async () => {
     if (data?.proposal && library) {
       const currentBlock = await library.getBlockNumber();
-      let endTimestamp;
 
+      let endTimestamp;
       if (
         BigNumber(currentBlock).isLessThanOrEqualTo(data.proposal.startBlock)
       ) {
@@ -339,6 +343,7 @@ const useProposalItem = () => {
     quorumError,
     secondsLeft: seconds,
     vFTHMTotalSupply,
+    currentBlock,
   };
 };
 
