@@ -105,7 +105,8 @@ const useCreateProposal = () => {
   }, [reset]);
 
   const onClose = useCallback(() => {
-    navigate("/dao/governance/proposals");
+    setShowSuccessAlertHandler(true, "Proposal created successfully");
+    navigate("/dao/governance");
   }, [navigate]);
 
   const onSubmit = useCallback(
