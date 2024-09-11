@@ -193,6 +193,7 @@ const Propose: FC = () => {
     appendAction,
     removeAction,
   } = useCreateProposal();
+
   const { isMobile } = useSharedContext();
   const navigate = useNavigate();
 

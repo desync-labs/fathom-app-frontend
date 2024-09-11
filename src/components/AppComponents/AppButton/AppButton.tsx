@@ -371,6 +371,7 @@ export const BackToProposalsButton = styled(MuiButton)`
 export const VotingEndedButton = styled(MuiButton)`
   padding: 8px 20px;
   width: 100%;
+  height: 48px;
   color: #6379a1;
   font-weight: 600;
   font-size: 17px;

@@ -31,6 +31,7 @@ const VoteButtonGroup = styled(ButtonGroup)`
   button {
     background: #324567;
     width: 33.33%;
+    height: 100%;
     border: 1px solid #4f658c;
     font-weight: 600;
     font-size: 17px;
