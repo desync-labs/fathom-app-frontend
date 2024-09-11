@@ -42,6 +42,8 @@ import BigNumber from "bignumber.js";
 
 import requiredSrc from "assets/svg/required.svg";
 import PlusSm from "assets/svg/PlusSm.svg";
+import BackSrc from "assets/svg/back.svg";
+import { useNavigate } from "react-router-dom";
 
 export const ProposeLabel = styled(BaseFormInputLabel)`
   color: #fff;
@@ -157,6 +159,22 @@ const ProposalPaper = styled(BasePaper)`
   }
 `;
 
+const BackIcon = () => (
+  <Icon sx={{ height: "14px", width: "16px", display: "flex" }}>
+    <img alt="staking-icon" src={BackSrc} width={16} height={14} />
+  </Icon>
+);
+
+const BackToProposalsButton = styled("div")`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  cursor: pointer;
+`;
+
 const Propose: FC = () => {
   const {
     minimumVBalance,
@@ -176,9 +194,15 @@ const Propose: FC = () => {
     removeAction,
   } = useCreateProposal();
   const { isMobile } = useSharedContext();
+  const navigate = useNavigate();
 
   return (
-    <BasePageContainer>
+    <BasePageContainer sx={{ gap: "25px" }}>
+      <BackToProposalsButton onClick={() => navigate("/dao/governance")}>
+        <BackIcon />
+        Back
+      </BackToProposalsButton>
+
       <BasePaper>
         <ProposalTitle>Proposal Creation</ProposalTitle>
         <FormProvider {...methods}>

@@ -1,21 +1,10 @@
 import { Container, Grid } from "@mui/material";
 import ProposalInfo from "components/Governance/Proposal/ProposalInfo";
 import ProposalVoting from "components/Governance/Proposal/ProposalVoting";
-
-// import useProposalContext from "context/proposal";
-
-// import BackSrc from "assets/svg/back.svg";
 import useSharedContext from "context/shared";
-import ProposalViewTopBar from "./Proposal/ProposalViewTopBar";
-
-// const BackIcon = () => (
-//   <Icon sx={{ height: "21px" }}>
-//     <img alt="staking-icon" src={BackSrc} />
-//   </Icon>
-// );
+import ProposalViewTopBar from "components/Governance/Proposal/ProposalViewTopBar";
 
 const ProposalView = () => {
-  // const { back } = useProposalContext();
   const { isMobile } = useSharedContext();
 
   return (
