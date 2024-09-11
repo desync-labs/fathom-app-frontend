@@ -1,5 +1,4 @@
 import { FC, memo } from "react";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
   CircularProgress,
@@ -7,66 +6,48 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import {
-  AppDialog,
-  DialogContentWrapper,
-} from "components/AppComponents/AppDialog/AppDialog";
-import { ILockPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
-import {
-  InfoLabel,
-  InfoValue,
-  InfoWrapper,
-  ModalDescription,
-} from "components/AppComponents/AppBox/AppBox";
 import InfoIcon from "@mui/icons-material/Info";
-import {
-  ButtonPrimary,
-  CancelButton,
-} from "components/AppComponents/AppButton/AppButton";
+import { ILockPosition } from "fathom-sdk";
+
 import useEarlyUnstake from "hooks/Staking/useEarlyUnstake";
-import {
-  ButtonsWrapper,
-  InfoMessageWrapper,
-} from "components/Staking/Dialog/ClaimRewardsDialog";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
 import useSharedContext from "context/shared";
 
+import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
+import {
+  BaseInfoBox,
+  BaseWarningBox,
+  InfoLabel,
+  InfoValue,
+  InfoWrapper,
+} from "components/Base/Boxes/StyledBoxes";
+import {
+  BaseDialogContentWrapper,
+  BaseDialogDescription,
+  BaseDialogWrapperLight,
+} from "components/Base/Dialog/StyledDialog";
+import {
+  BaseButtonPrimary,
+  BaseCancelButton,
+} from "components/Base/Buttons/StyledButtons";
+
 const UnstakeGrid = styled(Grid)`
   width: auto;
   &.MuiGrid-container {
-    margin: 0 17px;
-    padding: 10px 0;
-
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-      margin: 0;
-    }
+    margin: 20px 0;
+    padding: 0;
   }
 `;
 
-const ConfirmButton = styled(ButtonPrimary)`
+const ConfirmButton = styled(BaseButtonPrimary)`
   width: 100%;
   height: 48px;
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
-`;
-
-export const WarningBlock = styled(Box)`
-  background: #452508;
-  border: 1px solid #5c310a;
-  border-radius: 8px;
-  color: #f7b06e;
-  display: flex;
-  align-items: center;
-  padding: 8px 16px;
-  gap: 12px;
-  font-size: 14px;
-  margin: 20px 15px 25px 15px;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    margin: 20px 0 25px 0;
-  }
 `;
 
 const InfoLabelError = styled(InfoLabel)`
@@ -101,49 +82,42 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
   const { isMobile } = useSharedContext();
 
   return (
-    <AppDialog
+    <BaseDialogWrapperLight
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
       maxWidth="sm"
-      color="primary"
       data-testid="dao-early-unstake-dialog"
     >
-      <AppDialogTitle
+      <BaseDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
         data-testid="dao-early-unstake-dialog-title"
       >
         Early Unstake
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
-        <ModalDescription data-testid="dao-early-unstake-dialog-description">
-          Position lock time has not yet passed - by requesting <br />
-          Early Unstake - you will pay the penalty. <br />
-          Ensure you Claim Rewards before Unstaking so as not to lose your
-          rewards.
-        </ModalDescription>
-        <DialogContentWrapper data-testid="dao-early-unstake-dialog-requesting-unstake-content">
+        <BaseDialogDescription data-testid="dao-early-unstake-dialog-description">
+          You will be unstaking the position since unstaking early can exhause
+          the pool sharing and penalty fee will apply based your locking period
+          left.
+        </BaseDialogDescription>
+        <BaseDialogContentWrapper data-testid="dao-early-unstake-dialog-requesting-unstake-content">
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
-          <Box>You’re requesting to unstake</Box>
+          <Box sx={{ fontSize: "18px" }}>
+            You’re requesting to unstake early
+          </Box>
           <Box className={"amount"}>
             <Box>{formatPercentage(unstakeAmount / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
-        </DialogContentWrapper>
-
-        <UnstakeGrid
-          container
-          sx={{ "&.MuiGrid-container": { marginBottom: "20px" } }}
-        >
+        </BaseDialogContentWrapper>
+        <UnstakeGrid container>
           <Grid item xs={12}>
             <InfoWrapper>
-              <InfoLabel>
-                Total Available
-                <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
-              </InfoLabel>
+              <InfoLabel>You locked</InfoLabel>
               <InfoValue>
                 {formatPercentage(unstakeAmount / 10 ** 18)} {token}
               </InfoValue>
@@ -156,24 +130,21 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
               </InfoValueError>
             </InfoWrapper>
             <InfoWrapper>
-              <InfoLabel>
-                Maximum Received
-                <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
-              </InfoLabel>
+              <InfoLabel>You'll receive</InfoLabel>
               <InfoValue>
                 {formatPercentage(unstakeAmountWithFee / 10 ** 18)} {token}
               </InfoValue>
             </InfoWrapper>
           </Grid>
         </UnstakeGrid>
-        <WarningBlock>
-          <InfoIcon sx={{ fontSize: "18px", color: "#F5953D" }} />
-          <Typography component={"span"} fontSize="1rem">
-            Penalty fee will be applied.
-          </Typography>
-        </WarningBlock>
+        <BaseWarningBox>
+          <InfoIcon sx={{ fontSize: "18px" }} />
+          <Typography>Penalty fee will be applied.</Typography>
+        </BaseWarningBox>
         <ButtonsWrapper>
-          {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
+          {!isMobile && (
+            <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
+          )}
           <ConfirmButton
             disabled={isLoading}
             isLoading={isLoading}
@@ -181,16 +152,18 @@ const EarlyUnstakeDialog: FC<EarlyUnstakeDialogProps> = ({
           >
             {isLoading ? <CircularProgress size={30} /> : "Yes, Unstake"}
           </ConfirmButton>
-          {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
+          {isMobile && (
+            <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
+          )}
         </ButtonsWrapper>
-        <InfoMessageWrapper>
-          <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
+        <BaseInfoBox sx={{ marginTop: "20px" }}>
+          <InfoIcon sx={{ fontSize: "18px" }} />
           <Typography>
             Proceeding will prompt you to sign 1 txn in MetaMask.
           </Typography>
-        </InfoMessageWrapper>
+        </BaseInfoBox>
       </DialogContent>
-    </AppDialog>
+    </BaseDialogWrapperLight>
   );
 };
 

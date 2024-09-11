@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useServices } from "context/services";
+import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { ZERO_ADDRESS } from "utils/Constants";
-import { ProposeProps } from "components/Governance/Propose";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+import { useNavigate } from "react-router-dom";
 
 type ActionType = {
   target: string;
@@ -30,9 +31,10 @@ const defaultValues = {
   link: "",
   agreement: false,
   actions: [EMPTY_ACTION],
+  isApproved: false,
 };
 
-const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
+const useCreateProposal = () => {
   const { proposalService } = useServices();
   const { account, chainId } = useConnector();
 
@@ -42,6 +44,9 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<string>("0");
   const [minimumVBalance, setMinimumVBalance] = useState<number>();
+  const navigate = useNavigate();
+  const { setShowSuccessAlertHandler } = useAlertAndTransactionContext();
+  const { setLastTransactionBlock } = useSyncContext();
 
   const methods = useForm({
     defaultValues,
@@ -58,8 +63,6 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
     control,
     name: "actions",
   });
-
-  const { setLastTransactionBlock } = useSyncContext();
 
   const withAction = watch("withAction");
 
@@ -100,6 +103,11 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
       reset(values as unknown as typeof defaultValues);
     }
   }, [reset]);
+
+  const onClose = useCallback(() => {
+    setShowSuccessAlertHandler(true, "Proposal created successfully");
+    navigate("/dao/governance");
+  }, [navigate]);
 
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
@@ -176,7 +184,8 @@ const useCreateProposal = (onClose: ProposeProps["onClose"]) => {
   const saveForLater = useCallback(() => {
     const values = getValues();
     localStorage.setItem("createProposal", JSON.stringify(values));
-  }, [getValues]);
+    setShowSuccessAlertHandler(true, "Proposal saved for later");
+  }, [getValues, setShowSuccessAlertHandler]);
 
   const appendAction = useCallback(() => {
     append(EMPTY_ACTION);

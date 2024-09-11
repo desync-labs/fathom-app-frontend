@@ -62,12 +62,12 @@ const ProposeNotices: FC<ProposeNoticesProps> = ({
   }, [minimumVBalance, vBalance]);
 
   return vBalanceError ? (
-    <ErrorBox sx={{ my: 3 }}>
+    <ErrorBox sx={{ my: 1.5 }}>
       <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
       <ErrorMessage>{getInfo()}</ErrorMessage>
     </ErrorBox>
   ) : (
-    <WarningBox sx={{ my: 3 }}>
+    <WarningBox sx={{ my: 1.5 }}>
       <InfoIcon sx={{ width: "16px", color: "#F5953D", height: "16px" }} />
       <Typography>{getInfo()}</Typography>
     </WarningBox>

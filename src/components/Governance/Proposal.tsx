@@ -1,21 +1,11 @@
-import { Grid, Icon, Container } from "@mui/material";
-import { BackToProposalsButton } from "components/AppComponents/AppButton/AppButton";
+import { Container, Grid } from "@mui/material";
 import ProposalInfo from "components/Governance/Proposal/ProposalInfo";
 import ProposalVoting from "components/Governance/Proposal/ProposalVoting";
-
-import useProposalContext from "context/proposal";
-
-import BackSrc from "assets/svg/back.svg";
 import useSharedContext from "context/shared";
-
-const BackIcon = () => (
-  <Icon sx={{ height: "21px" }}>
-    <img alt="staking-icon" src={BackSrc} />
-  </Icon>
-);
+import ProposalViewTopBar from "components/Governance/Proposal/ProposalViewTopBar";
+import ProposalHistory from "./Proposal/ProposalHistory";
 
 const ProposalView = () => {
-  const { back } = useProposalContext();
   const { isMobile } = useSharedContext();
 
   return (
@@ -23,16 +13,16 @@ const ProposalView = () => {
       maxWidth="lg"
       sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4, px: isMobile ? 0 : 2 }}
     >
-      <Grid container spacing={isMobile ? 1 : 5}>
-        <Grid item xs={12}>
-          <BackToProposalsButton onClick={back}>
-            <BackIcon />
-            Back to All Proposals
-          </BackToProposalsButton>
+      <ProposalViewTopBar />
+      <Grid container>
+        <Grid item xs={7.8}>
+          <ProposalInfo />
         </Grid>
-        {isMobile && <ProposalVoting />}
-        <ProposalInfo />
-        {!isMobile && <ProposalVoting />}
+        <Grid xs={0.2}></Grid>
+        <Grid item xs={4}>
+          <ProposalVoting />
+          <ProposalHistory />
+        </Grid>
       </Grid>
     </Container>
   );

@@ -4,8 +4,8 @@ import { ITimeObject } from "fathom-sdk";
 const StakingCountdown: FC<{ timeObject: ITimeObject }> = ({ timeObject }) => {
   return (
     <>
-      {timeObject.days} days {timeObject.hour} hrs {timeObject.min} min{" "}
-      {timeObject.sec} sec left
+      {timeObject.days} D : {timeObject.hour} H : {timeObject.min} M :{" "}
+      {timeObject.sec} S
     </>
   );
 };

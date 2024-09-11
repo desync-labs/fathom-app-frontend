@@ -29,6 +29,7 @@ import Web3Status from "components/Web3Status/Web3Status";
 
 import AllProposalsView from "components/Governance/ViewAllProposals";
 import ProposalView from "components/Governance/Proposal";
+import Propose from "components/Governance/Propose";
 
 import StakingView from "components/Staking/StakingView";
 import AlertMessages from "components/Common/AlertMessages";
@@ -566,6 +567,10 @@ const MainLayout = () => {
                           <ProposalView />
                         </ProposalProvider>
                       }
+                    />
+                    <Route
+                      path="governance/proposal/create"
+                      element={<Propose />}
                     />
                     <Route
                       path="*"

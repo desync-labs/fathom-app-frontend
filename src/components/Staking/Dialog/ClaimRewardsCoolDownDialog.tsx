@@ -1,20 +1,21 @@
-import {
-  AppDialog,
-  DialogContentWrapper,
-} from "components/AppComponents/AppDialog/AppDialog";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import { Box, DialogContent } from "@mui/material";
-import {
-  ButtonPrimary,
-  CancelButton,
-} from "components/AppComponents/AppButton/AppButton";
-import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
 import { FC, memo } from "react";
+import { Box, DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import BigNumber from "bignumber.js";
+
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
-import BigNumber from "bignumber.js";
 import useSharedContext from "context/shared";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
+import {
+  BaseDialogContentWrapper,
+  BaseDialogDescription,
+  BaseDialogWrapperLight,
+} from "components/Base/Dialog/StyledDialog";
+import {
+  BaseButtonPrimary,
+  BaseCancelButton,
+} from "components/Base/Buttons/StyledButtons";
 
 const ButtonsWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "onContinue",
@@ -43,7 +44,7 @@ const ButtonsWrapper = styled(Box, {
   }
 `;
 
-const ConfirmButton = styled(ButtonPrimary)`
+const ConfirmButton = styled(BaseButtonPrimary)`
   height: 48px;
   font-weight: 600;
   font-size: 17px;
@@ -65,25 +66,24 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
 }) => {
   const { isMobile } = useSharedContext();
   return (
-    <AppDialog
+    <BaseDialogWrapperLight
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
       maxWidth="sm"
-      color="primary"
     >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Claim Rewards Cooling Down ...
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
-        <ModalDescription>
+        <BaseDialogDescription>
           You successfully requested to claim rewards. Now it's going to a
           “Cooldown" period for 5 days. After this period, you'll be able to
           Withdraw it at My Stats &gt; Ready to Withdraw.
-        </ModalDescription>
-        <DialogContentWrapper>
+        </BaseDialogDescription>
+        <BaseDialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to claim</Box>
           <Box className={"amount"}>
@@ -96,10 +96,12 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
             </Box>
             <span>{token}</span>
           </Box>
-        </DialogContentWrapper>
+        </BaseDialogContentWrapper>
         <ButtonsWrapper onContinue={!!onContinue}>
           {!isMobile && (
-            <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
+            <BaseCancelButton onClick={onClose}>
+              Back to My Positions
+            </BaseCancelButton>
           )}
           {onContinue && (
             <ConfirmButton onClick={onContinue}>
@@ -107,11 +109,13 @@ const ClaimRewardsCoolDownDialog: FC<ClaimRewardsDialogProps> = ({
             </ConfirmButton>
           )}
           {isMobile && (
-            <CancelButton onClick={onClose}>Back to My Positions</CancelButton>
+            <BaseCancelButton onClick={onClose}>
+              Back to My Positions
+            </BaseCancelButton>
           )}
         </ButtonsWrapper>
       </DialogContent>
-    </AppDialog>
+    </BaseDialogWrapperLight>
   );
 };
 

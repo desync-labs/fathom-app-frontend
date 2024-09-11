@@ -1,42 +1,28 @@
 import { FC } from "react";
-import { styled } from "@mui/material/styles";
-import MuiLinearProgress, {
-  LinearProgressProps,
-} from "@mui/material/LinearProgress";
 import {
-  Box,
   Button,
-  ButtonGroup,
   CircularProgress,
-  Grid,
   Typography,
+  Box,
+  Divider,
+  ButtonGroup,
+  LinearProgress,
+  linearProgressClasses,
+  styled,
 } from "@mui/material";
-import { ProposalStatus } from "utils/Constants";
 import useProposalContext from "context/proposal";
-import useSharedContext from "context/shared";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
 import {
-  ImageSrc,
   ProposalItemStatus,
+  StatusIcon,
 } from "components/Governance/ViewAllProposalItem";
 import { VotingEndedButton } from "components/AppComponents/AppButton/AppButton";
 import WalletConnectBtn from "components/Common/WalletConnectBtn";
+import { BasePaper } from "components/Base/Paper/StyledPaper";
+import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 
-const ProposalStatusBox = styled(Box)`
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 24px;
-`;
-
-function LinearProgress(props: LinearProgressProps) {
-  return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%" }}>
-        <MuiLinearProgress variant="determinate" {...props} />
-      </Box>
-    </Box>
-  );
-}
+import BigNumber from "bignumber.js";
+import { formatNumber } from "utils/format";
+import { ProposalStatus } from "utils/Constants";
 
 const VoteButtonGroup = styled(ButtonGroup)`
   width: 100%;
@@ -57,32 +43,6 @@ const VoteButtonGroup = styled(ButtonGroup)`
       border: 1px solid #b3fff9;
       color: #00332f;
     }
-  }
-`;
-
-const VotingWrapperBox = styled(Box)`
-  background: rgba(79, 101, 140, 0.2);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 10px;
-  > div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  > div > p {
-    color: #fff;
-  }
-
-  > div > p:first-of-type {
-    text-transform: uppercase;
-    font-size: 15px;
-    font-weight: bold;
-  }
-  ,
-  > div > p:last-child {
-    font-size: 14px;
   }
 `;
 
@@ -144,7 +104,85 @@ const Buttons: FC<ButtonsProps> = ({
   );
 };
 
-const ProposalVoting = () => {
+const VotingTitle = styled(Typography)`
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+`;
+
+const VotersLabel = styled(Typography)`
+  color: #8ea4cc;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+`;
+
+const VotersCount = styled(Typography)`
+  color: #fff;
+  text-align: right;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+`;
+
+const VoteProgressItem = styled(Box)`
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(79, 101, 140, 0.2);
+  cursor: pointer;
+  padding: 12px;
+
+  &:hover {
+    border: 1px solid #43fff1;
+  }
+`;
+const VoteProgressItemLabel = styled(Typography)`
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+`;
+
+export const LinearProgressForVotes = styled(LinearProgress)(() => ({
+  height: 4,
+  borderRadius: 10,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: "#566E99",
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 10,
+    backgroundColor: "#3DA329",
+  },
+}));
+
+export const LinearProgressAgainstVoted = styled(LinearProgress)(() => ({
+  height: 4,
+  borderRadius: 10,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: "#566E99",
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 10,
+    backgroundColor: "#F04242",
+  },
+}));
+
+export const LinearProgressAbstainsVoted = styled(LinearProgress)(() => ({
+  height: 4,
+  borderRadius: 10,
+  [`&.${linearProgressClasses.colorPrimary}`]: {
+    backgroundColor: "#566E99",
+  },
+  [`& .${linearProgressClasses.bar}`]: {
+    borderRadius: 10,
+    backgroundColor: "#43FFF1",
+  },
+}));
+
+const ProposalVoting: FC = () => {
   const {
     account,
     hasVoted,
@@ -152,69 +190,133 @@ const ProposalVoting = () => {
     forVotes,
     abstainVotes,
     againstVotes,
+    fetchedProposal,
+    fetchedTotalVotes,
     vote,
     status,
     quorumError,
+    vFTHMTotalSupply,
   } = useProposalContext();
-  const { isMobile } = useSharedContext();
 
   return (
-    <Grid item xs={12} md={4} lg={4}>
-      <AppPaper sx={{ padding: isMobile ? "20px 12px 25px" : "24px" }}>
-        <Box sx={{ width: "100%" }}>
-          <ProposalStatusBox>Proposal Status</ProposalStatusBox>
-          <ProposalDetailsStatus
-            className={status?.toLowerCase()}
-            sx={{ margin: "10px 0" }}
-          >
-            {["Defeated", "Succeeded"].includes(status as string) ? (
-              <img src={ImageSrc[status as string]} alt={status} />
-            ) : null}
-            {quorumError ? "Voting quorum was not reached" : status}
-          </ProposalDetailsStatus>
-          <Box sx={{ margin: "30px 0" }}>
-            <VotingWrapperBox>
-              <Box>
-                <Typography gutterBottom>For</Typography>
-                <Typography>{Math.round(forVotes)}%</Typography>
-              </Box>
-
-              <LinearProgress
-                variant="determinate"
-                color={"success"}
-                value={forVotes}
-              />
-            </VotingWrapperBox>
-
-            <VotingWrapperBox>
-              <Box>
-                <Typography gutterBottom>Against</Typography>
-                <Typography>{Math.round(againstVotes)}%</Typography>
-              </Box>
-
-              <LinearProgress
-                variant="determinate"
-                color={"error"}
-                value={againstVotes}
-              />
-            </VotingWrapperBox>
-
-            <VotingWrapperBox>
-              <Box>
-                <Typography gutterBottom>Abstains</Typography>
-                <Typography variant={"body2"} color="text.secondary">
-                  {Math.round(abstainVotes)}%
-                </Typography>
-              </Box>
-
-              <LinearProgress
-                variant="determinate"
-                color={"info"}
-                value={abstainVotes}
-              />
-            </VotingWrapperBox>
+    <BasePaper>
+      <BaseFlexBox>
+        <VotingTitle>Proposal Status</VotingTitle>
+        <ProposalDetailsStatus status={status} sx={{ margin: "10px 0" }}>
+          <StatusIcon status={status} />
+          {quorumError ? "Voting quorum was not reached" : status}
+        </ProposalDetailsStatus>
+      </BaseFlexBox>
+      <Divider sx={{ borderColor: "#2C4066", marginY: "12px" }} />
+      <BaseFlexBox sx={{ marginBottom: "18px" }}>
+        <VotersLabel>Total Voting power</VotersLabel>
+        <VotersCount>
+          {formatNumber(
+            BigNumber(vFTHMTotalSupply)
+              .dividedBy(10 ** 18)
+              .toNumber()
+          )}{" "}
+          vFTHM
+        </VotersCount>
+      </BaseFlexBox>
+      <BaseFlexBox>
+        <VotersLabel>Total Votes</VotersLabel>
+        <VotersCount>
+          {formatNumber(
+            BigNumber(fetchedTotalVotes)
+              .dividedBy(10 ** 18)
+              .toNumber()
+          )}{" "}
+          vFTHM
+        </VotersCount>
+      </BaseFlexBox>
+      <BaseFlexBox
+        sx={{
+          flexDirection: "column",
+          alignItems: "stretch",
+          gap: 1,
+          marginTop: "24px",
+        }}
+      >
+        <VoteProgressItem>
+          <BaseFlexBox>
+            <VoteProgressItemLabel>For</VoteProgressItemLabel>
+            {fetchedProposal?.forVotes && fetchedTotalVotes ? (
+              <VotersCount>
+                {formatNumber(
+                  BigNumber(fetchedProposal.forVotes)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}{" "}
+                (
+                {BigNumber(fetchedProposal.forVotes / fetchedTotalVotes)
+                  .multipliedBy(100)
+                  .toFixed(2)}
+                %)
+              </VotersCount>
+            ) : (
+              <VotersCount>0 (0.00%)</VotersCount>
+            )}
+          </BaseFlexBox>
+          <Box sx={{ width: "100%", marginTop: "12px" }}>
+            <LinearProgressForVotes variant="determinate" value={forVotes} />
           </Box>
-        </Box>
+        </VoteProgressItem>
+        <VoteProgressItem>
+          <BaseFlexBox>
+            <VoteProgressItemLabel>Against</VoteProgressItemLabel>
+            {fetchedProposal?.againstVotes && fetchedTotalVotes ? (
+              <VotersCount>
+                {formatNumber(
+                  BigNumber(fetchedProposal.againstVotes)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}{" "}
+                (
+                {BigNumber(fetchedProposal.againstVotes / fetchedTotalVotes)
+                  .multipliedBy(100)
+                  .toFixed(2)}
+                %)
+              </VotersCount>
+            ) : (
+              <VotersCount>0 (0.00%)</VotersCount>
+            )}
+          </BaseFlexBox>
+          <Box sx={{ width: "100%", marginTop: "12px" }}>
+            <LinearProgressAgainstVoted
+              variant="determinate"
+              value={againstVotes}
+            />
+          </Box>
+        </VoteProgressItem>
+        <VoteProgressItem>
+          <BaseFlexBox>
+            <VoteProgressItemLabel>Abstains</VoteProgressItemLabel>
+            {fetchedProposal.abstainVotes && fetchedTotalVotes ? (
+              <VotersCount>
+                {formatNumber(
+                  BigNumber(fetchedProposal.abstainVotes)
+                    .dividedBy(10 ** 18)
+                    .toNumber()
+                )}{" "}
+                (
+                {BigNumber(fetchedProposal.abstainVotes / fetchedTotalVotes)
+                  .multipliedBy(100)
+                  .toFixed(2)}
+                %)
+              </VotersCount>
+            ) : (
+              <VotersCount>0 (0.00%)</VotersCount>
+            )}
+          </BaseFlexBox>
+          <Box sx={{ width: "100%", marginTop: "12px" }}>
+            <LinearProgressAbstainsVoted
+              variant="determinate"
+              value={abstainVotes}
+            />
+          </Box>
+        </VoteProgressItem>
+
         <Buttons
           account={account}
           hasVoted={hasVoted}
@@ -222,8 +324,8 @@ const ProposalVoting = () => {
           vote={vote}
           votePending={votePending as string}
         />
-      </AppPaper>
-    </Grid>
+      </BaseFlexBox>
+    </BasePaper>
   );
 };
 

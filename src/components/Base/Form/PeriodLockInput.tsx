@@ -1,10 +1,13 @@
 import { FC, memo, useCallback, useEffect, useState } from "react";
-import { IconButton, Popover, styled, ToggleButton } from "@mui/material";
-import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import dayjs from "dayjs";
 import DatePicker from "react-datepicker";
+import { FieldError } from "react-hook-form";
+import InfoIcon from "@mui/icons-material/Info";
+import { Box, IconButton, Popover, styled, ToggleButton } from "@mui/material";
+import CalendarTodayOutlinedIcon from "@mui/icons-material/CalendarTodayOutlined";
 import "react-datepicker/dist/react-datepicker.css";
 import {
+  BaseFormInputErrorWrapper,
   BaseFormInputLabel,
   BaseFormInputWrapper,
   BaseFormLabelRow,
@@ -21,14 +24,18 @@ const DatePickerButton = styled(IconButton)`
   top: 8px;
 `;
 
-interface BaseDateRangePickerProps {
+interface PeriodLockInputProps {
   range: number;
-  handleChangeRange: (range: number) => void;
+  minLockPeriod: number;
+  handleChangeRange: (...event: any[]) => void;
+  error?: FieldError | undefined;
 }
 
-const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
+const PeriodLockInput: FC<PeriodLockInputProps> = ({
   range,
+  minLockPeriod,
   handleChangeRange,
+  error,
 }) => {
   const [startDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date | undefined>();
@@ -74,18 +81,68 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
 
   const open = Boolean(anchorEl);
   const id = open ? "date-range-popover" : undefined;
+
   return (
     <DateRangePickerWrapper>
       <BaseFormLabelRow>
-        <BaseFormInputLabel>Position duration</BaseFormInputLabel>
+        <BaseFormInputLabel>Lock period</BaseFormInputLabel>
       </BaseFormLabelRow>
       <BaseFormInputWrapper sx={{ marginBottom: 0 }}>
         <RangeTextFields
           type="number"
           value={range}
-          inputProps={{ min: 1, max: 180, step: 1 }}
-          onChange={(e) => handleChangeEndDate(Number(e.target.value))}
+          inputProps={{ min: minLockPeriod, max: 365, step: 1 }}
+          onChange={handleChangeRange}
           placeholder="Number of Days"
+          error={!!error}
+          helperText={
+            <>
+              {error && error.type === "max" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    The maximum staking period of 365 days has been exceeded
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+              {error && error.type === "required" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    Lock period is required
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+              {error && error.type === "min" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    Minimum lock period is {minLockPeriod} day.
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+              {error && error.type === "pattern" && (
+                <BaseFormInputErrorWrapper>
+                  <InfoIcon sx={{ float: "left", fontSize: "14px" }} />
+                  <Box
+                    component={"span"}
+                    sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                  >
+                    {error.message}
+                  </Box>
+                </BaseFormInputErrorWrapper>
+              )}
+            </>
+          }
         />
         <DatePickerButton onClick={handleOpen}>
           <CalendarTodayOutlinedIcon
@@ -119,17 +176,17 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
       </BaseFormInputWrapper>
       <BaseSlider
         value={range}
-        min={1}
-        max={180}
+        min={minLockPeriod}
+        max={365}
         step={1}
-        onChange={(e, newValue: number | number[]) =>
-          handleChangeEndDate(newValue as number)
-        }
+        onChange={handleChangeRange}
         aria-labelledby="input-slider"
       />
-      <BaseFormInputWrapper>
+      <BaseFormInputWrapper sx={{ marginTop: "8px" }}>
         <BaseFormLabelRow mb="8px">
-          <BaseFormInputLabel>Recommend period</BaseFormInputLabel>
+          <BaseFormInputLabel sx={{ color: "#fff" }}>
+            Recommend period
+          </BaseFormInputLabel>
         </BaseFormLabelRow>
         <BaseToggleButtonGroup
           value={range}
@@ -146,8 +203,11 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
           <ToggleButton selected={range > 60 && range <= 90} value={90}>
             3-Month
           </ToggleButton>
-          <ToggleButton selected={range > 90} value={180}>
-            6-Month
+          <ToggleButton selected={range > 90 && range <= 180} value={180}>
+            Half-Year
+          </ToggleButton>
+          <ToggleButton selected={range > 180} value={365}>
+            1-Year
           </ToggleButton>
         </BaseToggleButtonGroup>
       </BaseFormInputWrapper>
@@ -155,4 +215,4 @@ const BaseDateRangePicker: FC<BaseDateRangePickerProps> = ({
   );
 };
 
-export default memo(BaseDateRangePicker);
+export default memo(PeriodLockInput);
