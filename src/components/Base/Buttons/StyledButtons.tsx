@@ -257,6 +257,10 @@ export const BaseToggleButtonGroup = styled(ToggleButtonGroup)`
     &:hover {
       background: rgba(79, 101, 140, 0.1);
     }
+
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      font-size: 10px;
+    }
   }
 `;
 

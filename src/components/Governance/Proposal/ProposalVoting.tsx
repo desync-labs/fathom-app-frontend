@@ -23,6 +23,7 @@ import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import BigNumber from "bignumber.js";
 import { formatNumber } from "utils/format";
 import { ProposalStatus } from "utils/Constants";
+import useSharedContext from "context/shared";
 
 const VoteButtonGroup = styled(ButtonGroup)`
   width: 100%;
@@ -199,13 +200,15 @@ const ProposalVoting: FC = () => {
     vFTHMTotalSupply,
   } = useProposalContext();
 
+  const { isMobile } = useSharedContext();
+
   return (
     <BasePaper>
       <BaseFlexBox>
         <VotingTitle>Proposal Status</VotingTitle>
         <ProposalDetailsStatus status={status} sx={{ margin: "10px 0" }}>
           <StatusIcon status={status} />
-          {quorumError ? "Voting quorum was not reached" : status}
+          {quorumError && !isMobile ? "Voting quorum was not reached" : status}
         </ProposalDetailsStatus>
       </BaseFlexBox>
       <Divider sx={{ borderColor: "#2C4066", marginY: "12px" }} />
