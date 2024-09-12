@@ -44,9 +44,7 @@ import requiredSrc from "assets/svg/required.svg";
 import PlusSm from "assets/svg/PlusSm.svg";
 import BackSrc from "assets/svg/back.svg";
 import { useNavigate } from "react-router-dom";
-import ProposeEditor from "./Propose/ProposeEditor";
-import { EditorState, convertToRaw } from "draft-js";
-import draftToHtml from "draftjs-to-html";
+import ProposeEditor from "components/Governance/Propose/ProposeEditor";
 
 export const ProposeLabel = styled(BaseFormInputLabel)`
   color: #fff;
@@ -196,18 +194,6 @@ const Propose: FC = () => {
     appendAction,
     removeAction,
   } = useCreateProposal();
-
-  console.log({
-    description: methods.watch("description")
-      ? draftToHtml(
-          convertToRaw(
-            (
-              methods.watch("description") as unknown as EditorState
-            )?.getCurrentContent()
-          )
-        )
-      : "",
-  });
 
   const { isMobile } = useSharedContext();
   const navigate = useNavigate();
