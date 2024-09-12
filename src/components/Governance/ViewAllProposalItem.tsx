@@ -17,6 +17,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
 import { useNavigate } from "react-router-dom";
+import useSharedContext from "../../context/shared";
 
 type ViewAllProposalItemProps = {
   proposal: IProposal;
@@ -39,7 +40,7 @@ const ProposalIdTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
 ))(() => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: "#0D1526",
+    color: "#2a3e5a",
   },
   [`& .${tooltipClasses.tooltip}`]: {
     background: "#2a3e5a",
@@ -137,6 +138,7 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
     status,
     quorumError,
   } = useViewProposalItem(proposal);
+  const { isMobile } = useSharedContext();
 
   const navigate = useNavigate();
 
@@ -158,7 +160,9 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
           {status && (
             <ProposalItemStatus status={status}>
               <StatusIcon status={status} />
-              {quorumError ? "Voting quorum was not reached" : status}
+              {quorumError && !isMobile
+                ? "Voting quorum was not reached"
+                : status}
             </ProposalItemStatus>
           )}
           {useMemo(

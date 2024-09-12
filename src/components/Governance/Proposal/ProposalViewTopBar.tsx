@@ -9,6 +9,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import useProposalContext from "context/proposal";
+import useSharedContext from "../../../context/shared";
 
 const StyledBreadcrumb = styled(Chip)(() => {
   return {
@@ -38,6 +39,7 @@ const StyledBreadcrumb = styled(Chip)(() => {
 const ProposalViewTopBar: FC = () => {
   const navigate = useNavigate();
   const { fetchedProposal } = useProposalContext();
+  const { isMobile } = useSharedContext();
 
   return (
     <BaseFlexBox sx={{ marginBottom: "25px" }}>
@@ -51,7 +53,13 @@ const ProposalViewTopBar: FC = () => {
           onClick={() => navigate("/dao/governance/")}
         />
         <StyledBreadcrumb
-          label={`Proposal #${fetchedProposal?.proposalId}`}
+          label={`Proposal #${
+            isMobile
+              ? fetchedProposal.proposalId?.substring(0, 4) +
+                " ... " +
+                fetchedProposal.proposalId?.slice(-4)
+              : fetchedProposal?.proposalId
+          }`}
           className="disabled"
         />
       </Breadcrumbs>

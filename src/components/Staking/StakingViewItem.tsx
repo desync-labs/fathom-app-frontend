@@ -110,6 +110,9 @@ const CoolDownInfo = styled(Box)`
   gap: 4px;
   width: 100%;
   height: 100%;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    align-items: start;
+  }
 `;
 
 const StakingViewItemButton = styled(BaseButtonSecondary)`
@@ -145,7 +148,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   return (
     <StakingViewItemWrapper data-testid={`dao-position-${lockPosition.lockId}`}>
       <Grid container spacing={1} alignItems="center">
-        <Grid item xs={2}>
+        <Grid item sm={2} xs={6}>
           <BaseFlexBox sx={{ justifyContent: "flex-start", gap: "20px" }}>
             <Index>{lockPosition.lockId}</Index>
             <Box>
@@ -164,7 +167,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Box>
           </BaseFlexBox>
         </Grid>
-        <Grid item xs={2}>
+        <Grid item sm={2} xs={6}>
           <Label>Locking Time</Label>
           <Value
             className={"orange flex"}
@@ -178,30 +181,43 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
           </Value>
           <Spacer />
         </Grid>
-        <Grid item xs={1.5}>
-          <Label>Rewards Accrued</Label>
-          <Value
-            className={"green"}
-            data-testid={`dao-position-${lockPosition.lockId}-rewardsAccruedValue`}
-          >
-            {formatPercentage(
-              BigNumber(rewardsAvailable)
-                .dividedBy(10 ** 18)
-                .toNumber()
-            )}{" "}
-            {token}
-            <span>
-              $
+        <Grid
+          item
+          xs={6}
+          sm={1.5}
+          sx={(theme) => ({
+            [theme.breakpoints.only("xs")]: {
+              display: "flex",
+              gap: "20px",
+            },
+          })}
+        >
+          <Box sx={{ width: "36px" }}></Box>
+          <Box>
+            <Label>Rewards Accrued</Label>
+            <Value
+              className={"green"}
+              data-testid={`dao-position-${lockPosition.lockId}-rewardsAccruedValue`}
+            >
               {formatPercentage(
                 BigNumber(rewardsAvailable)
                   .dividedBy(10 ** 18)
-                  .multipliedBy(fthmPriceFormatted)
                   .toNumber()
-              )}
-            </span>
-          </Value>
+              )}{" "}
+              {token}
+              <span>
+                $
+                {formatPercentage(
+                  BigNumber(rewardsAvailable)
+                    .dividedBy(10 ** 18)
+                    .multipliedBy(fthmPriceFormatted)
+                    .toNumber()
+                )}
+              </span>
+            </Value>
+          </Box>
         </Grid>
-        <Grid item xs={1.5}>
+        <Grid item xs={6} sm={1.5}>
           <Label>Voting Power</Label>
           <Value
             data-testid={`dao-position-${lockPosition.lockId}-votingPowerValue`}
@@ -212,7 +228,12 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             <Spacer />
           </Value>
         </Grid>
-        <Grid item xs={5} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Grid
+          item
+          xs={12}
+          sm={5}
+          sx={{ display: "flex", justifyContent: "flex-end" }}
+        >
           <RewardsUnStakeWrapper>
             <Box>
               <Penalty

@@ -21,6 +21,7 @@ import { ChainId } from "connectors/networks";
 import { getAccountUrl } from "utils/explorer";
 import { ZERO_ADDRESS } from "utils/Constants";
 import { secondsToTime } from "utils/secondsToTime";
+import useSharedContext from "../../../context/shared";
 
 const ProposalTitle = styled(Typography)`
   color: #fff;
@@ -108,6 +109,7 @@ const ProposalInfo: FC = () => {
   } = useProposalContext();
 
   const { chainId } = useConnector();
+  const { isMobile } = useSharedContext();
 
   return (
     <BasePaper>
@@ -115,12 +117,12 @@ const ProposalInfo: FC = () => {
         {getTitleDescription(fetchedProposal.description, 0)}
       </ProposalTitle>
       <BaseFlexBox sx={{ justifyContent: "flex-start", alignItems: "start" }}>
-        <Box width={"25%"}>
+        <Box width={isMobile ? "35%" : "25%"}>
           <TimeLabel>Submit time</TimeLabel>
           <TimeValue>{submitTime}</TimeValue>
         </Box>
 
-        <Box width={"25%"}>
+        <Box width={isMobile ? "35%" : "25%"}>
           <TimeLabel>Exp. Voting starts:</TimeLabel>
           <TimeValue>{votingStartsTime}</TimeValue>
           <TimeBlock>Start block: {fetchedProposal.startBlock}</TimeBlock>

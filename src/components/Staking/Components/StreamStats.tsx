@@ -200,10 +200,12 @@ const StreamStats: FC = () => {
             <StatsLabel>Daily rewards</StatsLabel>
             {protocolStatsInfo && (
               <StatsValue>
-                <strong>
-                  {formatNumber(protocolStatsInfo.oneDayRewards / 10 ** 18)}
-                </strong>
-                FTHM
+                <Box>
+                  <strong>
+                    {formatNumber(protocolStatsInfo.oneDayRewards / 10 ** 18)}
+                  </strong>{" "}
+                  FTHM
+                </Box>
                 <span>
                   $
                   {formatCompact(

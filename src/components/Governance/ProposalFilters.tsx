@@ -45,7 +45,7 @@ const ProposalFilters: FC<ProposalFiltersType> = () => {
   const navigate = useNavigate();
   return (
     <Grid container spacing={1} alignItems={"center"}>
-      <Grid item xs={3}>
+      <Grid item xs={2} sm={3}>
         <AppFormInputWrapper sx={{ margin: 0 }}>
           {/*<AppTextField*/}
           {/*  id="outlined-helperText"*/}
@@ -60,7 +60,7 @@ const ProposalFilters: FC<ProposalFiltersType> = () => {
           {/*/>*/}
         </AppFormInputWrapper>
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1.5} sm={2}>
         {/*<ProposalSelect*/}
         {/*  value={time}*/}
         {/*  onChange={(event) => {*/}
@@ -72,7 +72,7 @@ const ProposalFilters: FC<ProposalFiltersType> = () => {
         {/*  <MenuItem value={2}>2</MenuItem>*/}
         {/*</ProposalSelect>*/}
       </Grid>
-      <Grid item xs={2}>
+      <Grid item xs={1.5} sm={2}>
         {/*<ProposalSelect*/}
         {/*  value={proposals}*/}
         {/*  onChange={(event) => {*/}
@@ -84,7 +84,7 @@ const ProposalFilters: FC<ProposalFiltersType> = () => {
         {/*  <MenuItem value={2}>All proposals 2</MenuItem>*/}
         {/*</ProposalSelect>*/}
       </Grid>
-      <Grid item xs={5}>
+      <Grid item xs={7} sm={5}>
         <AddProposalButton
           onClick={() => navigate("/dao/governance/proposal/create")}
         >

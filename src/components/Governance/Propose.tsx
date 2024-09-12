@@ -44,6 +44,9 @@ import requiredSrc from "assets/svg/required.svg";
 import PlusSm from "assets/svg/PlusSm.svg";
 import BackSrc from "assets/svg/back.svg";
 import { useNavigate } from "react-router-dom";
+import ProposeEditor from "./Propose/ProposeEditor";
+import { EditorState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 
 export const ProposeLabel = styled(BaseFormInputLabel)`
   color: #fff;
@@ -194,6 +197,18 @@ const Propose: FC = () => {
     removeAction,
   } = useCreateProposal();
 
+  console.log({
+    description: methods.watch("description")
+      ? draftToHtml(
+          convertToRaw(
+            (
+              methods.watch("description") as unknown as EditorState
+            )?.getCurrentContent()
+          )
+        )
+      : "",
+  });
+
   const { isMobile } = useSharedContext();
   const navigate = useNavigate();
 
@@ -278,27 +293,14 @@ const Propose: FC = () => {
                         control={control}
                         name="description"
                         rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
+                        render={() => (
                           <FormGroup>
                             <ProposeLabel>
                               Description <Required />
                             </ProposeLabel>
-                            <BaseTextField
-                              error={!!error}
-                              id="outlined-textarea"
-                              multiline
-                              rows={3}
-                              placeholder={
-                                "Ex: Describe how you propose new way in details..."
-                              }
-                              value={value}
-                              onChange={onChange}
-                              helperText={
-                                error && "Field Description is required"
-                              }
+                            <ProposeEditor
+                              control={control}
+                              editorName={"description"}
                             />
                           </FormGroup>
                         )}

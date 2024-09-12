@@ -11,15 +11,15 @@ const ProposalView = () => {
   return (
     <Container
       maxWidth="lg"
-      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4, px: isMobile ? 0 : 2 }}
+      sx={{ mt: isMobile ? 2 : 4, mb: isMobile ? 2 : 4, px: isMobile ? 1 : 2 }}
     >
       <ProposalViewTopBar />
       <Grid container>
-        <Grid item xs={7.8}>
+        <Grid item sm={7.8} xs={12} sx={{ mb: isMobile ? 1.25 : 0 }}>
           <ProposalInfo />
         </Grid>
-        <Grid xs={0.2}></Grid>
-        <Grid item xs={4}>
+        <Grid item sm={0.2} xs={12}></Grid>
+        <Grid item sm={4} xs={12}>
           <ProposalVoting />
           <ProposalHistory />
         </Grid>
