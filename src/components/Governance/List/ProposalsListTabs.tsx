@@ -10,40 +10,24 @@ import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { useNavigate } from "react-router-dom";
 
 const ViewAllProposalsTabsWrapper = styled(AppNavWrapper)`
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 24px;
-    width: 100%;
-    background: #2c4066;
-    padding: 0 16px;
-    z-index: 9;
-  }
   width: 100%;
   padding-bottom: 10px;
   justify-content: space-between;
-`;
-const ViewAllProposalsTabsItem = styled(AppNavItem)`
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    height: 48px;
-    width: fit-content;
-    min-width: unset;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 0;
+    padding-bottom: 3px;
   }
+`;
 
+const ViewAllProposalsTabsItem = styled(AppNavItem)`
   &.active {
     color: #fff;
     border: none;
     border-radius: 8px;
     background: #3d5580;
     padding: 8px 16px;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      padding: 6px 12px;
+    }
   }
 `;
 
@@ -51,8 +35,8 @@ const AddProposalButton = styled(ButtonPrimary)`
   float: right;
   padding: 8px 40px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: 100%;
-    margin-top: 10px;
+    padding: 8px 10px;
+    height: 32px;
   }
 `;
 

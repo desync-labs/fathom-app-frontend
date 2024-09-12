@@ -9,11 +9,7 @@ import {
 } from "components/Governance/Proposal/ProposalInfo";
 import useProposalDraftItem from "hooks/Governance/useProposalDraftItem";
 
-import {
-  htmlToComponent,
-  htmlToSanitize,
-  stripTags,
-} from "utils/htmlToComponent";
+import { htmlToComponent, stripTags } from "utils/htmlToComponent";
 import { ZERO_ADDRESS } from "utils/Constants";
 
 const ProposalDraftInfo = () => {
