@@ -7,6 +7,11 @@ import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import { useNavigate } from "react-router-dom";
+import draftToHtml from "draftjs-to-html";
+import { convertToRaw, EditorState, ContentState } from "draft-js";
+import { v4 as uuidv4 } from "uuid";
+// @ts-ignore
+import DraftPasteProcessor from "draft-js/lib/DraftPasteProcessor";
 
 type ActionType = {
   target: string;
@@ -45,7 +50,8 @@ const useCreateProposal = () => {
   const [notAllowTimestamp, setNotAllowTimestamp] = useState<string>("0");
   const [minimumVBalance, setMinimumVBalance] = useState<number>();
   const navigate = useNavigate();
-  const { setShowSuccessAlertHandler } = useAlertAndTransactionContext();
+  const { setShowSuccessAlertHandler, setShowErrorAlertHandler } =
+    useAlertAndTransactionContext();
   const { setLastTransactionBlock } = useSyncContext();
 
   const methods = useForm({
@@ -97,10 +103,25 @@ const useCreateProposal = () => {
   }, [proposalService, setMinimumVBalance]);
 
   useEffect(() => {
-    let values = localStorage.getItem("createProposal");
-    if (values) {
-      values = JSON.parse(values);
-      reset(values as unknown as typeof defaultValues);
+    let draftProposals = localStorage.getItem("draftProposals");
+    if (draftProposals) {
+      draftProposals = JSON.parse(draftProposals);
+      if (Array.isArray(draftProposals) && draftProposals.length) {
+        const values = draftProposals[0];
+
+        if (values.description && values.description.length) {
+          const formattedDescription = DraftPasteProcessor.processHTML(
+            values.description
+          );
+
+          const contentState =
+            ContentState.createFromBlockArray(formattedDescription);
+
+          values.description = EditorState.createWithContent(contentState);
+        }
+
+        reset(values);
+      }
     }
   }, [reset]);
 
@@ -129,8 +150,10 @@ const useCreateProposal = () => {
       setIsLoading(true);
       try {
         const { descriptionTitle, description, withAction, actions } = values;
-
-        const combinedText = `${descriptionTitle}----------------${description}`;
+        const formattedDescription = draftToHtml(
+          convertToRaw(description?.getCurrentContent())
+        );
+        const combinedText = `${descriptionTitle}----------------${formattedDescription}`;
         let blockNumber;
         if (withAction) {
           const targets: string[] = [];
@@ -162,7 +185,6 @@ const useCreateProposal = () => {
 
         setLastTransactionBlock(blockNumber as number);
         reset();
-        localStorage.removeItem("createProposal");
         onClose();
       } finally {
         setIsLoading(false);
@@ -183,8 +205,39 @@ const useCreateProposal = () => {
 
   const saveForLater = useCallback(() => {
     const values = getValues();
-    localStorage.setItem("createProposal", JSON.stringify(values));
-    setShowSuccessAlertHandler(true, "Proposal saved for later");
+
+    const { description, descriptionTitle } = values;
+
+    if (!descriptionTitle?.trim()) {
+      return setShowErrorAlertHandler(
+        true,
+        "Please enter a proposal title for save it for later."
+      );
+    }
+
+    const draftProposals = localStorage.getItem("draftProposals")
+      ? JSON.parse(localStorage.getItem("draftProposals") as string)
+      : [];
+
+    const formattedValues = {
+      ...values,
+      description:
+        (description as any) instanceof EditorState
+          ? draftToHtml(
+              convertToRaw(
+                (description as unknown as EditorState)?.getCurrentContent()
+              )
+            )
+          : description,
+      created: new Date().toString(),
+      id: uuidv4(),
+    };
+
+    localStorage.setItem(
+      "draftProposals",
+      JSON.stringify([...draftProposals, formattedValues])
+    );
+    setShowSuccessAlertHandler(true, "Proposal successfully saved for later.");
   }, [getValues, setShowSuccessAlertHandler]);
 
   const appendAction = useCallback(() => {

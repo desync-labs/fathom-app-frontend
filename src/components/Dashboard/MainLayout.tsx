@@ -138,6 +138,7 @@ import CookieConsent from "components/Common/CookieConsent";
 import MaintenanceModeBanner from "components/Common/MaintenanceBanner";
 import { FxdProvider } from "context/fxd";
 import useVH from "hooks/General/useVH";
+import ProposalDraftView from "components/Governance/ProposalDraftView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -560,6 +561,14 @@ const MainLayout = () => {
                       path="governance"
                       element={<AllProposalsView />}
                     ></Route>
+                    <Route
+                      path="governance/drafts"
+                      element={<AllProposalsView />}
+                    ></Route>
+                    <Route
+                      path="governance/drafts/:_proposalId"
+                      element={<ProposalDraftView />}
+                    />
                     <Route
                       path="governance/proposal/:_proposalId"
                       element={

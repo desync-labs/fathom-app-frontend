@@ -36,7 +36,14 @@ const StyledBreadcrumb = styled(Chip)(() => {
   };
 }) as typeof Chip;
 
-const ProposalViewTopBar: FC = () => {
+export enum ProposalViewTopBarVariant {
+  Proposal = "Proposal",
+  DraftProposal = "DraftProposal",
+}
+
+const ProposalViewTopBar: FC<{ variant?: ProposalViewTopBarVariant }> = ({
+  variant = ProposalViewTopBarVariant.Proposal,
+}) => {
   const navigate = useNavigate();
   const { fetchedProposal } = useProposalContext();
   const { isMobile } = useSharedContext();
@@ -48,29 +55,42 @@ const ProposalViewTopBar: FC = () => {
         aria-label="breadcrumb"
         sx={{ color: "#6D86B2" }}
       >
-        <StyledBreadcrumb
-          label="Proposals"
-          onClick={() => navigate("/dao/governance/")}
-        />
-        <StyledBreadcrumb
-          label={`Proposal #${
-            isMobile
-              ? fetchedProposal.proposalId?.substring(0, 4) +
-                " ... " +
-                fetchedProposal.proposalId?.slice(-4)
-              : fetchedProposal?.proposalId
-          }`}
-          className="disabled"
-        />
+        {variant === ProposalViewTopBarVariant.Proposal ? (
+          <StyledBreadcrumb
+            label="Proposals"
+            onClick={() => navigate("/dao/governance")}
+          />
+        ) : (
+          <StyledBreadcrumb
+            label="Drafts"
+            onClick={() => navigate("/dao/governance/drafts")}
+          />
+        )}
+        {variant === ProposalViewTopBarVariant.Proposal ? (
+          <StyledBreadcrumb
+            label={`Proposal #${
+              isMobile
+                ? fetchedProposal.proposalId?.substring(0, 4) +
+                  " ... " +
+                  fetchedProposal.proposalId?.slice(-4)
+                : fetchedProposal?.proposalId
+            }`}
+            className="disabled"
+          />
+        ) : (
+          <StyledBreadcrumb label={"Overview"} className="disabled" />
+        )}
       </Breadcrumbs>
-      <ButtonGroup>
-        <IconButton>
-          <StarOutlineRoundedIcon sx={{ color: "#6D86B2", width: "22px" }} />
-        </IconButton>
-        <IconButton>
-          <OpenInNewRoundedIcon sx={{ color: "#6D86B2", width: "18px" }} />
-        </IconButton>
-      </ButtonGroup>
+      {variant === ProposalViewTopBarVariant.Proposal && (
+        <ButtonGroup>
+          <IconButton>
+            <StarOutlineRoundedIcon sx={{ color: "#6D86B2", width: "22px" }} />
+          </IconButton>
+          <IconButton>
+            <OpenInNewRoundedIcon sx={{ color: "#6D86B2", width: "18px" }} />
+          </IconButton>
+        </ButtonGroup>
+      )}
     </BaseFlexBox>
   );
 };

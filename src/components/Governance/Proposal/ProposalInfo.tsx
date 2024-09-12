@@ -21,9 +21,9 @@ import { ChainId } from "connectors/networks";
 import { getAccountUrl } from "utils/explorer";
 import { ZERO_ADDRESS } from "utils/Constants";
 import { secondsToTime } from "utils/secondsToTime";
-import useSharedContext from "../../../context/shared";
+import useSharedContext from "context/shared";
 
-const ProposalTitle = styled(Typography)`
+export const ProposalTitle = styled(Typography)`
   color: #fff;
   font-size: 18px;
   font-weight: 600;
@@ -48,7 +48,7 @@ const TimeslotInProgress = styled(Box, {
   return styles;
 });
 
-const ProposalInfoList = styled(List)`
+export const ProposalInfoList = styled(List)`
   list-style: none;
 
   & .MuiListItem-root {
@@ -59,7 +59,7 @@ const ProposalInfoList = styled(List)`
   }
 `;
 
-const ListItemLabel = styled(ListItemText)`
+export const ListItemLabel = styled(ListItemText)`
   span {
     color: #fff;
     font-size: 16px;
@@ -68,7 +68,7 @@ const ListItemLabel = styled(ListItemText)`
   }
 `;
 
-const ListItemValue = styled(ListItemText)`
+export const ListItemValue = styled(ListItemText)`
   span {
     color: #b7c8e5;
     font-size: 14px;
@@ -85,6 +85,7 @@ const TimeLabel = styled("div")`
   text-transform: uppercase;
   padding-bottom: 2px;
 `;
+
 const TimeValue = styled("div")`
   color: #fff;
   font-size: 14px;

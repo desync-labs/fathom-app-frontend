@@ -1,4 +1,4 @@
-import { createContext, FC, ReactElement, useContext } from "react";
+import { createContext, FC, ReactElement, ReactNode, useContext } from "react";
 import useProposalItem from "hooks/Governance/useProposalItem";
 import { ChainId } from "connectors/networks";
 import { ProposalStatus } from "utils/Constants";
@@ -14,7 +14,7 @@ export type UseProposalContextReturnType = {
   chainId: ChainId;
   _proposalId: string | undefined;
   vote: (support: string) => Promise<void>;
-  getTitleDescription: (title: string, index: number) => string;
+  getTitleDescription: (title: string, index: number) => ReactNode;
   status: ProposalStatus;
   forVotes: number;
   abstainVotes: number;

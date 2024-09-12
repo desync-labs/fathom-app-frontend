@@ -3,11 +3,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useServices } from "context/services";
-import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
+
 import { IProposal, SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+
+import { htmlToComponent } from "utils/htmlToComponent";
+import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
 
 const useProposalItem = () => {
   const { account, chainId, library } = useConnector();
@@ -239,7 +242,7 @@ const useProposalItem = () => {
 
   const getTitleDescription = useCallback((title: string, index: number) => {
     if (title) {
-      return title.split("----------------")[index];
+      return htmlToComponent(title.split("----------------")[index]);
     } else {
       return "";
     }

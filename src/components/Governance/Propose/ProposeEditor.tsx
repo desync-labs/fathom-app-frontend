@@ -1,7 +1,6 @@
 import { Editor } from "react-draft-wysiwyg";
 import { useController } from "react-hook-form";
 import { EditorState } from "draft-js";
-
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { FC } from "react";
 import editorSettings from "utils/editor";
@@ -43,6 +42,15 @@ const EditorWrapper = styled("div")`
     &.rdw-option-active {
       box-shadow: 2px 2px 0px #071028 inset;
     }
+    .rdw-dropdown-selectedtext {
+      color: #071028;
+    }
+  }
+  .rdw-option-wrapper {
+    width: 16px;
+    min-width: 16px;
+    height: 12px;
+    margin: 0 3px;
   }
 
   .rdw-dropdownoption-highlighted,

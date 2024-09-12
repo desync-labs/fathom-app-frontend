@@ -4,6 +4,12 @@ import { GOVERNANCE_PROPOSALS, GOVERNANCE_STATS } from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
+import { useLocation } from "react-router-dom";
+
+export enum ProposalsTabs {
+  PROPOSALS = "proposals",
+  DRAFTS = "drafts",
+}
 
 export const useAllProposals = () => {
   const { chainId } = useConnector();
@@ -12,6 +18,8 @@ export const useAllProposals = () => {
   const [proposals, setProposals] = useState<string>("all");
 
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [tab, setTab] = useState<ProposalsTabs>(ProposalsTabs.PROPOSALS);
+  const [draftProposals, setDraftProposals] = useState<any[]>([]);
 
   const { syncDao, prevSyncDao } = useSyncContext();
 
@@ -22,6 +30,8 @@ export const useAllProposals = () => {
     },
     context: { clientName: "governance", chainId },
   });
+
+  const location = useLocation();
 
   const {
     data: stats,
@@ -47,6 +57,19 @@ export const useAllProposals = () => {
     }
   }, [syncDao, prevSyncDao, refetchProposals]);
 
+  useEffect(() => {
+    const drafts = localStorage.getItem("draftProposals") || "[]";
+    setDraftProposals(JSON.parse(drafts));
+  }, [setDraftProposals]);
+
+  useEffect(() => {
+    if (location.pathname.includes("drafts")) {
+      setTab(ProposalsTabs.DRAFTS);
+    } else {
+      setTab(ProposalsTabs.PROPOSALS);
+    }
+  }, [location, setTab]);
+
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
       fetchMore({
@@ -70,10 +93,13 @@ export const useAllProposals = () => {
     setProposals,
     fetchedProposals: loading ? [] : data.proposals,
     currentPage,
+    draftProposals,
     itemsCount:
       statsLoading || !stats || !stats.governanceStats.length
         ? 0
         : stats.governanceStats[0].totalProposalsCount,
     handlePageChange,
+    tab,
+    setTab,
   };
 };
