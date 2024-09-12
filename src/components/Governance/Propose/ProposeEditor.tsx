@@ -36,21 +36,28 @@ const EditorWrapper = styled("div")`
     border: 1px solid #071028;
     border-radius: 4px;
 
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      height: 20px;
+    }
+
     &:hover {
-      box-shadow: 2px 2px 0px #071028;
+      box-shadow: 2px 2px 0 #071028;
     }
     &.rdw-option-active {
-      box-shadow: 2px 2px 0px #071028 inset;
+      box-shadow: 2px 2px 0 #071028 inset;
     }
     .rdw-dropdown-selectedtext {
       color: #071028;
     }
   }
   .rdw-option-wrapper {
-    width: 16px;
     min-width: 16px;
-    height: 12px;
+    height: 18px;
     margin: 0 3px;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      width: 12px;
+      height: 10px;
+    }
   }
 
   .rdw-dropdownoption-highlighted,
@@ -100,6 +107,15 @@ const EditorWrapper = styled("div")`
 
   .public-DraftEditorPlaceholder-inner {
     color: #4f658c;
+  }
+
+  .rdw-block-wrapper,
+  .rdw-fontsize-wrapper,
+  .rdw-fontfamily-wrapper {
+    width: 100px;
+  }
+  .rdw-fontsize-wrapper {
+    width: 50px;
   }
 `;
 
