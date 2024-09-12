@@ -64,26 +64,49 @@ test.describe("Fathom App Test Suite: DAO Staking", () => {
     async ({ daoPage }) => {
       await daoPage.navigateStaking();
       await expect(daoPage.btnDaoConnectWallet).toBeVisible();
-      await expect
-        .soft(daoPage.page.getByText("My Wallet Balance"))
-        .not.toBeVisible();
-      await expect.soft(daoPage.myWalletBalanceFTHM).not.toBeVisible();
-      await expect.soft(daoPage.myWalletBalanceXDC).not.toBeVisible();
-      await expect.soft(daoPage.myWalletBalanceFXD).not.toBeVisible();
+      await expect.soft(daoPage.myWalletBalanceFTHM).toBeVisible();
+      const walletFTHMBalanceBefore =
+        await daoPage.getMyWalletFTHMBalanceValue();
+      expect.soft(walletFTHMBalanceBefore).toEqual(0);
       await expect(
         daoPage.page.getByText("You have no open positions.")
       ).toBeVisible();
       await daoPage.connectWalletDao(WalletConnectOptions.Metamask);
       await expect.soft(daoPage.btnStake).toBeVisible();
-      await expect
-        .soft(daoPage.page.getByText("My Wallet Balance"))
-        .toBeVisible();
       await expect.soft(daoPage.myWalletBalanceFTHM).toBeVisible();
-      await expect.soft(daoPage.myWalletBalanceXDC).toBeVisible();
-      await expect.soft(daoPage.myWalletBalanceFXD).toBeVisible();
+      const walletFTHMBalanceAfter =
+        await daoPage.getMyWalletFTHMBalanceValue();
+      expect.soft(walletFTHMBalanceAfter).toBeGreaterThan(0);
       await expect
         .soft(daoPage.page.getByText("You have no open positions."))
         .not.toBeVisible();
+    }
+  );
+
+  test(
+    qase(
+      84,
+      "'Buy FTHM on DEX' button is functional and successfully redirects to DEX page with prefilled FXD to FTHM values"
+    ),
+    async ({ daoPage, dexPage }) => {
+      await daoPage.navigateStaking();
+      await daoPage.connectWallet(WalletConnectOptions.Metamask);
+      await daoPage.validateConnectedWalletAddress();
+      await expect(daoPage.btnBuyFthmDex).toBeVisible();
+      await daoPage.btnBuyFthmDex.click();
+      await expect(daoPage.page).toHaveURL(/#\/swap/);
+      await expect
+        .soft(
+          dexPage.fromCurrencySelectButton.locator(
+            "span.token-symbol-container"
+          )
+        )
+        .toContainText("FXD");
+      await expect
+        .soft(
+          dexPage.toCurrencySelectButton.locator("span.token-symbol-container")
+        )
+        .toContainText("FTHM");
     }
   );
 });
