@@ -95,6 +95,7 @@ const PeriodLockInput: FC<PeriodLockInputProps> = ({
           onChange={handleChangeRange}
           placeholder="Number of Days"
           error={!!error}
+          data-testid="dao-lockPeriod-input"
           helperText={
             <>
               {error && error.type === "max" && (

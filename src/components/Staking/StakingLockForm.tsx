@@ -79,7 +79,7 @@ const StakingLockForm: FC = () => {
                   <BaseFormInputLabel>Staking amount</BaseFormInputLabel>
                 </BaseFormLabelRow>
                 {fthmBalance ? (
-                  <BaseFormWalletBalance>
+                  <BaseFormWalletBalance data-testid="dao-FTHM-balance">
                     Balance: {formatPercentage(Number(fthmBalance))} FTHM
                   </BaseFormWalletBalance>
                 ) : null}
