@@ -1,16 +1,16 @@
 import { FC, useCallback } from "react";
 import { Box, Typography, styled, Button } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
-import {
-  AppDialog,
-  DialogContentWrapper,
-} from "components/AppComponents/AppDialog/AppDialog";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 import useConnector, { ERC20TokenType } from "context/connector";
 
 import DoneIcon from "@mui/icons-material/Done";
 import WalletIcon from "@mui/icons-material/Wallet";
+import {
+  BaseDialogContentWrapper,
+  BaseDialogWrapper,
+} from "components/Base/Dialog/StyledDialog";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 
 export const SuccessContentWrapper = styled(Box)`
   display: flex;
@@ -65,7 +65,7 @@ const TransactionErc20TokenModal: FC = () => {
   }, [addERC20Token]);
 
   return (
-    <AppDialog
+    <BaseDialogWrapper
       onClose={resetErc20TokenModal}
       aria-labelledby="customized-dialog-title"
       open={true}
@@ -73,17 +73,17 @@ const TransactionErc20TokenModal: FC = () => {
       maxWidth="xsm"
     >
       <SuccessContentWrapper>
-        <AppDialogTitle
+        <BaseDialogTitle
           id="customized-dialog-title"
           onClose={resetErc20TokenModal}
-        ></AppDialogTitle>
+        ></BaseDialogTitle>
         <SuccessIconWrapper>
           <DoneIcon color="success" />
         </SuccessIconWrapper>
         <ModalTitle variant="h1">All done!</ModalTitle>
         <SuccessMessage>{successAlertMessage}</SuccessMessage>
         {isMetamask && (
-          <DialogContentWrapper
+          <BaseDialogContentWrapper
             width={"80%"}
             sx={{
               alignItems: "center",
@@ -99,7 +99,7 @@ const TransactionErc20TokenModal: FC = () => {
               <WalletIcon sx={{ fontSize: "16px", marginRight: "7px" }} />
               Add to wallet
             </ButtonPrimary>
-          </DialogContentWrapper>
+          </BaseDialogContentWrapper>
         )}
       </SuccessContentWrapper>
       <Box
@@ -123,7 +123,7 @@ const TransactionErc20TokenModal: FC = () => {
           Ok, Close
         </Button>
       </Box>
-    </AppDialog>
+    </BaseDialogWrapper>
   );
 };
 

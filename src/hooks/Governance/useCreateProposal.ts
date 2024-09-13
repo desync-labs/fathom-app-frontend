@@ -6,14 +6,16 @@ import { ZERO_ADDRESS } from "utils/Constants";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
 import { convertToRaw, EditorState, ContentState } from "draft-js";
 import { v4 as uuidv4 } from "uuid";
 // @ts-ignore
 import DraftPasteProcessor from "draft-js/lib/DraftPasteProcessor";
+import { saveDraftProposal, findDraftProposal } from "utils/draftProposal";
+import { stripTags } from "../../utils/htmlToComponent";
 
-type ActionType = {
+export type ActionType = {
   target: string;
   callData: string;
   functionSignature: string;
@@ -39,9 +41,20 @@ const defaultValues = {
   isApproved: false,
 };
 
+export type CreateProposalType = {
+  id?: string;
+  withAction: boolean;
+  descriptionTitle: string;
+  description: string;
+  link: string;
+  isApproved: boolean;
+  actions: ActionType[];
+};
+
 const useCreateProposal = () => {
   const { proposalService } = useServices();
   const { account, chainId } = useConnector();
+  const { _proposalId } = useParams();
 
   const [vBalance, setVBalance] = useState<null | string>(null);
   const [vBalanceError, setVBalanceError] = useState<boolean>(false);
@@ -103,27 +116,25 @@ const useCreateProposal = () => {
   }, [proposalService, setMinimumVBalance]);
 
   useEffect(() => {
-    let draftProposals = localStorage.getItem("draftProposals");
-    if (draftProposals) {
-      draftProposals = JSON.parse(draftProposals);
-      if (Array.isArray(draftProposals) && draftProposals.length) {
-        const values = draftProposals[0];
-
-        if (values.description && values.description.length) {
+    if (_proposalId) {
+      const draftProposal = findDraftProposal(_proposalId);
+      if (draftProposal) {
+        if (draftProposal.description && draftProposal.description.length) {
           const formattedDescription = DraftPasteProcessor.processHTML(
-            values.description
+            draftProposal.description
           );
 
           const contentState =
             ContentState.createFromBlockArray(formattedDescription);
 
-          values.description = EditorState.createWithContent(contentState);
+          draftProposal.description =
+            EditorState.createWithContent(contentState);
         }
 
-        reset(values);
+        reset(draftProposal);
       }
     }
-  }, [reset]);
+  }, [reset, _proposalId]);
 
   const onClose = useCallback(() => {
     setShowSuccessAlertHandler(true, "Proposal created successfully");
@@ -133,7 +144,10 @@ const useCreateProposal = () => {
   const onSubmit = useCallback(
     async (values: Record<string, any>) => {
       if (BigNumber(notAllowTimestamp).isGreaterThan(Date.now() / 1000)) {
-        return;
+        return setShowErrorAlertHandler(
+          true,
+          "Next acceptable proposal timestamp is not reached."
+        );
       }
 
       if (
@@ -207,38 +221,42 @@ const useCreateProposal = () => {
     const values = getValues();
 
     const { description, descriptionTitle } = values;
+    const formattedDescription =
+      (description as any) instanceof EditorState
+        ? draftToHtml(
+            convertToRaw(
+              (description as unknown as EditorState)?.getCurrentContent()
+            )
+          )
+        : description;
 
-    if (!descriptionTitle?.trim()) {
+    if (!descriptionTitle?.trim() || !stripTags(formattedDescription)) {
       return setShowErrorAlertHandler(
         true,
-        "Please enter a proposal title for save it for later."
+        "Please enter a proposal title and description for save it for later."
       );
     }
 
-    const draftProposals = localStorage.getItem("draftProposals")
-      ? JSON.parse(localStorage.getItem("draftProposals") as string)
-      : [];
-
     const formattedValues = {
       ...values,
-      description:
-        (description as any) instanceof EditorState
-          ? draftToHtml(
-              convertToRaw(
-                (description as unknown as EditorState)?.getCurrentContent()
-              )
-            )
-          : description,
+      description: formattedDescription,
       created: new Date().toString(),
       id: uuidv4(),
     };
 
-    localStorage.setItem(
-      "draftProposals",
-      JSON.stringify([...draftProposals, formattedValues])
-    );
+    if (_proposalId) {
+      const proposal = findDraftProposal(_proposalId);
+      formattedValues.id = _proposalId;
+      saveDraftProposal({
+        ...proposal,
+        ...formattedValues,
+      });
+    } else {
+      saveDraftProposal(formattedValues);
+    }
+
     setShowSuccessAlertHandler(true, "Proposal successfully saved for later.");
-  }, [getValues, setShowSuccessAlertHandler]);
+  }, [getValues, setShowSuccessAlertHandler, _proposalId]);
 
   const appendAction = useCallback(() => {
     append(EMPTY_ACTION);
