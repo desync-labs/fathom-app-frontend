@@ -1,0 +1,82 @@
+{
+  "$id": "vault-account-deposits",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "deposits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "default": "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e-0xfe3669df401086c09140025a7131920d8808f4bad73c2183c24c543192fff1eb-73-51",
+                "examples": [
+                  "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e-0xfe3669df401086c09140025a7131920d8808f4bad73c2183c24c543192fff1eb-73-51"
+                ],
+                "pattern": "^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$"
+              },
+              "timestamp": {
+                "type": "string",
+                "default": "1716287808000",
+                "examples": [
+                  "1716287808000"
+                ]
+              },
+              "sharesMinted": {
+                "type": "string",
+                "default": "999999988749759779166",
+                "examples": [
+                  "999999988749759779166"
+                ]
+              },
+              "tokenAmount": {
+                "type": "string",
+                "default": "1000000000000000000000",
+                "examples": [
+                  "1000000000000000000000"
+                ]
+              },
+              "blockNumber": {
+                "type": "string",
+                "default": "5947397",
+                "examples": [
+                  "5947397"
+                ]
+              },
+              "__typename": {
+                "type": "string",
+                "default": "Deposit",
+                "examples": [
+                  "Deposit"
+                ],
+                "const": "Deposit"
+              }
+            },
+            "required": [
+              "id",
+              "timestamp",
+              "sharesMinted",
+              "tokenAmount",
+              "blockNumber",
+              "__typename"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "deposits"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "data"
+  ],
+  "additionalProperties": false
+}

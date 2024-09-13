@@ -192,4 +192,170 @@ test.describe("Vault Subgraph API", () => {
       });
     }
   );
+
+  test(
+    qase(
+      87,
+      "VaultAccountDeposits Operation - Querying first 1000 deposits for an account that has at least one deposit is successful and response body matches the valid json schema"
+    ),
+    async ({ apiPage }) => {
+      let walletAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          walletAddress = "0x75fb890e23870f20cc5f5dcf6e79ca5257751cb7";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          walletAddress = "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          walletAddress = "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendVaultAccountDepositsOperationRequest(
+          {
+            account: walletAddress,
+            first: 1000,
+            skip: 0,
+          }
+        );
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/vault-account-deposits.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
+      });
+    }
+  );
+
+  test(
+    qase(
+      88,
+      "VaultAccountDeposits Operation - Querying first 1000 deposits for an account that has no deposits is successful and returns empty deposits array"
+    ),
+    async ({ apiPage }) => {
+      let walletAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          walletAddress = "0x2da3B5e70695E8C56D39221aB21e628Bd47E2E31";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          walletAddress = "0x2da3B5e70695E8C56D39221aB21e628Bd47E2E31";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          walletAddress = "0x9b803a49118c95Ee4fE8430C13bb84BE59614ec4";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendVaultAccountDepositsOperationRequest(
+          {
+            account: walletAddress,
+            first: 1000,
+            skip: 0,
+          }
+        );
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("deposits");
+        expect(responseJson.data.deposits).toEqual([]);
+      });
+    }
+  );
+
+  test(
+    qase(
+      89,
+      "VaultAccountWithdrawals Operation - Querying first 1000 deposits for an account that has at least one withdrawal is successful and response body matches the valid json schema"
+    ),
+    async ({ apiPage }) => {
+      let walletAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          walletAddress = "0x75fb890e23870f20cc5f5dcf6e79ca5257751cb7";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          walletAddress = "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          walletAddress = "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response =
+          await apiPage.sendVaultAccountWithdrawalsOperationRequest({
+            account: walletAddress,
+            first: 1000,
+            skip: 0,
+          });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/vault-account-withdrawals.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
+      });
+    }
+  );
+
+  test(
+    qase(
+      90,
+      "VaultAccountWithdrawals Operation - Querying first 1000 withdrawals for an account that has no withdrawals is successful and returns empty withdrawals array"
+    ),
+    async ({ apiPage }) => {
+      let walletAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          walletAddress = "0x2da3B5e70695E8C56D39221aB21e628Bd47E2E31";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          walletAddress = "0x2da3B5e70695E8C56D39221aB21e628Bd47E2E31";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          walletAddress = "0x9b803a49118c95Ee4fE8430C13bb84BE59614ec4";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response =
+          await apiPage.sendVaultAccountWithdrawalsOperationRequest({
+            account: walletAddress,
+            first: 1000,
+            skip: 0,
+          });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        expect(responseJson).toHaveProperty("data");
+        expect(responseJson.data).toHaveProperty("withdrawals");
+        expect(responseJson.data.withdrawals).toEqual([]);
+      });
+    }
+  );
 });
