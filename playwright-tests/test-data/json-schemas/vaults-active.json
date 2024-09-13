@@ -221,8 +221,7 @@
                     "__typename"
                   ],
                   "additionalProperties": false
-                },
-                "minItems": 1
+                }
               },
               "__typename": {
                 "type": "string",
