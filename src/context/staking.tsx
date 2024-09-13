@@ -53,6 +53,7 @@ type UseStakingReturnType = {
   itemCount: number;
   currentPage: number;
   handlePageChange: (event: ChangeEvent<unknown>, page: number) => void;
+  protocolStatsLoading: boolean;
 };
 
 export const StakingContext = createContext<UseStakingReturnType>(
