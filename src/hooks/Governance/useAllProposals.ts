@@ -22,8 +22,14 @@ export const useAllProposals = () => {
   const [draftProposals, setDraftProposals] = useState<any[]>([]);
 
   const { syncDao, prevSyncDao } = useSyncContext();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const { data, loading, refetch, fetchMore } = useQuery(GOVERNANCE_PROPOSALS, {
+  const {
+    data,
+    loading: proposalsLoading,
+    refetch,
+    fetchMore,
+  } = useQuery(GOVERNANCE_PROPOSALS, {
     variables: {
       first: COUNT_PER_PAGE,
       skip: 0,
@@ -58,6 +64,16 @@ export const useAllProposals = () => {
   }, [syncDao, prevSyncDao, refetchProposals]);
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(statsLoading || proposalsLoading);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [statsLoading, proposalsLoading, setIsLoading]);
+
+  useEffect(() => {
     const drafts = localStorage.getItem("draftProposals") || "[]";
     setDraftProposals(JSON.parse(drafts));
   }, [setDraftProposals]);
@@ -72,26 +88,29 @@ export const useAllProposals = () => {
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
+      setIsLoading(true);
       fetchMore({
         variables: {
           first: COUNT_PER_PAGE,
           skip: (page - 1) * COUNT_PER_PAGE,
         },
+      }).then(() => {
+        setIsLoading(false);
       });
       setCurrentPage(page);
     },
-    [setCurrentPage, fetchMore]
+    [setCurrentPage, fetchMore, setIsLoading]
   );
 
   return {
-    fetchProposalsPending: loading,
+    isLoading,
     search,
     setSearch,
     time,
     setTime,
     proposals,
     setProposals,
-    fetchedProposals: loading ? [] : data.proposals,
+    fetchedProposals: isLoading ? [] : data.proposals,
     currentPage,
     draftProposals,
     itemsCount:

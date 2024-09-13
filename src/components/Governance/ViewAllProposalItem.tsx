@@ -18,13 +18,14 @@ import RecommendIcon from "@mui/icons-material/Recommend";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
 import { useNavigate } from "react-router-dom";
 import useSharedContext from "../../context/shared";
+import { CustomSkeleton } from "../Base/Skeletons/StyledSkeleton";
 
 type ViewAllProposalItemProps = {
   proposal: IProposal;
   index: number;
 };
 
-const ProposalItemWrapper = styled(BasePaper)`
+export const ProposalItemWrapper = styled(BasePaper)`
   cursor: pointer;
   padding: 16px 18px;
   & .MuiListItemButton-root {
@@ -49,7 +50,7 @@ const ProposalIdTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-const ProposalLabel = styled(Box)`
+export const ProposalLabel = styled(Box)`
   color: #b7c8e5;
   font-size: 14px;
   font-style: normal;
@@ -58,7 +59,7 @@ const ProposalLabel = styled(Box)`
   margin-top: 10px;
 `;
 
-const ProposalValue = styled(Box)`
+export const ProposalValue = styled(Box)`
   color: #fff;
   font-size: 16px;
   font-style: normal;
@@ -66,7 +67,7 @@ const ProposalValue = styled(Box)`
   line-height: 20px;
 `;
 
-const ProposalItemProposalId = styled(Box)`
+export const ProposalItemProposalId = styled(Box)`
   color: #b7c8e5;
   text-align: center;
   font-size: 14px;
@@ -75,7 +76,7 @@ const ProposalItemProposalId = styled(Box)`
   line-height: 20px;
 `;
 
-const ProposalItemTimeLeft = styled(Box)`
+export const ProposalItemTimeLeft = styled(Box)`
   color: #6379a1;
   margin-top: -4px;
   font-size: 14px;
@@ -131,6 +132,8 @@ export const StatusIcon: FC<{ status: ProposalStatus }> = ({ status }) => {
 
 const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
   const {
+    statusLoading,
+    quorumLoading,
     proposalTitle,
     proposalDescription,
     timestamp,
@@ -157,13 +160,17 @@ const ViewAllProposalItem: FC<ViewAllProposalItemProps> = ({ proposal }) => {
           </ProposalItemProposalId>
         </ProposalIdTooltip>
         <BaseFlexBox>
-          {status && (
-            <ProposalItemStatus status={status}>
-              <StatusIcon status={status} />
-              {quorumError && !isMobile
-                ? "Voting quorum was not reached"
-                : status}
-            </ProposalItemStatus>
+          {statusLoading || quorumLoading ? (
+            <CustomSkeleton animation={"wave"} width={110} height={32} />
+          ) : (
+            status && (
+              <ProposalItemStatus status={status}>
+                <StatusIcon status={status} />
+                {quorumError && !isMobile
+                  ? "Voting quorum was not reached"
+                  : status}
+              </ProposalItemStatus>
+            )
           )}
           {useMemo(
             () =>

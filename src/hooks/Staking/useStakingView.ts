@@ -76,6 +76,8 @@ const useStakingView = () => {
     useState<boolean>(false);
   const [maxLockPositions, setMaxLockPositions] = useState<number>(0);
 
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
   const {
     data: protocolStatsInfo,
     loading: protocolStatsLoading,
@@ -129,6 +131,14 @@ const useStakingView = () => {
     refetchProtocolStats,
     setCurrentPage,
   ]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(stakesLoading || fetchPositionsLoading);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [stakesLoading, fetchPositionsLoading, setIsLoading]);
 
   useEffect(() => {
     if (account && stakesData?.stakers?.length) {
@@ -396,7 +406,7 @@ const useStakingView = () => {
     account,
     chainId,
     action,
-    isLoading: stakesLoading || fetchPositionsLoading,
+    isLoading,
     isUnlockable,
     isMaxLockPositionExceeded,
     maxLockPositions,
@@ -426,6 +436,7 @@ const useStakingView = () => {
       !protocolStatsLoading && protocolStatsInfo.protocolStats.length
         ? protocolStatsInfo.protocolStats[0]
         : null,
+    protocolStatsLoading,
     itemCount: stakesData?.stakers?.length
       ? stakesData.stakers[0].lockPositionCount
       : 0,

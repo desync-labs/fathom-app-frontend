@@ -14,14 +14,14 @@ import BasePopover from "components/Base/Popover/BasePopover";
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import { BaseButtonSecondary } from "components/Base/Buttons/StyledButtons";
 
-const StakingViewItemWrapper = styled(Box)`
+export const StakingViewItemWrapper = styled(Box)`
   border-radius: 8px;
   border: 1px solid #2c4066;
   background: #132340;
   padding: 16px 24px;
 `;
 
-const RewardsUnStakeWrapper = styled(BaseFlexBox)`
+export const RewardsUnStakeWrapper = styled(BaseFlexBox)`
   justify-content: space-between;
   gap: 16px;
   width: 100%;
@@ -36,7 +36,7 @@ const RewardsUnStakeWrapper = styled(BaseFlexBox)`
   }
 `;
 
-const Index = styled(Box)`
+export const Index = styled(Box)`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,14 +50,14 @@ const Index = styled(Box)`
   font-weight: 400;
 `;
 
-const Label = styled(Box)`
+export const Label = styled(Box)`
   font-size: 12px;
   font-weight: 400;
   line-height: 16px;
   color: #fff;
 `;
 
-const Value = styled(Box)`
+export const Value = styled(Box)`
   font-weight: 600;
   font-size: 12px;
   line-height: 20px;
@@ -89,7 +89,7 @@ const Value = styled(Box)`
   }
 `;
 
-const Penalty = styled(Typography)`
+export const Penalty = styled(Typography)`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -100,7 +100,7 @@ const Penalty = styled(Typography)`
   }
 `;
 
-const CoolDownInfo = styled(Box)`
+export const CoolDownInfo = styled(Box)`
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
@@ -123,7 +123,7 @@ const StakingViewItemButton = styled(BaseButtonSecondary)`
   }
 `;
 
-const Spacer = styled(Box)`
+export const Spacer = styled(Box)`
   margin-top: 12px;
 `;
 

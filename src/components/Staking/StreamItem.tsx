@@ -6,7 +6,7 @@ import { DialogActions, FlowType } from "hooks/Staking/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/Base/Typography/StyledTypography";
-import { Box, CircularProgress, Pagination } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
 import UnstakeCoolDownDialog from "components/Staking/Dialog/UnstakeCoolDownDialog";
@@ -15,6 +15,7 @@ import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
+import StakingViewSkeleton from "./StakingViewSkeleton";
 
 const StakingViewList = styled(Box)`
   display: flex;
@@ -53,20 +54,20 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
 
   return (
     <>
-      {useMemo(
-        () => (
+      <>
+        {!isLoading && !lockPositions.length ? (
+          <NoResults mt={isMobile ? 2 : 3}>
+            You have no open positions.
+          </NoResults>
+        ) : (
           <>
-            {!isLoading && !lockPositions.length ? (
-              <NoResults mt={isMobile ? 2 : 3}>
-                You have no open positions.
-              </NoResults>
-            ) : isLoading ? (
+            {isLoading && (
               <StakingViewList>
-                <Box sx={{ textAlign: "center" }}>
-                  <CircularProgress size={30} />
-                </Box>
+                <StakingViewSkeleton />
               </StakingViewList>
-            ) : (
+            )}
+
+            {!isLoading && (
               <StakingViewList>
                 {lockPositions.map((lockPosition: ILockPosition) => (
                   <StakingViewItem
@@ -77,26 +78,18 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
                 ))}
               </StakingViewList>
             )}
-            {itemCount > COUNT_PER_PAGE && (
-              <PaginationWrapper>
-                <Pagination
-                  count={Math.ceil(itemCount / COUNT_PER_PAGE)}
-                  page={currentPage}
-                  onChange={handlePageChange}
-                />
-              </PaginationWrapper>
-            )}
           </>
-        ),
-        [
-          token,
-          lockPositions,
-          currentPage,
-          itemCount,
-          handlePageChange,
-          isLoading,
-        ]
-      )}
+        )}
+        {itemCount > COUNT_PER_PAGE && (
+          <PaginationWrapper>
+            <Pagination
+              count={Math.ceil(itemCount / COUNT_PER_PAGE)}
+              page={currentPage}
+              onChange={handlePageChange}
+            />
+          </PaginationWrapper>
+        )}
+      </>
 
       {useMemo(() => {
         return (
