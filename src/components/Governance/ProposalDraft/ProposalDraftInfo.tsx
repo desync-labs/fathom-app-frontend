@@ -100,7 +100,8 @@ const ProposalDraftInfo = () => {
 
         {draftProposal.actions &&
           draftProposal.actions.length &&
-          draftProposal.actions[0].target !== ZERO_ADDRESS && (
+          draftProposal.actions[0].target !== ZERO_ADDRESS &&
+          draftProposal.actions[0].target.trim() && (
             <>
               <ListItem>
                 <ListItemLabel>Targets: </ListItemLabel>
