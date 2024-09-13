@@ -195,7 +195,7 @@ test.describe("Vault Subgraph API", () => {
 
   test(
     qase(
-      87,
+      88,
       "VaultAccountDeposits Operation - Querying first 1000 deposits for an account that has at least one deposit is successful and response body matches the valid json schema"
     ),
     async ({ apiPage }) => {
@@ -240,7 +240,7 @@ test.describe("Vault Subgraph API", () => {
 
   test(
     qase(
-      88,
+      89,
       "VaultAccountDeposits Operation - Querying first 1000 deposits for an account that has no deposits is successful and returns empty deposits array"
     ),
     async ({ apiPage }) => {
@@ -279,7 +279,7 @@ test.describe("Vault Subgraph API", () => {
 
   test(
     qase(
-      89,
+      90,
       "VaultAccountWithdrawals Operation - Querying first 1000 deposits for an account that has at least one withdrawal is successful and response body matches the valid json schema"
     ),
     async ({ apiPage }) => {
@@ -323,7 +323,7 @@ test.describe("Vault Subgraph API", () => {
 
   test(
     qase(
-      90,
+      91,
       "VaultAccountWithdrawals Operation - Querying first 1000 withdrawals for an account that has no withdrawals is successful and returns empty withdrawals array"
     ),
     async ({ apiPage }) => {
