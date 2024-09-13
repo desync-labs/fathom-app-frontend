@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Container, styled, SxProps } from "@mui/material";
 
-const StyledContainer = styled(Container)`
+export const StyledContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   gap: 40px;

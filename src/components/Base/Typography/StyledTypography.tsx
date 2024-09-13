@@ -22,3 +22,12 @@ export const NoResults = styled(Typography)`
   border-radius: 8px;
   padding: 16px 24px;
 `;
+
+export const StakingPaperTitle = styled("h2")`
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
+  padding: 6px 0;
+  margin: 0;
+`;

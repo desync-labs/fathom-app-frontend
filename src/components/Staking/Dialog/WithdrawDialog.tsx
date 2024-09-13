@@ -1,32 +1,23 @@
 import { FC, memo, useMemo } from "react";
-import {
-  AppDialog,
-  DialogContentWrapper,
-} from "components/AppComponents/AppDialog/AppDialog";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
-import {
-  Box,
-  CircularProgress,
-  DialogContent,
-  Typography,
-} from "@mui/material";
-import {
-  ButtonPrimary,
-  CancelButton,
-} from "components/AppComponents/AppButton/AppButton";
-import { ModalDescription } from "components/AppComponents/AppBox/AppBox";
+import { Box, CircularProgress, DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatPercentage } from "utils/format";
 import useStakingContext from "context/staking";
 import useSharedContext from "context/shared";
+import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import {
-  ButtonsWrapper,
-  InfoMessageWrapper,
-} from "components/Staking/Dialog/ClaimRewardsDialog";
-import InfoIcon from "@mui/icons-material/Info";
+  BaseDialogContentWrapper,
+  BaseDialogDescription,
+  BaseDialogWrapperLight,
+} from "components/Base/Dialog/StyledDialog";
+import {
+  BaseButtonPrimary,
+  BaseCancelButton,
+} from "components/Base/Buttons/StyledButtons";
 
-const ConfirmButton = styled(ButtonPrimary)`
+const ConfirmButton = styled(BaseButtonPrimary)`
   font-size: 17px;
 `;
 
@@ -44,32 +35,33 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
   }, [action]);
 
   return (
-    <AppDialog
+    <BaseDialogWrapperLight
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
       maxWidth="sm"
-      color="primary"
     >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Withdraw
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
-        <ModalDescription>
+        <BaseDialogDescription>
           Once it's completed, you'll see this amount in your wallet balance...
-        </ModalDescription>
-        <DialogContentWrapper>
+        </BaseDialogDescription>
+        <BaseDialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You're withdrawing...</Box>
           <Box className={"amount"}>
             <Box>{formatPercentage(stake.claimedAmount / 10 ** 18)}</Box>
             <span>{token}</span>
           </Box>
-        </DialogContentWrapper>
+        </BaseDialogContentWrapper>
         <ButtonsWrapper>
-          {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
+          {!isMobile && (
+            <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
+          )}
           <ConfirmButton
             disabled={isLoading}
             isLoading={isLoading}
@@ -77,16 +69,12 @@ const WithdrawDialog: FC<WithdrawDialogProps> = ({ token, onClose }) => {
           >
             {isLoading ? <CircularProgress size={30} /> : "Confirm Withdraw"}
           </ConfirmButton>
-          {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
+          {isMobile && (
+            <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
+          )}
         </ButtonsWrapper>
-        <InfoMessageWrapper>
-          <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
-          <Typography>
-            Proceeding will prompt you to sign 1 txn in MetaMask.
-          </Typography>
-        </InfoMessageWrapper>
       </DialogContent>
-    </AppDialog>
+    </BaseDialogWrapperLight>
   );
 };
 

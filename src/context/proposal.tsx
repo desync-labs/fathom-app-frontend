@@ -1,6 +1,7 @@
-import { createContext, FC, ReactElement, useContext } from "react";
+import { createContext, FC, ReactElement, ReactNode, useContext } from "react";
 import useProposalItem from "hooks/Governance/useProposalItem";
 import { ChainId } from "connectors/networks";
+import { ProposalStatus } from "utils/Constants";
 
 export type ProposalContextType = {
   children: ReactElement;
@@ -13,8 +14,8 @@ export type UseProposalContextReturnType = {
   chainId: ChainId;
   _proposalId: string | undefined;
   vote: (support: string) => Promise<void>;
-  getTitleDescription: (title: string, index: number) => string;
-  status: string | undefined;
+  getTitleDescription: (title: string, index: number) => ReactNode;
+  status: ProposalStatus;
   forVotes: number;
   abstainVotes: number;
   againstVotes: number;
@@ -26,6 +27,8 @@ export type UseProposalContextReturnType = {
   votingEndTime: string | null;
   quorumError: boolean;
   secondsLeft: number;
+  vFTHMTotalSupply: string;
+  currentBlock: number;
 };
 
 export const ProposalContext = createContext<UseProposalContextReturnType>(

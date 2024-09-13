@@ -34,6 +34,9 @@ export const AppNavItem = styled(Button)`
   &:hover {
     background-color: unset;
   }
+  &:active {
+    border-radius: 8px;
+  }
 
   ${({ theme }) => theme.breakpoints.down("sm")} {
     font-size: 14px;
