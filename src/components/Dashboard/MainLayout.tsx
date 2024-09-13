@@ -582,6 +582,10 @@ const MainLayout = () => {
                       element={<Propose />}
                     />
                     <Route
+                      path="governance/proposal/create/:_proposalId"
+                      element={<Propose />}
+                    />
+                    <Route
                       path="*"
                       element={<Navigate to="/dao/staking" replace />}
                     />

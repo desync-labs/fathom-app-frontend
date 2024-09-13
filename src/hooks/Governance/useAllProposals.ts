@@ -5,6 +5,7 @@ import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import { useLocation } from "react-router-dom";
+import { CreateProposalType } from "hooks/Governance/useCreateProposal";
 
 export enum ProposalsTabs {
   PROPOSALS = "proposals",
@@ -13,13 +14,12 @@ export enum ProposalsTabs {
 
 export const useAllProposals = () => {
   const { chainId } = useConnector();
-  const [search, setSearch] = useState<string>("");
-  const [time, setTime] = useState<string>("all");
-  const [proposals, setProposals] = useState<string>("all");
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [tab, setTab] = useState<ProposalsTabs>(ProposalsTabs.PROPOSALS);
-  const [draftProposals, setDraftProposals] = useState<any[]>([]);
+  const [draftProposals, setDraftProposals] = useState<CreateProposalType[]>(
+    []
+  );
 
   const { syncDao, prevSyncDao } = useSyncContext();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -104,12 +104,6 @@ export const useAllProposals = () => {
 
   return {
     isLoading,
-    search,
-    setSearch,
-    time,
-    setTime,
-    proposals,
-    setProposals,
     fetchedProposals: isLoading ? [] : data.proposals,
     currentPage,
     draftProposals,

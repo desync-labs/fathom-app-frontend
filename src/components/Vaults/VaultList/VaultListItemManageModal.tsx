@@ -14,7 +14,6 @@ import useVaultManageDeposit, {
 } from "hooks/Vaults/useVaultManageDeposit";
 import useConnector from "context/connector";
 
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import ManageVaultForm from "components/Vaults/VaultList/ManageVaultModal/ManageVaultForm";
 import ManageVaultInfo from "components/Vaults/VaultList/ManageVaultModal/ManageVaultInfo";
 import { AppNavItem } from "components/AppComponents/AppTabs/AppTabs";
@@ -35,6 +34,7 @@ import {
   BaseInfoBox,
   BaseWarningBox,
 } from "components/Base/Boxes/StyledBoxes";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 
 export type VaultManageProps = {
   vaultItemData: IVault;
@@ -98,7 +98,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
       maxWidth="sm"
       data-testid="vault-listItemManageModal"
     >
-      <AppDialogTitle
+      <BaseDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
         sx={{ padding: "24px" }}
@@ -125,7 +125,7 @@ const VaultListItemManageModal: FC<VaultManageProps> = ({
             </AppNavItem>
           </BaseDialogNavWrapper>
         )}
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
         <FormProvider {...methods}>
