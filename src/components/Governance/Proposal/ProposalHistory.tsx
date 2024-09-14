@@ -14,8 +14,8 @@ import { styled } from "@mui/material/styles";
 import CheckCircleOutlineRoundedIcon from "@mui/icons-material/CheckCircleOutlineRounded";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
-import useProposalContext from "../../../context/proposal";
-import { ProposalStatus } from "../../../utils/Constants";
+import useProposalContext from "context/proposal";
+import { ProposalStatus } from "utils/Constants";
 
 const HistoryTitle = styled(Typography)`
   color: #fff;

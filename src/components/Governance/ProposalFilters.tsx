@@ -1,27 +1,10 @@
-import {
-  Grid,
-  // MenuItem,
-  // Select
-} from "@mui/material";
+import { Grid } from "@mui/material";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { Dispatch, FC, memo } from "react";
 import { styled } from "@mui/material/styles";
-import {
-  AppFormInputWrapper,
-  // AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
+import { AppFormInputWrapper } from "components/AppComponents/AppForm/AppForm";
 import { useNavigate } from "react-router-dom";
-
-// const ProposalSelect = styled(Select)`
-//   padding: 8px 12px;
-//   gap: 8px;
-//   height: 40px;
-//   background: #253656;
-//   border: 1px solid #324567;
-//   border-radius: 8px;
-//   width: 100%;
-// `;
 
 type ProposalFiltersType = {
   search: string;
