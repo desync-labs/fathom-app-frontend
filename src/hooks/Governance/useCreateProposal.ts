@@ -251,11 +251,14 @@ const useCreateProposal = () => {
         ...proposal,
         ...formattedValues,
       });
+      setShowSuccessAlertHandler(true, "Proposal edited successfully.");
     } else {
       saveDraftProposal(formattedValues);
+      setShowSuccessAlertHandler(
+        true,
+        "Proposal successfully saved for later."
+      );
     }
-
-    setShowSuccessAlertHandler(true, "Proposal successfully saved for later.");
   }, [getValues, setShowSuccessAlertHandler, _proposalId]);
 
   const appendAction = useCallback(() => {
