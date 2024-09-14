@@ -390,6 +390,7 @@ const useStakingView = () => {
 
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
+      setIsLoading(true);
       fetchMoreStakes({
         variables: {
           address: account,

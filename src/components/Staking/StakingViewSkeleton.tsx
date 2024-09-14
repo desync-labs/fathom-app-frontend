@@ -109,6 +109,7 @@ const StakingViewSkeleton: FC = () => {
       <StakingViewSkeletonItem />
       <StakingViewSkeletonItem />
       <StakingViewSkeletonItem />
+      <StakingViewSkeletonItem />
     </>
   );
 };
