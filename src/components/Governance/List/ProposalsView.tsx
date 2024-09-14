@@ -5,7 +5,7 @@ import { Box, Pagination } from "@mui/material";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, FC } from "react";
-import ViewAllProposalSkeleton from "../ViewAllProposalSkeleton";
+import ViewAllProposalSkeleton from "components/Governance/ViewAllProposalSkeleton";
 
 const ProposalListWrapper = styled(Box)`
   display: flex;

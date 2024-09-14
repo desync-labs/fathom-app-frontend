@@ -22,6 +22,7 @@ import { getAccountUrl } from "utils/explorer";
 import { ZERO_ADDRESS } from "utils/Constants";
 import { secondsToTime } from "utils/secondsToTime";
 import useSharedContext from "context/shared";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 export const ProposalTitle = styled(Typography)`
   color: #fff;
@@ -69,6 +70,7 @@ export const ListItemLabel = styled(ListItemText)`
 `;
 
 export const ListItemValue = styled(ListItemText)`
+  width: 100%;
   span {
     color: #b7c8e5;
     font-size: 14px;
@@ -107,6 +109,7 @@ const ProposalInfo: FC = () => {
     votingStartsTime,
     votingEndTime,
     secondsLeft,
+    isLoading,
   } = useProposalContext();
 
   const { chainId } = useConnector();
@@ -114,51 +117,79 @@ const ProposalInfo: FC = () => {
 
   return (
     <BasePaper>
-      <ProposalTitle>
-        {getTitleDescription(fetchedProposal.description, 0)}
-      </ProposalTitle>
+      {isLoading ? (
+        <CustomSkeleton
+          animation={"wave"}
+          width={"100%"}
+          height={28}
+          sx={{ mb: "20px" }}
+        />
+      ) : (
+        <ProposalTitle variant={"h3"}>
+          {getTitleDescription(fetchedProposal.description, 0)}
+        </ProposalTitle>
+      )}
       <BaseFlexBox sx={{ justifyContent: "flex-start", alignItems: "start" }}>
         <Box width={isMobile ? "35%" : "25%"}>
           <TimeLabel>Submit time</TimeLabel>
-          <TimeValue>{submitTime}</TimeValue>
+          <TimeValue>
+            {isLoading ? (
+              <CustomSkeleton animation={"wave"} width={150} height={16} />
+            ) : (
+              submitTime
+            )}
+          </TimeValue>
         </Box>
 
         <Box width={isMobile ? "35%" : "25%"}>
           <TimeLabel>Exp. Voting starts:</TimeLabel>
-          <TimeValue>{votingStartsTime}</TimeValue>
-          <TimeBlock>Start block: {fetchedProposal.startBlock}</TimeBlock>
+          {isLoading ? (
+            <CustomSkeleton animation={"wave"} width={175} height={36} />
+          ) : (
+            <>
+              <TimeValue>{votingStartsTime}</TimeValue>
+              <TimeBlock>Start block: {fetchedProposal.startBlock}</TimeBlock>
+            </>
+          )}
         </Box>
 
         <Box width={"30%"}>
           <TimeLabel>Exp. Voting ends:</TimeLabel>
-          <TimeValue>
-            {secondsLeft ? "in " : null}
-            <TimeslotInProgress
-              isDone={secondsLeft <= 0}
-              lessTimeLeft={secondsLeft > 0 && secondsLeft < 15 * 60}
-              component="span"
-            >
-              {secondsLeft > 0 ? (
-                <StakingCountdown timeObject={secondsToTime(secondsLeft)} />
-              ) : (
-                votingEndTime
-              )}
-            </TimeslotInProgress>
-          </TimeValue>
-          <TimeBlock>End block: {fetchedProposal.endBlock}</TimeBlock>
+          {isLoading ? (
+            <CustomSkeleton animation={"wave"} width={175} height={36} />
+          ) : (
+            <>
+              <TimeValue>
+                {secondsLeft ? "in " : null}
+                <TimeslotInProgress
+                  isDone={secondsLeft <= 0}
+                  lessTimeLeft={secondsLeft > 0 && secondsLeft < 15 * 60}
+                  component="span"
+                >
+                  {secondsLeft > 0 ? (
+                    <StakingCountdown timeObject={secondsToTime(secondsLeft)} />
+                  ) : (
+                    votingEndTime
+                  )}
+                </TimeslotInProgress>
+              </TimeValue>
+              <TimeBlock>End block: {fetchedProposal.endBlock}</TimeBlock>
+            </>
+          )}
         </Box>
       </BaseFlexBox>
       <Divider sx={{ borderColor: "#2C4066", marginY: "16px" }} />
       <ProposalInfoList>
-        {!!getTitleDescription(fetchedProposal.description, 1) && (
-          <ListItem>
-            <ListItemLabel>Description</ListItemLabel>
-            <ListItemValue>
-              {" "}
-              {getTitleDescription(fetchedProposal.description, 1)}
-            </ListItemValue>
-          </ListItem>
-        )}
+        <ListItem>
+          <ListItemLabel>Description</ListItemLabel>
+          <ListItemValue>
+            {isLoading ? (
+              <CustomSkeleton animation={"wave"} height={75} width={"100%"} />
+            ) : (
+              getTitleDescription(fetchedProposal.description, 1)
+            )}
+          </ListItemValue>
+        </ListItem>
 
         {fetchedProposal.targets &&
           fetchedProposal.targets.length &&
@@ -188,7 +219,9 @@ const ProposalInfo: FC = () => {
         <ListItem>
           <ListItemLabel>Proposer</ListItemLabel>
           <ListItemValue>
-            {chainId && (
+            {isLoading ? (
+              <CustomSkeleton animation={"wave"} width={350} height={17} />
+            ) : (
               <a
                 target="_blank"
                 rel="noreferrer"

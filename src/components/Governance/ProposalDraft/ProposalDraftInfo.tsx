@@ -71,7 +71,7 @@ const ProposalDraftInfo = () => {
 
   return (
     <BasePaper>
-      <ProposalTitleDraft>
+      <ProposalTitleDraft variant={"h3"}>
         {draftProposal?.descriptionTitle}
         <ButtonsWrapper>
           <SubmitProposalBtn onClick={onSubmit}>

@@ -17,8 +17,8 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RecommendIcon from "@mui/icons-material/Recommend";
 import { BasePaper } from "components/Base/Paper/StyledPaper";
 import { useNavigate } from "react-router-dom";
-import useSharedContext from "../../context/shared";
-import { CustomSkeleton } from "../Base/Skeletons/StyledSkeleton";
+import useSharedContext from "context/shared";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 type ViewAllProposalItemProps = {
   proposal: IProposal;
@@ -124,6 +124,7 @@ export const StatusIcon: FC<{ status: ProposalStatus }> = ({ status }) => {
     case ProposalStatus.Defeated:
       return <CancelRoundedIcon sx={{ width: "16px" }} />;
     case ProposalStatus.OpenToVote:
+    case ProposalStatus.Pending:
       return <RecommendIcon sx={{ width: "16px" }} />;
     default:
       return null;

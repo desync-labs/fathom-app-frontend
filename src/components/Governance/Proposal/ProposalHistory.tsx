@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, ReactNode, useEffect, useState } from "react";
 import {
   Divider,
   Step,
@@ -16,6 +16,7 @@ import { BasePaper } from "components/Base/Paper/StyledPaper";
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import useProposalContext from "context/proposal";
 import { ProposalStatus } from "utils/Constants";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const HistoryTitle = styled(Typography)`
   color: #fff;
@@ -98,7 +99,7 @@ function HistoryStepIcon(props: StepIconProps) {
 
 type Step = {
   label: string;
-  date: string;
+  date: string | ReactNode;
 };
 
 const ProposalHistory: FC = () => {
@@ -111,28 +112,41 @@ const ProposalHistory: FC = () => {
     votingStartsTime,
     votingEndTime,
     status,
+    isLoading,
   } = useProposalContext();
 
   useEffect(() => {
     const steps = [
       {
         label: "Created",
-        date: new Date(
-          Number(fetchedProposal.blockTimestamp) * 1000
-        ).toLocaleString(),
+        date: isLoading ? (
+          <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
+        ) : (
+          new Date(
+            Number(fetchedProposal.blockTimestamp) * 1000
+          ).toLocaleString()
+        ),
       },
     ];
 
     if (currentBlock > fetchedProposal.startBlock) {
       steps.push({
         label: "Active",
-        date: votingStartsTime as string,
+        date: isLoading ? (
+          <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
+        ) : (
+          (votingStartsTime as string)
+        ),
       });
       setActiveStep(steps.length);
     } else {
       steps.push({
         label: "Active",
-        date: votingStartsTime as string,
+        date: isLoading ? (
+          <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
+        ) : (
+          (votingStartsTime as string)
+        ),
       });
       setActiveStep(steps.length - 1);
     }
@@ -143,7 +157,11 @@ const ProposalHistory: FC = () => {
     ) {
       steps.push({
         label: status,
-        date: votingEndTime as string,
+        date: isLoading ? (
+          <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
+        ) : (
+          (votingEndTime as string)
+        ),
       });
       setActiveStep(steps.length);
     } else {
@@ -152,13 +170,21 @@ const ProposalHistory: FC = () => {
       ) {
         steps.push({
           label: status,
-          date: votingEndTime as string,
+          date: isLoading ? (
+            <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
+          ) : (
+            (votingEndTime as string)
+          ),
         });
         setActiveStep(steps.length);
       } else {
         steps.push({
           label: ProposalStatus.Succeeded,
-          date: "",
+          date: isLoading ? (
+            <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
+          ) : (
+            ""
+          ),
         });
         setActiveStep(steps.length - 1);
       }
@@ -166,6 +192,7 @@ const ProposalHistory: FC = () => {
 
     setSteps(steps);
   }, [
+    isLoading,
     status,
     votingStartsTime,
     votingEndTime,
