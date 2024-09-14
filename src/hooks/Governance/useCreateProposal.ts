@@ -251,7 +251,7 @@ const useCreateProposal = () => {
         ...proposal,
         ...formattedValues,
       });
-      setShowSuccessAlertHandler(true, "Proposal edited successfully.");
+      setShowSuccessAlertHandler(true, "Draft proposal edited successfully.");
     } else {
       saveDraftProposal(formattedValues);
       setShowSuccessAlertHandler(
