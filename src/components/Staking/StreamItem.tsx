@@ -15,7 +15,7 @@ import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
-import StakingViewSkeleton from "./StakingViewSkeleton";
+import StakingViewSkeleton from "components/Staking/StakingViewSkeleton";
 
 const StakingViewList = styled(Box)`
   display: flex;

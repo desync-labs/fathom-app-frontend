@@ -4,7 +4,7 @@ import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
 import { useServices } from "context/services";
 import { IProposal } from "fathom-sdk";
 import BigNumber from "bignumber.js";
-import { stripTags } from "../../utils/htmlToComponent";
+import { stripTags } from "utils/htmlToComponent";
 
 const useViewProposalItem = (proposal: IProposal) => {
   const { chainId, account, library } = useConnector();

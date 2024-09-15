@@ -1,7 +1,7 @@
 import { Box, BoxProps } from "@mui/material";
 import { FC, ReactNode } from "react";
 import useSharedContext from "context/shared";
-import { CustomSkeleton } from "../Base/Skeletons/StyledSkeleton";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 interface ListItemProps extends BoxProps {
   children: ReactNode;

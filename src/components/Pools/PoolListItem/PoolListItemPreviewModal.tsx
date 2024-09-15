@@ -24,8 +24,8 @@ import {
   BaseListItem,
   BaseListPreviewModal,
 } from "components/Base/List/StyledList";
-import useConnector from "../../../context/connector";
-import { BaseFlexBox } from "../../Base/Boxes/StyledBoxes";
+import useConnector from "context/connector";
+import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 
 const BreadcrumbsContainer = styled(Box)`
   display: flex;

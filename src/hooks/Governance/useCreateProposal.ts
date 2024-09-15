@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from "uuid";
 // @ts-ignore
 import DraftPasteProcessor from "draft-js/lib/DraftPasteProcessor";
 import { saveDraftProposal, findDraftProposal } from "utils/draftProposal";
-import { stripTags } from "../../utils/htmlToComponent";
+import { stripTags } from "utils/htmlToComponent";
 
 export type ActionType = {
   target: string;
@@ -251,11 +251,14 @@ const useCreateProposal = () => {
         ...proposal,
         ...formattedValues,
       });
+      setShowSuccessAlertHandler(true, "Draft proposal edited successfully.");
     } else {
       saveDraftProposal(formattedValues);
+      setShowSuccessAlertHandler(
+        true,
+        "Proposal successfully saved for later."
+      );
     }
-
-    setShowSuccessAlertHandler(true, "Proposal successfully saved for later.");
   }, [getValues, setShowSuccessAlertHandler, _proposalId]);
 
   const appendAction = useCallback(() => {

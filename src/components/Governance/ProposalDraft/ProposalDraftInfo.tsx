@@ -32,6 +32,12 @@ const ProposalTitleDraft = styled(ProposalTitle)`
   display: flex;
   align-items: center;
   height: 28px;
+
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    flex-direction: column;
+    align-items: start;
+    height: 50px;
+  }
 `;
 
 const ButtonsWrapper = styled(Box)`
@@ -65,7 +71,7 @@ const ProposalDraftInfo = () => {
 
   return (
     <BasePaper>
-      <ProposalTitleDraft>
+      <ProposalTitleDraft variant={"h3"}>
         {draftProposal?.descriptionTitle}
         <ButtonsWrapper>
           <SubmitProposalBtn onClick={onSubmit}>

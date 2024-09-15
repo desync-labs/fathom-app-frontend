@@ -67,7 +67,9 @@ const EditorWrapper = styled("div")`
 
   .rdw-embedded-modal,
   .rdw-link-modal,
-  .rdw-colorpicker-modal {
+  .rdw-colorpicker-modal, 
+  .rdw-image-modal, 
+  .rdw-emoji-modal {
     background: #1e2f4d;
     box-shadow: 3px 3px 5px #071028;
     border: 1px solid #071028;
@@ -77,7 +79,48 @@ const EditorWrapper = styled("div")`
       border-radius: 4px;
       border: none;
       color: #fff;
+      height: 25px !important;
     }
+
+    button {
+        background: transparent;
+        color: #43FFF1;
+        font-weight: bold;
+        font-size: 15px;
+        line-height: 20px;
+        padding: 8px;
+        gap: 8px;
+        border: 1px solid #009E92;
+        border-radius: 8px;
+        height: 12px;
+        width: auto;
+        display: flex;
+        align-items: center;
+        &:hover {
+            background: transparent;
+            color: #B3FFF9;
+            border: 1px solid #B3FFF9; 
+            svg {
+                color: #B3FFF9;
+            },
+        }
+        &:disabled {
+            color: gray;
+            background: transparent;
+            border-color: gray;
+            cursor: not-allowed !important;
+            pointer-events: all !important;
+        }
+    }
+      .rdw-image-modal-btn-section, 
+      .rdw-link-modal-buttonsection {
+          display: flex;
+      }
+  }
+  .rdw-link-modal {
+      input {
+          margin-bottom: 5px;
+      }
   }
 
   .rdw-dropdown-optionwrapper {

@@ -50,6 +50,7 @@ const VoteButtonGroup = styled(ButtonGroup)`
 
 const ProposalDetailsStatus = styled(ProposalItemStatus)`
   max-width: 100%;
+  font-size: 13px;
 `;
 
 type ButtonsProps = {
@@ -205,7 +206,7 @@ const ProposalVoting: FC = () => {
   return (
     <BasePaper>
       <BaseFlexBox>
-        <VotingTitle>Proposal Status</VotingTitle>
+        <VotingTitle>Status</VotingTitle>
         <ProposalDetailsStatus status={status} sx={{ margin: "10px 0" }}>
           <StatusIcon status={status} />
           {quorumError && !isMobile ? "Voting quorum was not reached" : status}
