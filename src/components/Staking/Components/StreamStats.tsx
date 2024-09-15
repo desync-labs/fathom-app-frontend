@@ -159,6 +159,10 @@ const StreamStats: FC = () => {
       : 0;
   }, [totalRewards, fthmPriceFormatted]);
 
+  console.log({
+    claimedAmount: stake.claimedAmount,
+  });
+
   return (
     <BasePaper>
       <BaseFlexBox>
@@ -315,9 +319,7 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {BigNumber(Number(seconds)).isLessThanOrEqualTo(0) &&
-              stake &&
-              BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
+              {stake && BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                 <>
                   {formatPercentage(Number(stake.claimedAmount) / 10 ** 18)}{" "}
                   FTHM <span>${formatNumber(cooldownInUsd)}</span>
@@ -328,7 +330,13 @@ const StreamStats: FC = () => {
             </>
           }
         >
-          <ListItemText primary="Ready to withdraw" />
+          <ListItemText
+            primary={
+              BigNumber(Number(seconds)).isGreaterThan(0)
+                ? "Cooldown Amount"
+                : "Ready to withdraw"
+            }
+          />
         </BaseListItem>
       </BaseListStakingStats>
 
