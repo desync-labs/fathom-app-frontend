@@ -26,7 +26,7 @@ import {
   BreadcrumbsWrapper,
   VaultBreadcrumbsCurrentPage,
 } from "components/Vaults/VaultDetail/Breadcrumbs";
-import useConnector from "../../context/connector";
+import useConnector from "context/connector";
 
 const BreadcrumbsContainer = styled(Box)`
   display: flex;

@@ -1,13 +1,11 @@
 import { IProposal } from "fathom-sdk";
 import ViewAllProposalItem from "components/Governance/ViewAllProposalItem";
-import {
-  CircleWrapper,
-  NoResults,
-} from "components/AppComponents/AppBox/AppBox";
-import { Box, CircularProgress, Pagination } from "@mui/material";
+import { NoResults } from "components/AppComponents/AppBox/AppBox";
+import { Box, Pagination } from "@mui/material";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent, FC } from "react";
+import ViewAllProposalSkeleton from "components/Governance/ViewAllProposalSkeleton";
 
 const ProposalListWrapper = styled(Box)`
   display: flex;
@@ -23,7 +21,7 @@ const PaginationWrapper = styled(Box)`
 `;
 
 type ProposalsViewProps = {
-  fetchProposalsPending: boolean;
+  isLoading: boolean;
   fetchedProposals: IProposal[];
   itemsCount: number;
   currentPage: number;
@@ -31,7 +29,7 @@ type ProposalsViewProps = {
 };
 
 const ProposalsView: FC<ProposalsViewProps> = ({
-  fetchProposalsPending,
+  isLoading,
   fetchedProposals,
   itemsCount,
   currentPage,
@@ -40,27 +38,25 @@ const ProposalsView: FC<ProposalsViewProps> = ({
   return (
     <>
       <ProposalListWrapper>
-        {fetchedProposals.length && !fetchProposalsPending ? (
-          fetchedProposals.map((proposal: IProposal, index: number) => (
-            <ViewAllProposalItem
-              proposal={proposal}
-              key={proposal.proposalId}
-              index={index}
-            />
-          ))
+        {isLoading ? (
+          <ViewAllProposalSkeleton />
         ) : (
-          <NoResults>
-            {fetchProposalsPending ? (
-              <CircleWrapper>
-                <CircularProgress size={30} />
-              </CircleWrapper>
+          <>
+            {fetchedProposals.length ? (
+              fetchedProposals.map((proposal: IProposal, index: number) => (
+                <ViewAllProposalItem
+                  proposal={proposal}
+                  key={proposal.proposalId}
+                  index={index}
+                />
+              ))
             ) : (
-              "No opened any proposals."
+              <NoResults>No opened any proposals.</NoResults>
             )}
-          </NoResults>
+          </>
         )}
       </ProposalListWrapper>
-      {!fetchProposalsPending && itemsCount > COUNT_PER_PAGE && (
+      {!isLoading && itemsCount > COUNT_PER_PAGE && (
         <PaginationWrapper>
           <Pagination
             count={Math.ceil(itemsCount / COUNT_PER_PAGE)}

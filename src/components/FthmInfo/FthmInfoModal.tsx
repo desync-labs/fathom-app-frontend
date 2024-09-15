@@ -1,6 +1,6 @@
 import { Dispatch, FC, ReactNode, SetStateAction } from "react";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { styled } from "@mui/material/styles";
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
 type FthmInfoModalProps = {
   open: boolean;
@@ -8,7 +8,7 @@ type FthmInfoModalProps = {
   children: ReactNode;
 };
 
-const FthmInfoModalDialog = styled(AppDialog)`
+const FthmInfoModalDialog = styled(BaseDialogWrapper)`
   .MuiPaper-root {
     width: 500px;
     ${({ theme }) => theme.breakpoints.down("sm")} {

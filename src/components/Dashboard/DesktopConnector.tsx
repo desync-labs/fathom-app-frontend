@@ -1,10 +1,10 @@
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
 import { FC, useCallback } from "react";
 import { DialogContent } from "@mui/material";
 import MetamaskSrc from "assets/svg/metamask.svg";
 import WalletConnect from "assets/svg/wallet-connect.svg";
 import { styled } from "@mui/material/styles";
 import useConnector from "context/connector";
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
 type DesktopConnectorPropsType = {
   onClose: () => void;
@@ -52,7 +52,7 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
   }, [onClose, connectMetamask]);
 
   return (
-    <AppDialog
+    <BaseDialogWrapper
       onClose={onClose}
       open={true}
       sx={{ "& .MuiPaper-root": { width: "500px" } }}
@@ -67,7 +67,7 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
           Wallet Connect
         </Connector>
       </ConnectorDialogContent>
-    </AppDialog>
+    </BaseDialogWrapper>
   );
 };
 

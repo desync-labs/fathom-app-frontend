@@ -1,6 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { Box, TableCell, TableContainer, TableRow } from "@mui/material";
-import { AppTableRow } from "../../AppComponents/AppTable/AppTable";
+import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 
 export const BaseTableContainer = styled(TableContainer)`
   border-radius: 12px;

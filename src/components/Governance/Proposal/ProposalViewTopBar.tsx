@@ -9,7 +9,8 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
 import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import useProposalContext from "context/proposal";
-import useSharedContext from "../../../context/shared";
+import useSharedContext from "context/shared";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const StyledBreadcrumb = styled(Chip)(() => {
   return {
@@ -41,9 +42,10 @@ export enum ProposalViewTopBarVariant {
   DraftProposal = "DraftProposal",
 }
 
-const ProposalViewTopBar: FC<{ variant?: ProposalViewTopBarVariant }> = ({
-  variant = ProposalViewTopBarVariant.Proposal,
-}) => {
+const ProposalViewTopBar: FC<{
+  variant?: ProposalViewTopBarVariant;
+  isLoading?: boolean;
+}> = ({ variant = ProposalViewTopBarVariant.Proposal, isLoading = false }) => {
   const navigate = useNavigate();
   const { fetchedProposal } = useProposalContext();
   const { isMobile } = useSharedContext();
@@ -67,16 +69,20 @@ const ProposalViewTopBar: FC<{ variant?: ProposalViewTopBarVariant }> = ({
           />
         )}
         {variant === ProposalViewTopBarVariant.Proposal ? (
-          <StyledBreadcrumb
-            label={`Proposal #${
-              isMobile
-                ? fetchedProposal.proposalId?.substring(0, 4) +
-                  " ... " +
-                  fetchedProposal.proposalId?.slice(-4)
-                : fetchedProposal?.proposalId
-            }`}
-            className="disabled"
-          />
+          isLoading ? (
+            <CustomSkeleton animation={"wave"} width={300} height={20} />
+          ) : (
+            <StyledBreadcrumb
+              label={`Proposal #${
+                isMobile
+                  ? fetchedProposal.proposalId?.substring(0, 4) +
+                    " ... " +
+                    fetchedProposal.proposalId?.slice(-4)
+                  : fetchedProposal?.proposalId
+              }`}
+              className="disabled"
+            />
+          )
         ) : (
           <StyledBreadcrumb label={"Overview"} className="disabled" />
         )}

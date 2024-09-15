@@ -16,7 +16,7 @@ import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 const AllProposalsView = () => {
   const {
     tab,
-    fetchProposalsPending,
+    isLoading,
     fetchedProposals,
     itemsCount,
     currentPage,
@@ -40,7 +40,7 @@ const AllProposalsView = () => {
         )}
         {tab === ProposalsTabs.PROPOSALS && (
           <ProposalsView
-            fetchProposalsPending={fetchProposalsPending}
+            isLoading={isLoading}
             fetchedProposals={fetchedProposals}
             itemsCount={itemsCount}
             currentPage={currentPage}

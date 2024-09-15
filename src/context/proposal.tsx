@@ -29,6 +29,7 @@ export type UseProposalContextReturnType = {
   secondsLeft: number;
   vFTHMTotalSupply: string;
   currentBlock: number;
+  isLoading: boolean;
 };
 
 export const ProposalContext = createContext<UseProposalContextReturnType>(

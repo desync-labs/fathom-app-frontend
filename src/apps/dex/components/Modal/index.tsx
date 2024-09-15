@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
 import { styled } from "@mui/material";
-import { AppDialog } from "components/AppComponents/AppDialog/AppDialog";
+import { BaseDialogWrapper } from "components/Base/Dialog/StyledDialog";
 
-const AppDialogStyled = styled(AppDialog)<{
+const AppDialogStyled = styled(BaseDialogWrapper)<{
   minHeight?: number;
   maxHeight?: number;
   isFixedHeight?: boolean;

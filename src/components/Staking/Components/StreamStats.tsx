@@ -28,6 +28,7 @@ import LockedSrc from "assets/svg/locked.svg";
 import RewardsSrc from "assets/svg/rewards.svg";
 import PriceSrc from "assets/svg/price.svg";
 import useConnector from "context/connector";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const StatsBlocks = styled(Box)`
   display: flex;
@@ -37,8 +38,11 @@ const StatsBlocks = styled(Box)`
   align-items: flex-start;
   gap: 20px 8px;
   width: 100%;
-  padding: 16px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #1d2d49;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    gap: 12px;
+  }
 `;
 
 const StatsBlock = styled(Box)`
@@ -118,6 +122,15 @@ const NoCooldownText = styled(Box)`
   text-transform: capitalize;
 `;
 
+const ValueLockedWrapper = styled(Box)`
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    display: block;
+  }
+`;
+
 const StreamStats: FC = () => {
   const {
     stake,
@@ -161,12 +174,14 @@ const StreamStats: FC = () => {
           <img src={PercentSrc} alt={"percent"} />
           <Box>
             <StatsLabel>APR</StatsLabel>
-            {protocolStatsInfo && (
+            {protocolStatsInfo ? (
               <StatsValue>
                 <strong>
                   {formatNumber(protocolStatsInfo.stakingAPR / 10 ** 18)}%
                 </strong>
               </StatsValue>
+            ) : (
+              <CustomSkeleton animation={"wave"} width={40} height={20} />
             )}
           </Box>
         </StatsBlock>
@@ -175,14 +190,14 @@ const StreamStats: FC = () => {
           <img src={LockedSrc} alt={"locked"} />
           <Box>
             <StatsLabel>Total Value Locked</StatsLabel>
-            {protocolStatsInfo && (
+            {protocolStatsInfo ? (
               <StatsValue>
-                <Box>
+                <ValueLockedWrapper>
                   <strong>
                     {formatNumber(protocolStatsInfo.totalStakeFTHM / 10 ** 18)}
                   </strong>{" "}
                   FTHM
-                </Box>
+                </ValueLockedWrapper>
                 <span>
                   $
                   {formatCompact(
@@ -191,6 +206,8 @@ const StreamStats: FC = () => {
                   )}
                 </span>
               </StatsValue>
+            ) : (
+              <CustomSkeleton animation={"wave"} width={150} height={22.5} />
             )}
           </Box>
         </StatsBlock>
@@ -198,7 +215,7 @@ const StreamStats: FC = () => {
           <img src={RewardsSrc} alt={"rewards"} />
           <Box>
             <StatsLabel>Daily rewards</StatsLabel>
-            {protocolStatsInfo && (
+            {protocolStatsInfo ? (
               <StatsValue>
                 <Box>
                   <strong>
@@ -214,6 +231,8 @@ const StreamStats: FC = () => {
                   )}
                 </span>
               </StatsValue>
+            ) : (
+              <CustomSkeleton animation={"wave"} width={50} height={22.5} />
             )}
           </Box>
         </StatsBlock>
@@ -221,7 +240,7 @@ const StreamStats: FC = () => {
           <img src={PriceSrc} alt={"price"} />
           <Box>
             <StatsLabel>Price</StatsLabel>
-            {protocolStatsInfo && (
+            {protocolStatsInfo ? (
               <StatsValue>
                 <strong>
                   $
@@ -230,6 +249,8 @@ const StreamStats: FC = () => {
                     : 0}
                 </strong>
               </StatsValue>
+            ) : (
+              <CustomSkeleton animation={"wave"} width={93} height={20} />
             )}
           </Box>
         </StatsBlock>
@@ -311,7 +332,7 @@ const StreamStats: FC = () => {
         </BaseListItem>
       </BaseListStakingStats>
 
-      <BaseFlexBox sx={{ paddingTop: "16px" }}>
+      <BaseFlexBox sx={{ paddingTop: "12px" }}>
         {BigNumber(Number(seconds)).isGreaterThan(0) ? (
           <>
             <NoCooldownText>Cooldown in progress</NoCooldownText>

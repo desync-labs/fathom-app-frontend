@@ -19,10 +19,10 @@ const ViewAllProposalsTabsWrapper = styled(AppNavWrapper)`
 `;
 
 const ViewAllProposalsTabsItem = styled(AppNavItem)`
+  border-radius: 8px;
   &.active {
     color: #fff;
     border: none;
-    border-radius: 8px;
     background: #3d5580;
     padding: 8px 16px;
     ${({ theme }) => theme.breakpoints.down("sm")} {
