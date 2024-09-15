@@ -159,10 +159,6 @@ const StreamStats: FC = () => {
       : 0;
   }, [totalRewards, fthmPriceFormatted]);
 
-  console.log({
-    claimedAmount: stake.claimedAmount,
-  });
-
   return (
     <BasePaper>
       <BaseFlexBox>
