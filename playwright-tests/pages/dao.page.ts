@@ -148,13 +148,12 @@ export default class DaoPage extends BasePage {
       }),
       this.waitForGraphRequestByOperationName(
         graphAPIEndpoints.daoSubgraph,
-        GraphOperationName.Stakers
+        GraphOperationName.LockPositions
       ),
     ]);
     const response = await results[2].response();
     const responseBody = await response?.json();
-    const newPositionLockId =
-      responseBody.data.stakers[0].lockPositions[0].lockId;
+    const newPositionLockId = responseBody.data.lockPositions[0].lockId;
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(1000);
     return Number(newPositionLockId);
@@ -349,13 +348,12 @@ export default class DaoPage extends BasePage {
       }),
       this.waitForGraphRequestByOperationName(
         graphAPIEndpoints.daoSubgraph,
-        GraphOperationName.Stakers
+        GraphOperationName.LockPositions
       ),
     ]);
     const response = await results[2].response();
     const responseBody = await response?.json();
-    const lastPositionLockId =
-      responseBody.data.stakers[0].lockPositions[0].lockId;
+    const lastPositionLockId = responseBody.data.lockPositions[0].lockId;
     await this.page.waitForLoadState("load");
     await this.page.waitForTimeout(1000);
     expect.soft(lastPositionLockId).toEqual((lockId - 1).toString());
