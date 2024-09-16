@@ -14,7 +14,6 @@ import useConnector from "context/connector";
 
 import DepositVaultInfo from "components/Vaults/VaultList/DepositVaultModal/DepositVaultInfo";
 import DepositVaultForm from "components/Vaults/VaultList/DepositVaultModal/DepositVaultForm";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   ButtonPrimary,
   ButtonSecondary,
@@ -29,6 +28,7 @@ import {
   BaseWarningBox,
   BaseErrorBox,
 } from "components/Base/Boxes/StyledBoxes";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 
 export type VaultDepositProps = {
   vaultItemData: IVault;
@@ -82,7 +82,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
       maxWidth="sm"
       data-testid="vault-listItemDepositModal"
     >
-      <AppDialogTitle
+      <BaseDialogTitle
         id="customized-dialog-title"
         onClose={onClose}
         sx={{ padding: "24px !important" }}
@@ -90,7 +90,7 @@ const VaultListItemDepositModal: FC<VaultDepositProps> = ({
         data-testid="vault-listItemDepositModal-dialogTitle"
       >
         Deposit
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
         <FormProvider {...methods}>

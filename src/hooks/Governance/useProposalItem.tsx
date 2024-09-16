@@ -3,18 +3,21 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GOVERNANCE_PROPOSAL_ITEM } from "apollo/queries";
 import { useServices } from "context/services";
-import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
-import { IProposal } from "fathom-sdk";
+
+import { IProposal, SmartContractFactory } from "fathom-sdk";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
+
+import { htmlToComponent } from "utils/htmlToComponent";
+import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
 
 const useProposalItem = () => {
   const { account, chainId, library } = useConnector();
   const navigate = useNavigate();
 
   const { _proposalId } = useParams();
-  const { proposalService } = useServices();
+  const { proposalService, poolService } = useServices();
 
   const [votePending, setVotePending] = useState<string | null>(null);
   const [hasVoted, setHasVoted] = useState<boolean>(false);
@@ -22,14 +25,27 @@ const useProposalItem = () => {
 
   const [seconds, setSeconds] = useState<number>(0);
 
-  const [status, setStatus] = useState<string>();
+  const [status, setStatus] = useState<ProposalStatus>(ProposalStatus.Pending);
 
   const [votingStartsTime, setVotingStartsTime] = useState<string | null>(null);
   const [votingEndTime, setVotingEndTime] = useState<string | null>(null);
+  const [vFTHMTotalSupply, setFTHMTotalSupply] = useState<string>("0");
+  const [currentBlock, setCurrentBlock] = useState<number>(0);
+
+  const [votingStartsTimeLoading, setVotingStartsTimeLoading] =
+    useState<boolean>(false);
+  const [votingEndTimeLoading, setVotingEndTimeLoading] =
+    useState<boolean>(false);
+  const [statusLoading, setStatusLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext();
 
-  const { data, loading, refetch } = useQuery(GOVERNANCE_PROPOSAL_ITEM, {
+  const {
+    data,
+    loading: proposalLoading,
+    refetch,
+  } = useQuery(GOVERNANCE_PROPOSAL_ITEM, {
     variables: {
       id: _proposalId,
     },
@@ -42,6 +58,34 @@ const useProposalItem = () => {
     }
   }, [syncDao, prevSyncDao, refetch]);
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsLoading(
+        votingEndTimeLoading ||
+          statusLoading ||
+          votingStartsTimeLoading ||
+          proposalLoading
+      );
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [
+    votingEndTimeLoading,
+    statusLoading,
+    votingStartsTimeLoading,
+    proposalLoading,
+    setIsLoading,
+  ]);
+
+  useEffect(() => {
+    if (chainId) {
+      const vFathom = SmartContractFactory.vFathom(chainId);
+      poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
+        setFTHMTotalSupply(totalSupply.toString());
+      });
+    }
+  }, [chainId, poolService, setFTHMTotalSupply]);
+
   const fetchHasVoted = useCallback(async () => {
     const hasVoted = await proposalService.hasVoted(
       data.proposal.proposalId,
@@ -52,10 +96,14 @@ const useProposalItem = () => {
 
   const fetchStatus = useCallback(async () => {
     if (data?.proposal) {
+      setStatusLoading(true);
       const [status, currentBlock] = await Promise.all([
         proposalService.viewProposalState(data.proposal.proposalId),
         library.getBlockNumber(),
       ]);
+
+      setCurrentBlock(currentBlock);
+
       if (
         BigNumber(currentBlock).isGreaterThan(data?.proposal.endBlock) &&
         [0, 1].includes(status)
@@ -64,11 +112,13 @@ const useProposalItem = () => {
       } else {
         setStatus((Object.values(ProposalStatus) as any)[status]);
       }
+      setStatusLoading(false);
     }
-  }, [proposalService, data, account, setStatus]);
+  }, [proposalService, data, account, setStatus, setCurrentBlock]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data?.proposal) {
+      setVotingStartsTimeLoading(true);
       const currentBlock = await library.getBlockNumber();
 
       let timestamp;
@@ -88,6 +138,7 @@ const useProposalItem = () => {
         timestamp = BigNumber(blockData.timestamp);
       }
 
+      setVotingStartsTimeLoading(false);
       return setVotingStartsTime(
         new Date(timestamp.toNumber() * 1000).toLocaleString()
       );
@@ -95,10 +146,11 @@ const useProposalItem = () => {
   }, [data, library, setVotingStartsTime]);
 
   const getVotingEndTime = useCallback(async () => {
-    if (data?.proposal && library) {
+    if (data?.proposal) {
+      setVotingEndTimeLoading(true);
       const currentBlock = await library.getBlockNumber();
-      let endTimestamp;
 
+      let endTimestamp;
       if (
         BigNumber(currentBlock).isLessThanOrEqualTo(data.proposal.startBlock)
       ) {
@@ -134,6 +186,7 @@ const useProposalItem = () => {
 
       const now = Date.now() / 1000;
 
+      setVotingEndTimeLoading(false);
       setVotingEndTime(new Date(endTimestamp * 1000).toLocaleString());
 
       if (BigNumber(endTimestamp).minus(now).isLessThanOrEqualTo(0)) {
@@ -183,11 +236,9 @@ const useProposalItem = () => {
   }, [data, account, fetchHasVoted, fetchStatus]);
 
   useEffect(() => {
-    if (library) {
-      getVotingStartsTime();
-      getVotingEndTime();
-    }
-  }, [library, getVotingStartsTime, getVotingEndTime]);
+    getVotingStartsTime();
+    getVotingEndTime();
+  }, [getVotingStartsTime, getVotingEndTime]);
 
   useEffect(() => {
     let timeout1: ReturnType<typeof setTimeout>;
@@ -225,7 +276,7 @@ const useProposalItem = () => {
 
   const getTitleDescription = useCallback((title: string, index: number) => {
     if (title) {
-      return title.split("----------------")[index];
+      return htmlToComponent(title.split("----------------")[index]);
     } else {
       return "";
     }
@@ -282,31 +333,31 @@ const useProposalItem = () => {
   }, [data?.proposal]);
 
   const forVotes = useMemo(() => {
-    return loading
+    return proposalLoading
       ? 0
       : BigNumber(data?.proposal.forVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
           .toNumber() || 0;
-  }, [data?.proposal, loading]);
+  }, [data?.proposal, proposalLoading]);
 
   const againstVotes = useMemo(() => {
-    return loading
+    return proposalLoading
       ? 0
       : BigNumber(data?.proposal.againstVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
           .toNumber() || 0;
-  }, [data?.proposal, loading]);
+  }, [data?.proposal, proposalLoading]);
 
   const abstainVotes = useMemo(() => {
-    return loading
+    return proposalLoading
       ? 0
       : BigNumber(data?.proposal.abstainVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
           .toNumber() || 0;
-  }, [data?.proposal, loading]);
+  }, [data?.proposal, proposalLoading]);
 
   return {
     hasVoted,
@@ -321,13 +372,16 @@ const useProposalItem = () => {
     abstainVotes,
     againstVotes,
     fetchedTotalVotes,
-    fetchedProposal: loading ? ({} as IProposal) : data.proposal,
+    fetchedProposal: proposalLoading ? ({} as IProposal) : data.proposal,
+    isLoading,
     back,
     submitTime,
     votingStartsTime,
     votingEndTime,
     quorumError,
     secondsLeft: seconds,
+    vFTHMTotalSupply,
+    currentBlock,
   };
 };
 

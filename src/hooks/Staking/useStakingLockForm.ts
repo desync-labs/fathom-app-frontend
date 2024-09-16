@@ -2,11 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import debounce from "lodash.debounce";
 import BigNumber from "bignumber.js";
+import { SmartContractFactory } from "fathom-sdk";
 
 import { useServices } from "context/services";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
-import { SmartContractFactory } from "fathom-sdk";
 import { DAY_IN_SECONDS } from "utils/Constants";
 
 const useStakingLockForm = () => {
@@ -27,8 +27,8 @@ const useStakingLockForm = () => {
     reValidateMode: "onChange",
     mode: "onChange",
   });
-  const { account, chainId, library } = useConnector();
-  const { stakingService, positionService } = useServices();
+  const { account, chainId } = useConnector();
+  const { stakingService } = useServices();
 
   const { setLastTransactionBlock, syncDao, prevSyncDao } = useSyncContext();
 
@@ -37,9 +37,6 @@ const useStakingLockForm = () => {
 
   const [approvedBtn, setApprovedBtn] = useState<boolean>(false);
   const [approvalPending, setApprovalPending] = useState<boolean>(false);
-
-  const [xdcBalance, setXdcBalance] = useState<string>("0");
-  const [fxdBalance, setFxdBalance] = useState<string>("0");
 
   const [minLockPeriod, setMinLockPeriod] = useState<number>(1);
 
@@ -101,35 +98,6 @@ const useStakingLockForm = () => {
   }, [account, chainId, fthmTokenAddress, approvalStatus, stakePosition]);
 
   useEffect(() => {
-    const getBalance = async () => {
-      const [xdcBalance, fxdBalance] = await Promise.all([
-        library.getBalance(account),
-        positionService.balanceStableCoin(account),
-      ]);
-
-      setXdcBalance(
-        BigNumber(xdcBalance.toString())
-          .dividedBy(10 ** 18)
-          .toString()
-      );
-      setFxdBalance(
-        BigNumber(fxdBalance.toString())
-          .dividedBy(10 ** 18)
-          .toString()
-      );
-    };
-
-    if (account && chainId) getBalance();
-  }, [
-    account,
-    library,
-    chainId,
-    positionService,
-    setXdcBalance,
-    setFxdBalance,
-  ]);
-
-  useEffect(() => {
     if (BigNumber(stakePosition).isGreaterThan(fthmBalance)) {
       setBalanceError(true);
     } else {
@@ -184,14 +152,7 @@ const useStakingLockForm = () => {
 
   const setMax = useCallback(
     (balance: string) => {
-      setValue("stakePosition", balance);
-    },
-    [setValue]
-  );
-
-  const setPeriod = useCallback(
-    (period: number) => {
-      setValue("lockDays", period);
+      setValue("stakePosition", balance, { shouldValidate: true });
     },
     [setValue]
   );
@@ -217,10 +178,7 @@ const useStakingLockForm = () => {
     handleSubmit,
     onSubmit,
     setMax,
-    setPeriod,
     fthmBalance,
-    fxdBalance,
-    xdcBalance,
   };
 };
 

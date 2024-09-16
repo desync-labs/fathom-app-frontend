@@ -1,5 +1,5 @@
 import { styled } from "@mui/material/styles";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box as MuiBox, Box, Stack, Typography } from "@mui/material";
 
 export const BaseInfoBox = styled(Box)`
   display: flex;
@@ -108,4 +108,24 @@ export const BaseFlexBox = styled(Stack)`
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+`;
+
+export const InfoLabel = styled(Typography)`
+  font-size: 14px;
+  float: left;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+`;
+
+export const InfoValue = styled(Typography)`
+  font-size: 14px;
+  color: #fff;
+  float: right;
+`;
+
+export const InfoWrapper = styled(MuiBox)`
+  overflow: hidden;
+  padding: 2px 0;
 `;

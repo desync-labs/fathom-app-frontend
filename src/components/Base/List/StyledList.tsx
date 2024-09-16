@@ -47,3 +47,40 @@ export const BaseListItem = styled(ListItem)`
     justify-content: space-between;
   }
 `;
+
+export const BaseListStakingStats = styled(List)`
+  padding: 0;
+  & li {
+    padding: 0 0 4px 0;
+
+    & .MuiListItemText-root {
+      margin-top: 2px;
+      margin-bottom: 2px;
+
+      span {
+        font-size: 11px;
+        line-height: 16px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #b7c8e5;
+      }
+    }
+
+    & .MuiListItemSecondaryAction-root {
+      display: inline-flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+
+      & span {
+        color: #b7c8e5;
+        font-weight: 400;
+      }
+    }
+  }
+`;

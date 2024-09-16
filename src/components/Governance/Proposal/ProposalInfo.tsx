@@ -1,69 +1,35 @@
-import { Box, Grid, Typography } from "@mui/material";
-import { secondsToTime } from "utils/secondsToTime";
-import { getAccountUrl } from "utils/explorer";
+import { FC } from "react";
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  styled,
+} from "@mui/material";
 import useProposalContext from "context/proposal";
-import { ChainId } from "connectors/networks";
-import { styled } from "@mui/material/styles";
-import { AppPaper } from "components/AppComponents/AppPaper/AppPaper";
-import StakingCountdown from "components/Staking/StakingCountdown";
-import useConnector from "context/connector";
-import { ZERO_ADDRESS } from "utils/Constants";
-import useSharedContext from "context/shared";
 
-const ProposalTitle = styled(Typography)`
-  font-weight: bold;
-  font-size: 24px;
+import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
+import { BasePaper } from "components/Base/Paper/StyledPaper";
+import StakingCountdown from "components/Staking/StakingCountdown";
+
+import useConnector from "context/connector";
+
+import { ChainId } from "connectors/networks";
+
+import { getAccountUrl } from "utils/explorer";
+import { ZERO_ADDRESS } from "utils/Constants";
+import { secondsToTime } from "utils/secondsToTime";
+import useSharedContext from "context/shared";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
+
+export const ProposalTitle = styled(Typography)`
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
   line-height: 28px;
   margin-bottom: 20px;
-`;
-
-const TimeslotContainer = styled(Grid)`
-  border-bottom: 1px solid #253656;
-  padding: 20px 24px 30px;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 12px 12px 20px;
-  }
-`;
-
-const TimeslotTitle = styled(Typography)`
-  text-transform: uppercase;
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 16px;
-  color: #7d91b5;
-`;
-
-const TimeslotValue = styled(Typography)`
-  font-size: 14px;
-  line-height: 20px;
-`;
-
-const TimeslotBlock = styled(Typography)`
-  font-size: 14px;
-  line-height: 20px;
-  color: #9fadc6;
-`;
-
-const ActionLabel = styled(Box)`
-  color: #7d91b5;
-  font-weight: 700;
-  font-size: 13px;
-  line-height: 16px;
-`;
-
-const ActionWrapper = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  justify-content: start;
-  margin-bottom: 10px;
-`;
-
-const CallDataWrapper = styled("div")`
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -ms-word-break: break-word;
-  word-break: break-word;
 `;
 
 const TimeslotInProgress = styled(Box, {
@@ -83,23 +49,59 @@ const TimeslotInProgress = styled(Box, {
   return styles;
 });
 
-const ProposalLabel = styled(Box)`
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
-`;
+export const ProposalInfoList = styled(List)`
+  list-style: none;
 
-const ProposalDescription = styled(Box)`
-  color: #9fadc6;
-  font-size: 14px;
-  line-height: 20px;
-  padding: 10px 0;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    line-break: anywhere;
+  & .MuiListItem-root {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-left: 0;
+    padding-right: 0;
   }
 `;
 
-const ProposalInfo = () => {
+export const ListItemLabel = styled(ListItemText)`
+  span {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+`;
+
+export const ListItemValue = styled(ListItemText)`
+  width: 100%;
+  span {
+    color: #b7c8e5;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+`;
+
+const TimeLabel = styled("div")`
+  color: #8ea4cc;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  text-transform: uppercase;
+  padding-bottom: 2px;
+`;
+
+const TimeValue = styled("div")`
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+`;
+
+const TimeBlock = styled("div")`
+  font-size: 14px;
+  line-height: 20px;
+  color: #9fadc6;
+`;
+
+const ProposalInfo: FC = () => {
   const {
     getTitleDescription,
     fetchedProposal,
@@ -107,133 +109,135 @@ const ProposalInfo = () => {
     votingStartsTime,
     votingEndTime,
     secondsLeft,
+    isLoading,
   } = useProposalContext();
 
   const { chainId } = useConnector();
   const { isMobile } = useSharedContext();
 
   return (
-    <Grid item xs={12} md={8} lg={8}>
-      <AppPaper>
-        <Grid container>
-          <Grid
-            item
-            xs={12}
-            sx={{ padding: isMobile ? "20px 12px 0" : "24px 24px 0" }}
-          >
-            <ProposalTitle>
-              {getTitleDescription(fetchedProposal.description, 0)}
-            </ProposalTitle>
-          </Grid>
-          <Grid item xs={12}>
-            <TimeslotContainer container gap={2}>
-              <Grid item xs={12} sm={3}>
-                <TimeslotTitle>Submit time:</TimeslotTitle>
-                <TimeslotValue>{submitTime}</TimeslotValue>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TimeslotTitle>Exp. Voting starts:</TimeslotTitle>
-                <TimeslotValue>{votingStartsTime}</TimeslotValue>
-                <TimeslotBlock>
-                  Start block: {fetchedProposal.startBlock}
-                </TimeslotBlock>
-              </Grid>
-              <Grid item xs={12} sm={5}>
-                <TimeslotTitle>Exp. Voting ends:</TimeslotTitle>
-                <TimeslotValue>
-                  {secondsLeft ? "in " : null}
-                  <TimeslotInProgress
-                    isDone={secondsLeft <= 0}
-                    lessTimeLeft={secondsLeft > 0 && secondsLeft < 15 * 60}
-                    component="span"
-                  >
-                    {secondsLeft > 0 ? (
-                      <StakingCountdown
-                        timeObject={secondsToTime(secondsLeft)}
-                      />
-                    ) : (
-                      votingEndTime
-                    )}
-                  </TimeslotInProgress>
-                </TimeslotValue>
-                <TimeslotBlock>
-                  End block: {fetchedProposal.endBlock}
-                </TimeslotBlock>
-              </Grid>
-            </TimeslotContainer>
-          </Grid>
-          {!!getTitleDescription(fetchedProposal.description, 1) && (
-            <Grid
-              item
-              xs={12}
-              sx={{ padding: isMobile ? "20px 12px" : "24px 24px 12px 24px" }}
-            >
-              <ProposalLabel>Description</ProposalLabel>
-              <ProposalDescription>
-                {getTitleDescription(fetchedProposal.description, 1)}
-              </ProposalDescription>
-            </Grid>
-          )}
-          {fetchedProposal.targets &&
-            fetchedProposal.targets.length &&
-            fetchedProposal.targets[0] !== ZERO_ADDRESS && (
-              <Grid
-                item
-                xs={12}
-                sx={{ padding: isMobile ? "12px" : "12px 24px" }}
-              >
-                <ProposalLabel>Action</ProposalLabel>
-                <ProposalDescription>
-                  <ActionWrapper>
-                    <ActionLabel>Targets: </ActionLabel>
-                    {fetchedProposal.targets.join(", ")}
-                  </ActionWrapper>
-                  <ActionWrapper>
-                    <ActionLabel>Values: </ActionLabel>
-                    {fetchedProposal.values.join(", ")}
-                  </ActionWrapper>
-                  <ActionWrapper>
-                    <ActionLabel>Call Data:</ActionLabel>{" "}
-                    <CallDataWrapper>
-                      {fetchedProposal.calldatas.join(", ")}
-                    </CallDataWrapper>
-                  </ActionWrapper>
-                </ProposalDescription>
-              </Grid>
+    <BasePaper>
+      {isLoading ? (
+        <CustomSkeleton
+          animation={"wave"}
+          width={"100%"}
+          height={28}
+          sx={{ mb: "20px" }}
+        />
+      ) : (
+        <ProposalTitle variant={"h3"}>
+          {getTitleDescription(fetchedProposal.description, 0)}
+        </ProposalTitle>
+      )}
+      <BaseFlexBox sx={{ justifyContent: "flex-start", alignItems: "start" }}>
+        <Box width={isMobile ? "35%" : "25%"}>
+          <TimeLabel>Submit time</TimeLabel>
+          <TimeValue>
+            {isLoading ? (
+              <CustomSkeleton animation={"wave"} width={150} height={16} />
+            ) : (
+              submitTime
             )}
-          {/*<Grid item xs={12} sx={{ padding: "12px 24px" }}>*/}
-          {/*  <ProposalLabel>Discussion</ProposalLabel>*/}
-          {/*  <ProposalDescription>*/}
-          {/*    <a href="/">Discord / Forum / Medium / etc...</a>*/}
-          {/*  </ProposalDescription>*/}
-          {/*</Grid>*/}
-          <Grid
-            item
-            xs={12}
-            sx={{
-              padding: isMobile ? "12px 12px 20px" : "12px 24px 24px 24px",
-            }}
-          >
-            <ProposalLabel>Proposer</ProposalLabel>
-            <ProposalDescription>
-              {chainId && (
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={getAccountUrl(
-                    fetchedProposal.proposer,
-                    chainId as ChainId
-                  )}
+          </TimeValue>
+        </Box>
+
+        <Box width={isMobile ? "35%" : "25%"}>
+          <TimeLabel>Exp. Voting starts:</TimeLabel>
+          {isLoading ? (
+            <CustomSkeleton animation={"wave"} width={175} height={36} />
+          ) : (
+            <>
+              <TimeValue>{votingStartsTime}</TimeValue>
+              <TimeBlock>Start block: {fetchedProposal.startBlock}</TimeBlock>
+            </>
+          )}
+        </Box>
+
+        <Box width={"30%"}>
+          <TimeLabel>Exp. Voting ends:</TimeLabel>
+          {isLoading ? (
+            <CustomSkeleton animation={"wave"} width={175} height={36} />
+          ) : (
+            <>
+              <TimeValue>
+                {secondsLeft ? "in " : null}
+                <TimeslotInProgress
+                  isDone={secondsLeft <= 0}
+                  lessTimeLeft={secondsLeft > 0 && secondsLeft < 15 * 60}
+                  component="span"
                 >
-                  {fetchedProposal.proposer}
-                </a>
-              )}
-              {!chainId && <span>{fetchedProposal.proposer}</span>}
-            </ProposalDescription>
-          </Grid>
-        </Grid>
-      </AppPaper>
-    </Grid>
+                  {secondsLeft > 0 ? (
+                    <StakingCountdown timeObject={secondsToTime(secondsLeft)} />
+                  ) : (
+                    votingEndTime
+                  )}
+                </TimeslotInProgress>
+              </TimeValue>
+              <TimeBlock>End block: {fetchedProposal.endBlock}</TimeBlock>
+            </>
+          )}
+        </Box>
+      </BaseFlexBox>
+      <Divider sx={{ borderColor: "#2C4066", marginY: "16px" }} />
+      <ProposalInfoList>
+        <ListItem>
+          <ListItemLabel>Description</ListItemLabel>
+          <ListItemValue>
+            {isLoading ? (
+              <CustomSkeleton animation={"wave"} height={75} width={"100%"} />
+            ) : (
+              getTitleDescription(fetchedProposal.description, 1)
+            )}
+          </ListItemValue>
+        </ListItem>
+
+        {fetchedProposal.targets &&
+          fetchedProposal.targets.length &&
+          fetchedProposal.targets[0] !== ZERO_ADDRESS && (
+            <>
+              <ListItem>
+                <ListItemLabel>Targets: </ListItemLabel>
+                <ListItemValue>
+                  {fetchedProposal.targets.join(", ")}
+                </ListItemValue>
+              </ListItem>
+              <ListItem>
+                <ListItemLabel>Values: </ListItemLabel>
+                <ListItemValue>
+                  {fetchedProposal.values.join(", ")}
+                </ListItemValue>
+              </ListItem>
+              <ListItem>
+                <ListItemLabel>Call Data: </ListItemLabel>
+                <ListItemValue>
+                  {fetchedProposal.calldatas.join(", ")}
+                </ListItemValue>
+              </ListItem>
+            </>
+          )}
+
+        <ListItem>
+          <ListItemLabel>Proposer</ListItemLabel>
+          <ListItemValue>
+            {isLoading ? (
+              <CustomSkeleton animation={"wave"} width={350} height={17} />
+            ) : (
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={getAccountUrl(
+                  fetchedProposal.proposer,
+                  chainId as ChainId
+                )}
+              >
+                {fetchedProposal.proposer}
+              </a>
+            )}
+            {!chainId && <span>{fetchedProposal.proposer}</span>}
+          </ListItemValue>
+        </ListItem>
+      </ProposalInfoList>
+    </BasePaper>
   );
 };
 

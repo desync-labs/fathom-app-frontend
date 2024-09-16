@@ -4,16 +4,21 @@ import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
 import { useServices } from "context/services";
 import { IProposal } from "fathom-sdk";
 import BigNumber from "bignumber.js";
+import { stripTags } from "utils/htmlToComponent";
 
 const useViewProposalItem = (proposal: IProposal) => {
   const { chainId, account, library } = useConnector();
+
   const [status, setStatus] = useState<ProposalStatus>();
+  const [statusLoading, setStatusLoading] = useState<boolean>(false);
+
   const { proposalService } = useServices();
 
   const [timestamp, setTimestamp] = useState<number>(0);
   const [seconds, setSeconds] = useState<number>(0);
 
   const [quorumError, setQuorumError] = useState<boolean>(false);
+  const [quorumLoading, setQuorumLoading] = useState<boolean>(false);
 
   const getTimestamp = useCallback(async () => {
     const currentBlock = await library.getBlockNumber();
@@ -59,6 +64,7 @@ const useViewProposalItem = (proposal: IProposal) => {
   }, [proposal, library, setSeconds, setTimestamp]);
 
   const checkProposalVotesAndQuorum = useCallback(async () => {
+    setQuorumLoading(true);
     const [totalVotes, quorum] = await Promise.all([
       proposalService.proposalVotes(proposal.proposalId),
       proposalService.quorum(proposal.startBlock),
@@ -75,9 +81,11 @@ const useViewProposalItem = (proposal: IProposal) => {
     } else {
       setQuorumError(true);
     }
+    setQuorumLoading(false);
   }, [proposalService, proposal]);
 
   const fetchProposalState = useCallback(async () => {
+    setStatusLoading(true);
     const [status, currentBlock] = await Promise.all([
       proposalService.viewProposalState(proposal.proposalId),
       library.getBlockNumber(),
@@ -93,7 +101,8 @@ const useViewProposalItem = (proposal: IProposal) => {
     } else {
       setStatus((Object.values(ProposalStatus) as any)[status]);
     }
-  }, [proposalService, proposal, account, library]);
+    setStatusLoading(false);
+  }, [proposalService, proposal, account, library, setStatusLoading]);
 
   useEffect(() => {
     library && getTimestamp();
@@ -129,9 +138,21 @@ const useViewProposalItem = (proposal: IProposal) => {
     return title.substring(0, 50) + (title.length > 50 ? "... " : "");
   }, [proposal.description]);
 
+  const proposalDescription = useMemo(() => {
+    const description = stripTags(
+      proposal.description.split("----------------")[1]
+    );
+    return (
+      description.substring(0, 150) + (description.length > 150 ? "... " : "")
+    );
+  }, [proposal.description]);
+
   return {
+    quorumLoading,
+    statusLoading,
     quorumError,
     proposalTitle,
+    proposalDescription,
     timestamp,
     seconds,
     status,

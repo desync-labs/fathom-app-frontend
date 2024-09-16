@@ -6,7 +6,7 @@ import { DialogActions, FlowType } from "hooks/Staking/useStakingView";
 import UnstakeDialog from "components/Staking/Dialog/UnstakeDialog";
 import EarlyUnstakeDialog from "components/Staking/Dialog/EarlyUnstakeDialog";
 import { NoResults } from "components/Base/Typography/StyledTypography";
-import { Box, CircularProgress, Grid, Pagination } from "@mui/material";
+import { Box, Pagination } from "@mui/material";
 import UnclaimedRewardsDialog from "components/Staking/Dialog/UnclaimedRewardsDialog";
 import useStakingContext from "context/staking";
 import UnstakeCoolDownDialog from "components/Staking/Dialog/UnstakeCoolDownDialog";
@@ -15,6 +15,14 @@ import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
+import StakingViewSkeleton from "components/Staking/StakingViewSkeleton";
+
+const StakingViewList = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+`;
 
 const PaginationWrapper = styled(Box)`
   display: flex;
@@ -51,22 +59,26 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
           <NoResults mt={isMobile ? 2 : 3}>
             You have no open positions.
           </NoResults>
-        ) : isLoading ? (
-          <Grid container>
-            <Grid item xs={12} sx={{ textAlign: "center" }}>
-              <CircularProgress size={30} />
-            </Grid>
-          </Grid>
         ) : (
-          <Grid container sx={{ gap: "12px" }} mt={isMobile ? 2 : 3}>
-            {lockPositions.map((lockPosition: ILockPosition) => (
-              <StakingViewItem
-                key={lockPosition.lockId}
-                token={token}
-                lockPosition={lockPosition}
-              />
-            ))}
-          </Grid>
+          <>
+            {isLoading && (
+              <StakingViewList>
+                <StakingViewSkeleton />
+              </StakingViewList>
+            )}
+
+            {!isLoading && (
+              <StakingViewList>
+                {lockPositions.map((lockPosition: ILockPosition) => (
+                  <StakingViewItem
+                    key={lockPosition.lockId}
+                    token={token}
+                    lockPosition={lockPosition}
+                  />
+                ))}
+              </StakingViewList>
+            )}
+          </>
         )}
         {itemCount > COUNT_PER_PAGE && (
           <PaginationWrapper>

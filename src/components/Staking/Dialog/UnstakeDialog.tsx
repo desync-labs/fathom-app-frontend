@@ -1,5 +1,4 @@
 import { FC, memo } from "react";
-import { AppDialogTitle } from "components/AppComponents/AppDialog/AppDialogTitle";
 import {
   Box,
   CircularProgress,
@@ -7,76 +6,60 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import {
-  AppDialog,
-  DialogContentWrapper,
-} from "components/AppComponents/AppDialog/AppDialog";
-
-import { ILockPosition } from "fathom-sdk";
 import { styled } from "@mui/material/styles";
+import InfoIcon from "@mui/icons-material/Info";
+import { ILockPosition } from "fathom-sdk";
+import BigNumber from "bignumber.js";
+
+import useSharedContext from "context/shared";
+import usePricesContext from "context/prices";
+import { getTokenLogoURL } from "utils/tokenLogo";
+import useUnstake from "hooks/Staking/useUnstake";
+import { formatNumber, formatPercentage } from "utils/format";
+
+import { ButtonsWrapper } from "components/Staking/Dialog/ClaimRewardsDialog";
+import { BaseDialogTitle } from "components/Base/Dialog/BaseDialogTitle";
 import {
-  AppFormInputLogo,
-  AppFormInputWrapper,
-  AppFormLabel,
-  AppTextField,
-} from "components/AppComponents/AppForm/AppForm";
+  BaseButtonPrimary,
+  BaseCancelButton,
+} from "components/Base/Buttons/StyledButtons";
 import {
+  BaseInfoBox,
   InfoLabel,
   InfoValue,
   InfoWrapper,
-  WalletBalance,
-} from "components/AppComponents/AppBox/AppBox";
-import InfoIcon from "@mui/icons-material/Info";
-import { getTokenLogoURL } from "utils/tokenLogo";
+} from "components/Base/Boxes/StyledBoxes";
 import {
-  ButtonPrimary,
-  CancelButton,
-  MaxButton,
-} from "components/AppComponents/AppButton/AppButton";
-import useUnstake from "hooks/Staking/useUnstake";
+  BaseDialogContentWrapper,
+  BaseDialogDescription,
+  BaseDialogWrapperLight,
+} from "components/Base/Dialog/StyledDialog";
 import {
-  ButtonsWrapper,
-  InfoMessageWrapper,
-} from "components/Staking/Dialog/ClaimRewardsDialog";
-import { formatNumber, formatPercentage } from "utils/format";
-import BigNumber from "bignumber.js";
-import useSharedContext from "context/shared";
-
-const UnStakeDialogWrapper = styled(AppDialog)`
-  .MuiGrid-container {
-    margin: 0 17px 15px 17px;
-    padding: 10px 0 30px 0;
-  }
-`;
+  BaseFormInputErrorWrapper,
+  BaseFormInputLabel,
+  BaseFormInputLogo,
+  BaseFormInputUsdIndicator,
+  BaseFormInputWrapper,
+  BaseFormLabelRow,
+  BaseFormSetMaxButton,
+  BaseFormTextField,
+  BaseFormWalletBalance,
+} from "components/Base/Form/StyledForm";
 
 const UnStakeGrid = styled(Grid)`
   width: auto;
   &.MuiGrid-container {
-    margin: 0 17px;
-    padding: 10px 0;
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-      margin: 0;
-    }
+    margin: 20px 0;
+    padding: 0;
   }
 `;
 
-const ConfirmButton = styled(ButtonPrimary)`
+const ConfirmButton = styled(BaseButtonPrimary)`
   width: 100%;
   height: 48px;
   font-weight: 600;
   font-size: 17px;
   line-height: 24px;
-`;
-
-const ErrorWrapper = styled("div")`
-  display: flex;
-  align-items: center;
-  justify-content: left;
-  gap: 7px;
-  padding-top: 2px;
-  & > * {
-    font-size: 13px;
-  }
 `;
 
 export type UnStakeDialogProps = {
@@ -103,63 +86,96 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
     unStakeHandler,
   } = useUnstake(lockPosition, onFinish);
   const { isMobile } = useSharedContext();
+  const { fthmPrice } = usePricesContext();
 
   return (
-    <UnStakeDialogWrapper
+    <BaseDialogWrapperLight
       onClose={onClose}
       aria-labelledby="customized-dialog-title"
       open={true}
       fullWidth
       maxWidth="sm"
     >
-      <AppDialogTitle id="customized-dialog-title" onClose={onClose}>
+      <BaseDialogTitle id="customized-dialog-title" onClose={onClose}>
         Unstake
-      </AppDialogTitle>
+      </BaseDialogTitle>
 
       <DialogContent>
-        <UnStakeGrid container>
-          <Grid item xs={12}>
-            <AppFormInputWrapper>
-              <AppFormLabel>Unstake amount</AppFormLabel>
-              <WalletBalance>
-                Available:{" "}
-                {formatPercentage(
-                  BigNumber(totalBalance)
-                    .dividedBy(10 ** 18)
-                    .toNumber()
-                )}{" "}
-                {token}
-              </WalletBalance>
-              <AppTextField
-                error={balanceError || requiredError}
-                id="outlined-helperText"
-                helperText={
-                  <>
-                    {balanceError && (
-                      <ErrorWrapper>
-                        <InfoIcon />
-                        <Typography>You do not have enough {token}</Typography>
-                      </ErrorWrapper>
-                    )}
-                    {requiredError && (
-                      <ErrorWrapper>
-                        <InfoIcon />
-                        <Typography>Unstake amount is required</Typography>
-                      </ErrorWrapper>
-                    )}
-                  </>
-                }
-                value={unStakeAmount}
-                placeholder="0"
-                onChange={handleUnStakeAmountChange}
-              />
-              <AppFormInputLogo src={getTokenLogoURL(token)} />
-              <MaxButton onClick={() => setMax()}>Max</MaxButton>
-            </AppFormInputWrapper>
-          </Grid>
-        </UnStakeGrid>
+        <BaseDialogDescription>
+          How much do you want to unstake from this position?
+        </BaseDialogDescription>
+        <BaseFormInputWrapper>
+          <BaseFormLabelRow>
+            <BaseFormInputLabel>Unstake amount</BaseFormInputLabel>
+            <BaseFormWalletBalance>
+              Available:{" "}
+              {formatPercentage(
+                BigNumber(totalBalance)
+                  .dividedBy(10 ** 18)
+                  .toNumber()
+              )}{" "}
+              {token}
+            </BaseFormWalletBalance>
+          </BaseFormLabelRow>
+          <BaseFormTextField
+            error={balanceError || requiredError}
+            id="outlined-helperText"
+            helperText={
+              <>
+                {balanceError && (
+                  <BaseFormInputErrorWrapper>
+                    <InfoIcon
+                      sx={{
+                        float: "left",
+                        fontSize: "14px",
+                      }}
+                    />
+                    <Box
+                      sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                      component={"span"}
+                    >
+                      You do not have enough {token}
+                    </Box>
+                  </BaseFormInputErrorWrapper>
+                )}
+                {requiredError && (
+                  <BaseFormInputErrorWrapper>
+                    <InfoIcon
+                      sx={{
+                        float: "left",
+                        fontSize: "14px",
+                      }}
+                    />
+                    <Box
+                      sx={{ fontSize: "12px", paddingLeft: "6px" }}
+                      component={"span"}
+                    >
+                      Unstake amount is required
+                    </Box>
+                  </BaseFormInputErrorWrapper>
+                )}
+              </>
+            }
+            value={unStakeAmount}
+            placeholder="0"
+            onChange={handleUnStakeAmountChange}
+          />
+          <BaseFormInputUsdIndicator>{`$${formatNumber(
+            BigNumber(unStakeAmount || 0)
+              .multipliedBy(fthmPrice)
+              .dividedBy(10 ** 18)
+              .toNumber()
+          )}`}</BaseFormInputUsdIndicator>
+          <BaseFormInputLogo
+            className={"extendedInput"}
+            src={getTokenLogoURL(token)}
+          />
+          <BaseFormSetMaxButton onClick={() => setMax()}>
+            Max
+          </BaseFormSetMaxButton>
+        </BaseFormInputWrapper>
 
-        <DialogContentWrapper>
+        <BaseDialogContentWrapper>
           <img src={getTokenLogoURL(token)} alt={"token-logo"} width={58} />
           <Box sx={{ fontSize: "18px" }}>You’re requesting to unstake</Box>
           <Box className={"amount"}>
@@ -168,17 +184,11 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
             </Box>
             <span>{token}</span>
           </Box>
-        </DialogContentWrapper>
-        <UnStakeGrid
-          container
-          sx={{ "&.MuiGrid-container": { marginBottom: "20px" } }}
-        >
+        </BaseDialogContentWrapper>
+        <UnStakeGrid container>
           <Grid item xs={12}>
             <InfoWrapper>
-              <InfoLabel>
-                You locked
-                <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
-              </InfoLabel>
+              <InfoLabel>You locked</InfoLabel>
               <InfoValue>
                 {formatPercentage(
                   BigNumber(totalBalance)
@@ -189,10 +199,7 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
               </InfoValue>
             </InfoWrapper>
             <InfoWrapper>
-              <InfoLabel>
-                You'll received
-                <InfoIcon sx={{ fontSize: "18px", color: "#6379A1" }} />
-              </InfoLabel>
+              <InfoLabel>You'll received</InfoLabel>
               <InfoValue>
                 {unStakeAmount ? formatNumber(Number(unStakeAmount)) : "--"}{" "}
                 {token}
@@ -201,7 +208,9 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
           </Grid>
         </UnStakeGrid>
         <ButtonsWrapper>
-          {!isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
+          {!isMobile && (
+            <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
+          )}
           <ConfirmButton
             disabled={isLoading}
             isLoading={isLoading}
@@ -209,16 +218,18 @@ const UnStakeDialog: FC<UnStakeDialogProps> = ({
           >
             {isLoading ? <CircularProgress size={30} /> : "Yes, Unstake"}
           </ConfirmButton>
-          {isMobile && <CancelButton onClick={onClose}>Cancel</CancelButton>}
+          {isMobile && (
+            <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
+          )}
         </ButtonsWrapper>
-        <InfoMessageWrapper>
-          <InfoIcon sx={{ fontSize: "18px", color: "#4F658C" }} />
+        <BaseInfoBox sx={{ marginTop: "20px" }}>
+          <InfoIcon sx={{ fontSize: "18px" }} />
           <Typography>
             Proceeding will prompt you to sign 1 txn in MetaMask.
           </Typography>
-        </InfoMessageWrapper>
+        </BaseInfoBox>
       </DialogContent>
-    </UnStakeDialogWrapper>
+    </BaseDialogWrapperLight>
   );
 };
 

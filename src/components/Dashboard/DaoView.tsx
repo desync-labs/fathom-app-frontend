@@ -1,11 +1,17 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { styled } from "@mui/material/styles";
 import { GovernanceIcon, StakingIcon } from "components/Common/MenuIcons";
 import {
-  NestedRouteContainer,
   NestedRouteLink,
   NestedRouteNav,
 } from "components/AppComponents/AppBox/AppBox";
+
+const DAONestedRouteContainer = styled("div")`
+  width: 100%;
+  margin: 0;
+  padding: 0;
+`;
 
 const DaoView = () => {
   const location = useLocation();
@@ -38,9 +44,9 @@ const DaoView = () => {
           Governance
         </NestedRouteLink>
       </NestedRouteNav>
-      <NestedRouteContainer maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <DAONestedRouteContainer>
         <Outlet />
-      </NestedRouteContainer>
+      </DAONestedRouteContainer>
     </>
   );
 };

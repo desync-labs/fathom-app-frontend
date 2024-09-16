@@ -1,12 +1,15 @@
 import { styled } from "@mui/material/styles";
 import {
   Box,
+  Checkbox,
+  CheckboxProps,
   FormLabel as MuiFormLabel,
   IconButton as MuiButton,
   List as MuiList,
   TextField as MuiTextField,
   Typography,
 } from "@mui/material";
+import { FC } from "react";
 
 export const BaseTextField = styled(MuiTextField)`
   width: 100%;
@@ -14,8 +17,8 @@ export const BaseTextField = styled(MuiTextField)`
   margin: 0;
   input,
   textarea {
-    background: #071028;
     border-radius: 8px;
+    background: #071028;
     height: 40px;
     width: 100%;
     padding: 0 50px 0 35px;
@@ -289,6 +292,37 @@ export const BaseFormTextField = styled(MuiTextField)`
   }
 `;
 
+export const RangeTextFields = styled(BaseFormTextField)`
+  input,
+  textarea {
+    height: 30px;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 8px 60px 8px 16px;
+  }
+
+  & .Mui-error input,
+  & .Mui-error textarea {
+    color: #f44336;
+    text-fill-color: #f44336;
+    border: 1px solid #f44336;
+  }
+
+  &.MuiFormHelperText-root {
+    margin-left: 0;
+    margin-top: 0;
+    color: #6379a1;
+
+    &.Mui-error {
+      color: #dd3c3c;
+    }
+
+    p {
+      padding-left: 0;
+    }
+  }
+`;
+
 export const BaseFormSetMaxButton = styled(MuiButton)`
   position: absolute;
   top: 35px;
@@ -354,3 +388,41 @@ export const BaseFormInfoList = styled(MuiList)`
     }
   }
 `;
+
+const BpIcon = styled("span")(({ theme }) => ({
+  borderRadius: 4,
+  width: 20,
+  height: 20,
+  backgroundColor: "#091433",
+  border: "1px solid #6D86B2",
+  "input:hover ~ &": {
+    border: "1px solid #5a81ff",
+    boxShadow: "0px 0px 8px #003cff",
+  },
+  "input:disabled ~ &": {
+    boxShadow: "none",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(57,75,89,.5)"
+        : "rgba(206,217,224,.5)",
+  },
+}));
+
+const BpCheckedIcon = styled(BpIcon)({
+  "&::before": {
+    display: "block",
+    width: 18,
+    height: 18,
+    backgroundImage:
+      "url(\"data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath" +
+      " fill-rule='evenodd' clip-rule='evenodd' d='M12 5c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 " +
+      "1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z' fill='%236D86B2'/%3E%3C/svg%3E\")",
+    content: '""',
+  },
+});
+
+export const BaseCheckbox: FC<CheckboxProps> = (props) => {
+  return (
+    <Checkbox {...props} checkedIcon={<BpCheckedIcon />} icon={<BpIcon />} />
+  );
+};

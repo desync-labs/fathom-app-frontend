@@ -29,6 +29,7 @@ import Web3Status from "components/Web3Status/Web3Status";
 
 import AllProposalsView from "components/Governance/ViewAllProposals";
 import ProposalView from "components/Governance/Proposal";
+import Propose from "components/Governance/Propose";
 
 import StakingView from "components/Staking/StakingView";
 import AlertMessages from "components/Common/AlertMessages";
@@ -137,6 +138,7 @@ import CookieConsent from "components/Common/CookieConsent";
 import MaintenanceModeBanner from "components/Common/MaintenanceBanner";
 import { FxdProvider } from "context/fxd";
 import useVH from "hooks/General/useVH";
+import ProposalDraftView from "components/Governance/ProposalDraftView";
 
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -560,12 +562,28 @@ const MainLayout = () => {
                       element={<AllProposalsView />}
                     ></Route>
                     <Route
+                      path="governance/drafts"
+                      element={<AllProposalsView />}
+                    ></Route>
+                    <Route
+                      path="governance/drafts/:_proposalId"
+                      element={<ProposalDraftView />}
+                    />
+                    <Route
                       path="governance/proposal/:_proposalId"
                       element={
                         <ProposalProvider>
                           <ProposalView />
                         </ProposalProvider>
                       }
+                    />
+                    <Route
+                      path="governance/proposal/create"
+                      element={<Propose />}
+                    />
+                    <Route
+                      path="governance/proposal/create/:_proposalId"
+                      element={<Propose />}
                     />
                     <Route
                       path="*"

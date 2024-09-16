@@ -32,6 +32,7 @@ export default class DaoPage extends BasePage {
   readonly descriptionUnstakeCooldownDialog: Locator;
   readonly coolingDownContentUnstakeCooldownDialog: Locator;
   readonly btnDaoConnectWallet: Locator;
+  readonly btnBuyFthmDex: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -63,13 +64,13 @@ export default class DaoPage extends BasePage {
       "dao-early-unstake-dialog-requesting-unstake-content"
     );
     this.totalAvailableEarlyUnstakeDialog = this.page.locator(
-      "//p[text()='Total Available']/following-sibling::p"
+      "//p[text()='You locked']/following-sibling::p"
     );
     this.penaltyFeeEarlyUnstakeDialog = this.page.locator(
       "//p[text()='Penalty Fee']/following-sibling::p"
     );
     this.maximumReceivedEarlyUnstakeDialog = this.page.locator(
-      "//p[text()='Maximum Received']/following-sibling::p"
+      "//p[contains(text(), 'receive')]/following-sibling::p"
     );
     this.unstakCooldownDialog = this.page.getByTestId(
       "dao-unstake-cooldown-dialog"
@@ -86,6 +87,7 @@ export default class DaoPage extends BasePage {
     this.btnDaoConnectWallet = this.page.getByTestId(
       "dao-connect-wallet-button"
     );
+    this.btnBuyFthmDex = this.page.getByText("Buy FTHM on DEX");
   }
 
   async navigateStaking(): Promise<void> {
@@ -207,14 +209,10 @@ export default class DaoPage extends BasePage {
       `dao-position-${lockId}-lockingTimeValue`
     );
     const lockingTimeText = (await lockingTimeLocator.textContent()) as string;
-    const match = lockingTimeText.match(/(\d+)\s+days/);
-    const lockingDaysValue = match ? parseInt(match[1], 10) : null;
-    const unstakeLockedValueLocator = this.page.getByTestId(
-      `dao-position-${lockId}-unstakeLockedValue`
+    const lockingDaysValue = parseInt(
+      lockingTimeText.match(/(\d+)\s*D/)?.[1] || "0",
+      10
     );
-    const unstakeLockedValueText =
-      (await unstakeLockedValueLocator.textContent()) as string;
-    const unstakeLockedValue = extractNumericValue(unstakeLockedValueText);
     const penaltyFeeLocator = this.page.getByTestId(
       `dao-position-${lockId}-penaltyFee`
     );
@@ -230,7 +228,6 @@ export default class DaoPage extends BasePage {
     expect.soft(lockedValue).toEqual(stakingAmountExpected);
     expect.soft(votingPowerValue).toBeGreaterThan(0);
     expect.soft(lockingDaysValue).toEqual(lockedPeriodExpected - 1);
-    expect.soft(unstakeLockedValue).toEqual(stakingAmountExpected);
     expect.soft(penaltyFeeText).toContain("Penalty Fee: Yes");
     expect.soft(cooldownInfoText).toEqual("Cooldown Period: 5 days");
     await expect.soft(earlyUnstakeButton).toBeVisible();
@@ -271,14 +268,8 @@ export default class DaoPage extends BasePage {
     await expect.soft(this.descriptionEarlyUnstakeDialog).toBeVisible();
     await expect
       .soft(this.descriptionEarlyUnstakeDialog)
-      .toContainText("Position lock time has not yet passed - by requesting");
-    await expect
-      .soft(this.descriptionEarlyUnstakeDialog)
-      .toContainText("Early Unstake - you will pay the penalty.");
-    await expect
-      .soft(this.descriptionEarlyUnstakeDialog)
       .toContainText(
-        "Ensure you Claim Rewards before Unstaking so as not to lose your rewards."
+        "You will be unstaking the position since unstaking early can exhause the pool sharing and penalty fee will apply based your locking period left."
       );
     await expect
       .soft(this.requestingUnstakeContentEarlyUnstakeDialog.locator("img"))
@@ -299,7 +290,7 @@ export default class DaoPage extends BasePage {
           "div:nth-child(2)"
         )
       )
-      .toHaveText("You’re requesting to unstake");
+      .toHaveText("You’re requesting to unstake early");
     await expect
       .soft(
         this.requestingUnstakeContentEarlyUnstakeDialog.locator(
@@ -388,7 +379,7 @@ export default class DaoPage extends BasePage {
     await expect
       .soft(this.descriptionUnstakeCooldownDialog)
       .toContainText(
-        "You successfully requested to unstake. Now it's going to a “Cooldown\" period for 2 days. After this period, you'll be able to Withdraw it at My Stats > Ready-to-Withdraw. Learn more"
+        `You successfully requested to unstake. Now it's going to a “Cooldown" period for 2 days. After this period, you'll be able to Withdraw it at My Stats > Ready-to-Withdraw.`
       );
     await expect
       .soft(this.coolingDownContentUnstakeCooldownDialog.locator("img"))
