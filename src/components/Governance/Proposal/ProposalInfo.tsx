@@ -36,14 +36,14 @@ const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",
 })<{ lessTimeLeft?: boolean; isDone?: boolean }>(
   ({ lessTimeLeft, isDone, theme }) => {
-    const styles = {
+    const styles: any = {
       color: "#3DA329",
       fontSize: "14px",
     };
 
-    if (theme.breakpoints.down("sm")) {
-      styles.fontSize = "10px";
-    }
+    styles[`${theme.breakpoints.down("sm")}`] = {
+      fontSize: "10px",
+    };
 
     if (lessTimeLeft) {
       styles.color = "#C37022";
