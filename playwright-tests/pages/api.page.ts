@@ -272,6 +272,32 @@ export default class APIPage {
     return response;
   }
 
+  async sendVaultPositionTransactionsOperationRequest({
+    account,
+    first,
+    vault,
+  }: {
+    account: string;
+    first: number;
+    vault: string;
+  }): Promise<APIResponse> {
+    const response = await this.request.post(
+      `${this.baseUrl}${this.vaultEndpoint}`,
+      {
+        headers: { "Content-Type": "application/json" },
+        data: {
+          query: this.vaultVaultPositionTransactions,
+          variables: {
+            account,
+            first,
+            vault,
+          },
+        },
+      }
+    );
+    return response;
+  }
+
   async sendAccountVaultPositionsOperationRequest({
     account,
     first,
@@ -308,32 +334,6 @@ export default class APIPage {
           query: this.vaultVaultQuery,
           variables: {
             id,
-          },
-        },
-      }
-    );
-    return response;
-  }
-
-  async sendAccountPositionTransactionsOperationRequest({
-    account,
-    first,
-    vault,
-  }: {
-    account: string;
-    first: number;
-    vault: string;
-  }): Promise<APIResponse> {
-    const response = await this.request.post(
-      `${this.baseUrl}${this.vaultEndpoint}`,
-      {
-        headers: { "Content-Type": "application/json" },
-        data: {
-          query: this.vaultAccountVaultPositionsQuery,
-          variables: {
-            account,
-            first,
-            vault,
           },
         },
       }

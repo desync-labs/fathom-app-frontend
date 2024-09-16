@@ -17,7 +17,7 @@
                 "examples": [
                   "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0xe1415b34bcdba312568205b944bd143fe121f8fb98b44cf1ce330022a1254a74-25-12"
                 ],
-                "pattern": "/^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$/"
+                "pattern": "^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$"
               },
               "timestamp": {
                 "type": "string",
@@ -79,7 +79,7 @@
                 "examples": [
                   "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0x0a59f7f36a36e1e7b462f1d0d9e3734d452db2cbec22c228641b93bac0a3529e-3-1"
                 ],
-                "pattern": "/^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$/"
+                "pattern": "^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$"
               },
               "timestamp": {
                 "type": "string",
