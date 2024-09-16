@@ -34,20 +34,26 @@ export const ProposalTitle = styled(Typography)`
 
 const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",
-})<{ lessTimeLeft?: boolean; isDone?: boolean }>(({ lessTimeLeft, isDone }) => {
-  const styles = {
-    color: "#3DA329",
-    fontSize: "14px",
-  };
+})<{ lessTimeLeft?: boolean; isDone?: boolean }>(
+  ({ lessTimeLeft, isDone, theme }) => {
+    const styles = {
+      color: "#3DA329",
+      fontSize: "14px",
+    };
 
-  if (lessTimeLeft) {
-    styles.color = "#C37022";
-  } else if (isDone) {
-    styles.color = "#fff";
+    if (theme.breakpoints.down("sm")) {
+      styles.fontSize = "10px";
+    }
+
+    if (lessTimeLeft) {
+      styles.color = "#C37022";
+    } else if (isDone) {
+      styles.color = "#fff";
+    }
+
+    return styles;
   }
-
-  return styles;
-});
+);
 
 export const ProposalInfoList = styled(List)`
   list-style: none;
@@ -97,7 +103,7 @@ const TimeValue = styled("div")`
   font-weight: 400;
   line-height: 16px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    font-size: 11px;
+    font-size: 10px;
   }
 `;
 
@@ -160,7 +166,7 @@ const ProposalInfo: FC = () => {
             <CustomSkeleton
               animation={"wave"}
               width={isMobile ? "100%" : 175}
-              height={isMobile ? 72 : 36}
+              height={36}
             />
           ) : (
             <>
@@ -176,7 +182,7 @@ const ProposalInfo: FC = () => {
             <CustomSkeleton
               animation={"wave"}
               width={isMobile ? "100%" : 175}
-              height={isMobile ? 72 : 36}
+              height={36}
             />
           ) : (
             <>
