@@ -4,8 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import BigNumber from "bignumber.js";
 
 const useStreamStats = () => {
-  const { processFlow, protocolStatsInfo, stake, previousStake, totalRewards } =
-    useStakingContext();
+  const {
+    processFlow,
+    protocolStatsInfo,
+    stake,
+    previousStake,
+    totalRewards,
+    isLoading,
+  } = useStakingContext();
 
   const { fthmPrice } = usePricesContext();
   const fthmPriceFormatted = useMemo(
@@ -61,6 +67,7 @@ const useStreamStats = () => {
   }, [seconds, timer, setSeconds, setTimer]);
 
   return {
+    isLoading,
     stake,
     seconds,
     protocolStatsInfo,
