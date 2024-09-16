@@ -19,6 +19,9 @@ export const StakingViewItemWrapper = styled(Box)`
   border: 1px solid #2c4066;
   background: #132340;
   padding: 16px 24px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    padding: 16px;
+  }
 `;
 
 export const RewardsUnStakeWrapper = styled(BaseFlexBox)`
@@ -148,7 +151,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
   return (
     <StakingViewItemWrapper data-testid={`dao-position-${lockPosition.lockId}`}>
       <Grid container spacing={1} alignItems="center">
-        <Grid item sm={2} xs={6}>
+        <Grid item sm={2} xs={7}>
           <BaseFlexBox sx={{ justifyContent: "flex-start", gap: "20px" }}>
             <Index>{lockPosition.lockId}</Index>
             <Box>
@@ -167,7 +170,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Box>
           </BaseFlexBox>
         </Grid>
-        <Grid item sm={2} xs={6}>
+        <Grid item sm={2} xs={5}>
           <Label>Locking Time</Label>
           <Value
             className={"orange flex"}
@@ -183,7 +186,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
         </Grid>
         <Grid
           item
-          xs={6}
+          xs={7}
           sm={1.5}
           sx={(theme) => ({
             [theme.breakpoints.only("xs")]: {
@@ -217,7 +220,7 @@ const StakingViewItem: FC<StakingViewItemPropsType> = ({
             </Value>
           </Box>
         </Grid>
-        <Grid item xs={6} sm={1.5}>
+        <Grid item xs={5} sm={1.5}>
           <Label>Voting Power</Label>
           <Value
             data-testid={`dao-position-${lockPosition.lockId}-votingPowerValue`}
