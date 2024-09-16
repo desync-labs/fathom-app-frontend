@@ -201,7 +201,7 @@ export const STAKING_PROTOCOL_STATS = gql`
 `;
 
 export const STAKING_STAKER = gql`
-  query Stakers($address: Bytes, $skip: Int, $first: Int) {
+  query Stakers($address: Bytes) {
     stakers(where: { address: $address }) {
       id
       address
@@ -212,23 +212,29 @@ export const STAKING_STAKER = gql`
       claimedAmount
       lockPositionIds
       lockPositionCount
-      lockPositions(
-        skip: $skip
-        first: $first
-        orderBy: lockId
-        orderDirection: desc
-      ) {
-        id
-        account
-        streamShares
-        nVoteToken
-        amount
-        lockId
-        end
-        blockNumber
-        blockTimestamp
-        transaction
-      }
+    }
+  }
+`;
+
+export const STAKING_LOCK_POSITIONS = gql`
+  query LockPositions($address: Bytes, $skip: Int, $first: Int) {
+    lockPositions(
+      skip: $skip
+      first: $first
+      orderBy: lockId
+      orderDirection: desc
+      where: { account: $address }
+    ) {
+      id
+      account
+      streamShares
+      nVoteToken
+      amount
+      lockId
+      end
+      blockNumber
+      blockTimestamp
+      transaction
     }
   }
 `;

@@ -22,13 +22,15 @@ import {
   BaseButtonPrimary,
   BaseButtonPrimaryLink,
 } from "components/Base/Buttons/StyledButtons";
+import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
+
+import useConnector from "context/connector";
+import useSharedContext from "context/shared";
 
 import PercentSrc from "assets/svg/percent.svg";
 import LockedSrc from "assets/svg/locked.svg";
 import RewardsSrc from "assets/svg/rewards.svg";
 import PriceSrc from "assets/svg/price.svg";
-import useConnector from "context/connector";
-import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 const StatsBlocks = styled(Box)`
   display: flex;
@@ -79,6 +81,9 @@ const StatsValue = styled(Box)`
     font-weight: 600;
     font-size: 20px;
     line-height: 20px;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      font-size: 16px;
+    }
   }
   span {
     font-weight: 400;
@@ -139,9 +144,10 @@ const StreamStats: FC = () => {
     totalRewards,
     fthmPriceFormatted,
     processFlow,
-    isLoading,
+    stakesLoading,
   } = useStreamStats();
   const { chainId } = useConnector();
+  const { isMobile } = useSharedContext();
 
   const addresses = useMemo(() => {
     return chainId === 50 ? XDC_ADDRESSES : APOTHEM_ADDRESSES;
@@ -151,7 +157,7 @@ const StreamStats: FC = () => {
     return stake ? (stake.claimedAmount / 10 ** 18) * fthmPriceFormatted : 0;
   }, [stake, fthmPriceFormatted]);
 
-  const totalrewardsInUsd = useMemo(() => {
+  const totalRewardsInUsd = useMemo(() => {
     return totalRewards
       ? BigNumber(totalRewards)
           .dividedBy(10 ** 18)
@@ -208,7 +214,11 @@ const StreamStats: FC = () => {
                 </span>
               </StatsValue>
             ) : (
-              <CustomSkeleton animation={"wave"} width={150} height={22} />
+              <CustomSkeleton
+                animation={"wave"}
+                width={150}
+                height={isMobile ? 41 : 22}
+              />
             )}
           </Box>
         </StatsBlock>
@@ -233,7 +243,11 @@ const StreamStats: FC = () => {
                 </span>
               </StatsValue>
             ) : (
-              <CustomSkeleton animation={"wave"} width={50} height={22} />
+              <CustomSkeleton
+                animation={"wave"}
+                width={50}
+                height={isMobile ? 41 : 22}
+              />
             )}
           </Box>
         </StatsBlock>
@@ -264,7 +278,7 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {isLoading ? (
+              {stakesLoading ? (
                 <CustomSkeleton animation={"wave"} height={20} width={175} />
               ) : stake ? (
                 formatPercentage(stake.accruedVotes / 10 ** 18) + " vFTHM"
@@ -279,7 +293,7 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {isLoading ? (
+              {stakesLoading ? (
                 <CustomSkeleton animation={"wave"} height={20} width={175} />
               ) : stake ? (
                 <>
@@ -302,7 +316,7 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {isLoading ? (
+              {stakesLoading ? (
                 <CustomSkeleton animation={"wave"} height={20} width={175} />
               ) : stake && BigNumber(totalRewards).isGreaterThan(0.0001) ? (
                 <>
@@ -312,7 +326,7 @@ const StreamStats: FC = () => {
                       .toNumber()
                   )}{" "}
                   FTHM
-                  <span>${formatNumber(totalrewardsInUsd)}</span>
+                  <span>${formatNumber(totalRewardsInUsd)}</span>
                 </>
               ) : (
                 "0 FTHM"
@@ -325,7 +339,7 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {isLoading ? (
+              {stakesLoading ? (
                 <CustomSkeleton animation={"wave"} height={20} width={175} />
               ) : stake && BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                 <>
@@ -340,7 +354,7 @@ const StreamStats: FC = () => {
         >
           <ListItemText
             primary={
-              isLoading ? (
+              stakesLoading ? (
                 <CustomSkeleton animation={"wave"} height={16} width={175} />
               ) : BigNumber(Number(seconds)).isGreaterThan(0) ? (
                 "Cooldown Amount"
@@ -353,7 +367,7 @@ const StreamStats: FC = () => {
       </BaseListStakingStats>
 
       <BaseFlexBox sx={{ paddingTop: "12px" }}>
-        {isLoading ? (
+        {stakesLoading ? (
           <>
             <CustomSkeleton animation={"wave"} height={16} width={175} />
             <CustomSkeleton animation={"wave"} height={16} width={150} />
