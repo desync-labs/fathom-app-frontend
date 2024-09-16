@@ -8,13 +8,13 @@ import usePricesContext from "context/prices";
 import { getTokenLogoURL } from "utils/tokenLogo";
 import { formatCurrency } from "utils/format";
 import useVaultListItem from "hooks/Vaults/useVaultListItem";
-import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
 import { AppFlexBox } from "components/AppComponents/AppBox/AppBox";
 import VaultListItemPreviewModal from "components/Vaults/VaultList/VaultListItemPreviewModal";
 import VaultListItemDepositModal from "components/Vaults/VaultList/VaultListItemDepositModal";
 import VaultListItemManageModal from "components/Vaults/VaultList/VaultListItemManageModal";
+import { BaseTableRow } from "components/Base/Table/StyledTable";
 
-export const VaultItemTableRow = styled(AppTableRow)`
+export const VaultItemTableRow = styled(BaseTableRow)`
   width: 100%;
   border-radius: 8px;
   background: #132340;

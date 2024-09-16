@@ -1,6 +1,34 @@
 import { styled } from "@mui/material/styles";
-import { Box, TableCell, TableContainer, TableRow } from "@mui/material";
-import { AppTableRow } from "components/AppComponents/AppTable/AppTable";
+import {
+  Box,
+  TableCell,
+  TableContainer,
+  TableRow as MuiTableRow,
+  TableRow,
+} from "@mui/material";
+
+export const BaseTableRow = styled(MuiTableRow)`
+  background: #131f35;
+  td {
+    color: #c5d7f2;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    border-bottom: 2px solid #121212;
+    height: 72px;
+    padding: 0;
+  }
+  td:first-of-type {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding-left: 20px;
+  }
+  td:last-of-type {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+`;
 
 export const BaseTableContainer = styled(TableContainer)`
   border-radius: 12px;
@@ -39,7 +67,7 @@ export const BaseTableCellPopover = styled(Box)`
   line-height: 1rem;
 `;
 
-export const BaseTableItemRow = styled(AppTableRow)`
+export const BaseTableItemRow = styled(BaseTableRow)`
   background: transparent;
 
   &:last-child {

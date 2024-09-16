@@ -10,7 +10,11 @@ import { LogLevel, useLogger } from "utils/Logger";
 import { useServices } from "context/services";
 import { ILockPosition } from "fathom-sdk";
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { STAKING_PROTOCOL_STATS, STAKING_STAKER } from "apollo/queries";
+import {
+  STAKING_LOCK_POSITIONS,
+  STAKING_PROTOCOL_STATS,
+  STAKING_STAKER,
+} from "apollo/queries";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import useSyncContext from "context/sync";
 import useConnector from "context/connector";
@@ -93,9 +97,20 @@ const useStakingView = () => {
       previousData: stakesPreviousData,
       loading: stakesLoading,
       refetch: refetchStakes,
-      fetchMore: fetchMoreStakes,
     },
   ] = useLazyQuery(STAKING_STAKER, {
+    context: { clientName: "governance", chainId },
+  });
+
+  const [
+    fetchLockPositions,
+    {
+      data: lockPositionsData,
+      loading: lockPositionsLoading,
+      refetch: refetchLockPositions,
+      fetchMore: fetchMoreLockPositions,
+    },
+  ] = useLazyQuery(STAKING_LOCK_POSITIONS, {
     context: { clientName: "governance", chainId },
   });
 
@@ -113,11 +128,13 @@ const useStakingView = () => {
   useEffect(() => {
     if (syncDao && !prevSyncDao) {
       refetchStakes({
-        variables: {
-          skip: 0,
-          first: COUNT_PER_PAGE,
-          address: account,
-        },
+        address: account,
+      });
+
+      refetchLockPositions({
+        skip: 0,
+        first: COUNT_PER_PAGE,
+        address: account,
       });
 
       refetchProtocolStats();
@@ -129,16 +146,24 @@ const useStakingView = () => {
     prevSyncDao,
     refetchStakes,
     refetchProtocolStats,
+    refetchLockPositions,
     setCurrentPage,
   ]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      setIsLoading(stakesLoading || fetchPositionsLoading);
+      setIsLoading(
+        stakesLoading || fetchPositionsLoading || lockPositionsLoading
+      );
     }, 300);
 
     return () => clearTimeout(timeout);
-  }, [stakesLoading, fetchPositionsLoading, setIsLoading]);
+  }, [
+    stakesLoading,
+    fetchPositionsLoading,
+    lockPositionsLoading,
+    setIsLoading,
+  ]);
 
   useEffect(() => {
     if (account && stakesData?.stakers?.length) {
@@ -167,16 +192,15 @@ const useStakingView = () => {
 
   const fetchPositions = useMemo(
     () =>
-      debounce((stakesData, account, stakesLoading) => {
+      debounce((lockPositionsData, account, lockPositionLoading) => {
         if (
-          stakesData?.stakers?.length &&
-          stakesData?.stakers[0].lockPositions.length &&
-          !stakesLoading &&
+          lockPositionsData?.lockPositions?.length &&
+          !lockPositionLoading &&
           account
         ) {
           const promises: Promise<eBigNumber>[] = [];
 
-          stakesData?.stakers[0].lockPositions.forEach(
+          lockPositionsData?.lockPositions.forEach(
             (lockPosition: ILockPosition) => {
               promises.push(
                 stakingService.getStreamClaimableAmountPerLock(
@@ -190,7 +214,7 @@ const useStakingView = () => {
 
           setFetchPositionLoading(true);
           Promise.all(promises).then((result) => {
-            const newLockPositions = stakesData?.stakers[0].lockPositions
+            const newLockPositions = lockPositionsData?.lockPositions
               .map((lockPosition: ILockPosition, index: number) => {
                 const newLockPosition: ILockPosition = { ...lockPosition };
                 newLockPosition.rewardsAvailable = Number(
@@ -223,11 +247,17 @@ const useStakingView = () => {
 
   useEffect(() => {
     if (supportedChainIds.includes(chainId)) {
-      fetchPositions(stakesData, account, stakesLoading);
+      fetchPositions(lockPositionsData, account, lockPositionsLoading);
     } else {
       setLockPositions([]);
     }
-  }, [stakesData, account, stakesLoading, fetchPositions, chainId]);
+  }, [
+    lockPositionsData,
+    account,
+    lockPositionsLoading,
+    fetchPositions,
+    chainId,
+  ]);
 
   /**
    * Get All claimed rewards
@@ -283,17 +313,26 @@ const useStakingView = () => {
   );
 
   useEffect(() => {
-    fetchStakes({
-      variables: {
-        skip: 0,
-        first: COUNT_PER_PAGE,
-        address: account,
-      },
-      fetchPolicy: "network-only",
-    });
+    if (account) {
+      fetchStakes({
+        variables: {
+          address: account,
+        },
+        fetchPolicy: "network-only",
+      });
 
-    setCurrentPage(1);
-  }, [account, fetchStakes, setCurrentPage]);
+      fetchLockPositions({
+        variables: {
+          skip: 0,
+          first: COUNT_PER_PAGE,
+          address: account,
+        },
+        fetchPolicy: "network-only",
+      });
+
+      setCurrentPage(1);
+    }
+  }, [account, fetchStakes, fetchLockPositions, setCurrentPage]);
 
   const claimRewards = useCallback(
     async (callback: Function) => {
@@ -391,7 +430,7 @@ const useStakingView = () => {
   const handlePageChange = useCallback(
     (event: ChangeEvent<unknown>, page: number) => {
       setIsLoading(true);
-      fetchMoreStakes({
+      fetchMoreLockPositions({
         variables: {
           address: account,
           first: COUNT_PER_PAGE,
@@ -400,7 +439,7 @@ const useStakingView = () => {
       });
       setCurrentPage(page);
     },
-    [setCurrentPage, fetchMoreStakes, account]
+    [setCurrentPage, fetchMoreLockPositions, account]
   );
 
   return {
@@ -443,6 +482,7 @@ const useStakingView = () => {
       : 0,
     currentPage,
     handlePageChange,
+    stakesLoading,
   } as const;
 };
 
