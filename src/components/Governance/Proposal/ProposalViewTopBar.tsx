@@ -1,13 +1,10 @@
 import { FC } from "react";
 import { styled } from "@mui/material/styles";
-import { Breadcrumbs, Chip, IconButton } from "@mui/material";
-import ButtonGroup from "@mui/material/ButtonGroup";
+import { Breadcrumbs, Chip } from "@mui/material";
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import { useNavigate } from "react-router-dom";
 
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
-import StarOutlineRoundedIcon from "@mui/icons-material/StarOutlineRounded";
 import useProposalContext from "context/proposal";
 import useSharedContext from "context/shared";
 import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
@@ -87,16 +84,6 @@ const ProposalViewTopBar: FC<{
           <StyledBreadcrumb label={"Overview"} className="disabled" />
         )}
       </Breadcrumbs>
-      {variant === ProposalViewTopBarVariant.Proposal && (
-        <ButtonGroup>
-          <IconButton>
-            <StarOutlineRoundedIcon sx={{ color: "#6D86B2", width: "22px" }} />
-          </IconButton>
-          <IconButton>
-            <OpenInNewRoundedIcon sx={{ color: "#6D86B2", width: "18px" }} />
-          </IconButton>
-        </ButtonGroup>
-      )}
     </BaseFlexBox>
   );
 };
