@@ -487,4 +487,136 @@ test.describe("Vault Subgraph API", () => {
       });
     }
   );
+
+  test(
+    qase(
+      95,
+      "Vault Operation - Querying vault operation for a valid vault id is successful and response body matches valid json schema"
+    ),
+    async ({ apiPage }) => {
+      let vaultAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          vaultAddress = "0x0bd92a4749392e99df284d216ad8ec09d622a5c4";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          vaultAddress = "0x775a2c63c79062a9ecb265b62cf155a7934e0b6e";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          vaultAddress = "0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response = await apiPage.sendVaultOperationRequest({
+          id: vaultAddress,
+        });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/vault.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
+      });
+    }
+  );
+
+  test(
+    qase(
+      96,
+      "Account Vault Position Operation - Querying first 1000 account vault positions for an account and specific vault is successful and response body matches valid json schema"
+    ),
+    async ({ apiPage }) => {
+      let walletAddress;
+      let vaultAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          walletAddress = "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e";
+          vaultAddress = "0x0bd92a4749392e99df284d216ad8ec09d622a5c4";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          walletAddress = "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e";
+          vaultAddress = "0x775a2c63c79062a9ecb265b62cf155a7934e0b6e";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          walletAddress = "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0";
+          vaultAddress = "0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response =
+          await apiPage.sendAccountVaultPositionsOperationRequest({
+            account: walletAddress,
+            first: 1000,
+            vault: vaultAddress,
+          });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/account-vault-positions.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
+      });
+    }
+  );
+
+  test(
+    qase(
+      97,
+      "Account Vault Position Operation - Querying first 1000 account vault positions for an account is successful and response body matches valid json schema"
+    ),
+    async ({ apiPage }) => {
+      let walletAddress;
+      switch (apiPage.baseUrl) {
+        case "https://graph.apothem.fathom.fi":
+          walletAddress = "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e";
+          break;
+        case "https://graph.sepolia.fathom.fi":
+          walletAddress = "0xcefc4215f4f92a80ab5f2b2a8e94078a3e79b26e";
+          break;
+        case "https://graph.xinfin.fathom.fi":
+          walletAddress = "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0";
+          break;
+        default:
+          throw new Error("GRAPH_API_BASE_URL value is invalid");
+      }
+      await test.step("Step 1", async () => {
+        const response =
+          await apiPage.sendAccountVaultPositionsOperationRequest({
+            account: walletAddress,
+            first: 1000,
+          });
+        const responseJson = await response.json();
+        lastResponseBody = responseJson;
+        expect(response.status()).toBe(200);
+        apiPage.assertResponseBodyNotEmpty({ responseBody: responseJson });
+        const valid = ajv.validate(
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          require("../../test-data/json-schemas/account-vault-positions.json"),
+          responseJson
+        );
+        if (!valid) {
+          console.error("AJV Validation Errors:", ajv.errorsText());
+        }
+        expect(valid).toBe(true);
+      });
+    }
+  );
 });

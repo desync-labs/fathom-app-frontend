@@ -301,22 +301,37 @@ export default class APIPage {
   async sendAccountVaultPositionsOperationRequest({
     account,
     first,
+    vault,
   }: {
     account: string;
     first: number;
+    vault?: string;
   }): Promise<APIResponse> {
+    const options = !vault
+      ? {
+          headers: { "Content-Type": "application/json" },
+          data: {
+            query: this.vaultAccountVaultPositionsQuery,
+            variables: {
+              account,
+              first,
+            },
+          },
+        }
+      : {
+          headers: { "Content-Type": "application/json" },
+          data: {
+            query: this.vaultAccountVaultPositionsQuery,
+            variables: {
+              account,
+              first,
+              vault,
+            },
+          },
+        };
     const response = await this.request.post(
       `${this.baseUrl}${this.vaultEndpoint}`,
-      {
-        headers: { "Content-Type": "application/json" },
-        data: {
-          query: this.vaultAccountVaultPositionsQuery,
-          variables: {
-            account,
-            first,
-          },
-        },
-      }
+      options
     );
     return response;
   }
