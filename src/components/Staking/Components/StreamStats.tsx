@@ -139,6 +139,7 @@ const StreamStats: FC = () => {
     totalRewards,
     fthmPriceFormatted,
     processFlow,
+    isLoading,
   } = useStreamStats();
   const { chainId } = useConnector();
 
@@ -263,10 +264,12 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {stake ? (
+              {isLoading ? (
+                <CustomSkeleton animation={"wave"} height={20} width={175} />
+              ) : stake ? (
                 formatPercentage(stake.accruedVotes / 10 ** 18) + " vFTHM"
               ) : (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                "0 vFTHM"
               )}{" "}
             </>
           }
@@ -276,7 +279,9 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {stake ? (
+              {isLoading ? (
+                <CustomSkeleton animation={"wave"} height={20} width={175} />
+              ) : stake ? (
                 <>
                   {formatPercentage(stake.totalStaked / 10 ** 18)} FTHM
                   <span>
@@ -287,7 +292,7 @@ const StreamStats: FC = () => {
                   </span>
                 </>
               ) : (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                "0 FTHM"
               )}
             </>
           }
@@ -297,7 +302,9 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {stake && BigNumber(totalRewards).isGreaterThan(0.0001) ? (
+              {isLoading ? (
+                <CustomSkeleton animation={"wave"} height={20} width={175} />
+              ) : stake && BigNumber(totalRewards).isGreaterThan(0.0001) ? (
                 <>
                   {formatPercentage(
                     BigNumber(totalRewards)
@@ -308,7 +315,7 @@ const StreamStats: FC = () => {
                   <span>${formatNumber(totalrewardsInUsd)}</span>
                 </>
               ) : (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                "0 FTHM"
               )}
             </>
           }
@@ -318,27 +325,27 @@ const StreamStats: FC = () => {
         <BaseListItem
           secondaryAction={
             <>
-              {stake && BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
+              {isLoading ? (
+                <CustomSkeleton animation={"wave"} height={20} width={175} />
+              ) : stake && BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                 <>
                   {formatPercentage(Number(stake.claimedAmount) / 10 ** 18)}{" "}
                   FTHM <span>${formatNumber(cooldownInUsd)}</span>
                 </>
               ) : (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                "0 FTHM"
               )}
             </>
           }
         >
           <ListItemText
             primary={
-              stake ? (
-                BigNumber(Number(seconds)).isGreaterThan(0) ? (
-                  "Cooldown Amount"
-                ) : (
-                  "Ready to withdraw"
-                )
+              isLoading ? (
+                <CustomSkeleton animation={"wave"} height={16} width={175} />
+              ) : BigNumber(Number(seconds)).isGreaterThan(0) ? (
+                "Cooldown Amount"
               ) : (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                "Ready to withdraw"
               )
             }
           />
@@ -346,22 +353,20 @@ const StreamStats: FC = () => {
       </BaseListStakingStats>
 
       <BaseFlexBox sx={{ paddingTop: "12px" }}>
-        {stake ? (
-          BigNumber(Number(seconds)).isGreaterThan(0) ? (
-            <>
-              <NoCooldownText>Cooldown in progress</NoCooldownText>
-              <CooldownCountDown>
-                <StakingCountdown timeObject={secondsToTime(Number(seconds))} />
-              </CooldownCountDown>
-            </>
-          ) : (
-            <NoCooldownText>You have no cooldown</NoCooldownText>
-          )
-        ) : (
+        {isLoading ? (
           <>
             <CustomSkeleton animation={"wave"} height={16} width={175} />
             <CustomSkeleton animation={"wave"} height={16} width={150} />
           </>
+        ) : BigNumber(Number(seconds)).isGreaterThan(0) ? (
+          <>
+            <NoCooldownText>Cooldown in progress</NoCooldownText>
+            <CooldownCountDown>
+              <StakingCountdown timeObject={secondsToTime(Number(seconds))} />
+            </CooldownCountDown>
+          </>
+        ) : (
+          <NoCooldownText>You have no cooldown</NoCooldownText>
         )}
       </BaseFlexBox>
 
