@@ -86,6 +86,9 @@ const TimeLabel = styled("div")`
   line-height: 16px;
   text-transform: uppercase;
   padding-bottom: 2px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 10px;
+  }
 `;
 
 const TimeValue = styled("div")`
@@ -93,12 +96,18 @@ const TimeValue = styled("div")`
   font-size: 14px;
   font-weight: 400;
   line-height: 16px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 11px;
+  }
 `;
 
 const TimeBlock = styled("div")`
   font-size: 14px;
   line-height: 20px;
   color: #9fadc6;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 11px;
+  }
 `;
 
 const ProposalInfo: FC = () => {
@@ -134,7 +143,11 @@ const ProposalInfo: FC = () => {
           <TimeLabel>Submit time</TimeLabel>
           <TimeValue>
             {isLoading ? (
-              <CustomSkeleton animation={"wave"} width={150} height={16} />
+              <CustomSkeleton
+                animation={"wave"}
+                width={isMobile ? "100%" : 150}
+                height={16}
+              />
             ) : (
               submitTime
             )}
@@ -144,7 +157,11 @@ const ProposalInfo: FC = () => {
         <Box width={isMobile ? "35%" : "25%"}>
           <TimeLabel>Exp. Voting starts:</TimeLabel>
           {isLoading ? (
-            <CustomSkeleton animation={"wave"} width={175} height={36} />
+            <CustomSkeleton
+              animation={"wave"}
+              width={isMobile ? "100%" : 175}
+              height={isMobile ? 72 : 36}
+            />
           ) : (
             <>
               <TimeValue>{votingStartsTime}</TimeValue>
@@ -156,7 +173,11 @@ const ProposalInfo: FC = () => {
         <Box width={"30%"}>
           <TimeLabel>Exp. Voting ends:</TimeLabel>
           {isLoading ? (
-            <CustomSkeleton animation={"wave"} width={175} height={36} />
+            <CustomSkeleton
+              animation={"wave"}
+              width={isMobile ? "100%" : 175}
+              height={isMobile ? 72 : 36}
+            />
           ) : (
             <>
               <TimeValue>

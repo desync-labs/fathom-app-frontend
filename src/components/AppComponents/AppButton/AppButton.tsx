@@ -354,20 +354,6 @@ export const FathomSwapChangeCurrencyButton = styled(MuiButton)`
   position: absolute;
 `;
 
-export const BackToProposalsButton = styled(MuiButton)`
-  font-size: 15px;
-  line-height: 20px;
-  background: transparent;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-weight: 600;
-  :hover {
-    background: none;
-  }
-`;
-
 export const VotingEndedButton = styled(MuiButton)`
   padding: 8px 20px;
   width: 100%;
@@ -380,13 +366,6 @@ export const VotingEndedButton = styled(MuiButton)`
     background: #324567;
     border-radius: 8px;
   }
-`;
-
-export const FarmFilterMobileBtn = styled(MuiButton)`
-  width: 44px;
-  height: 44px;
-  background: rgba(79, 101, 140, 0.2);
-  border-radius: 8px;
 `;
 
 export const ExtLinkIcon = styled(OpenInNewRoundedIcon, {
