@@ -10,10 +10,12 @@ const useStreamStats = () => {
     stake,
     previousStake,
     totalRewards,
-    isLoading,
+    stakesLoading,
   } = useStakingContext();
 
-  const { fthmPrice } = usePricesContext();
+  const [isLoading, setLoading] = useState<boolean>(true);
+
+  const { fthmPrice, fetchPricesInProgress } = usePricesContext();
   const fthmPriceFormatted = useMemo(
     () =>
       BigNumber(fthmPrice)
@@ -35,6 +37,14 @@ const useStreamStats = () => {
       setSeconds(null);
     }
   }, [stake, setSeconds]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setLoading(fetchPricesInProgress || stakesLoading);
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [fetchPricesInProgress, stakesLoading, setLoading]);
 
   useEffect(() => {
     setPreviousStakerState(previousStake);
@@ -67,7 +77,7 @@ const useStreamStats = () => {
   }, [seconds, timer, setSeconds, setTimer]);
 
   return {
-    isLoading,
+    stakesLoading: isLoading,
     stake,
     seconds,
     protocolStatsInfo,

@@ -76,6 +76,9 @@ export const BaseListStakingStats = styled(List)`
       font-size: 14px;
       font-weight: 600;
       line-height: 20px;
+      ${({ theme }) => theme.breakpoints.down("sm")} {
+        font-size: 11px;
+      }
 
       & span {
         color: #b7c8e5;

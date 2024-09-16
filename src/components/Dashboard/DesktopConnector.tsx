@@ -55,7 +55,10 @@ const DesktopConnector: FC<DesktopConnectorPropsType> = ({ onClose }) => {
     <BaseDialogWrapper
       onClose={onClose}
       open={true}
-      sx={{ "& .MuiPaper-root": { width: "500px" } }}
+      sx={{
+        "& .MuiPaper-root": { width: "500px" },
+        "& .MuiDialogContent-root": { padding: "16px" },
+      }}
     >
       <ConnectorDialogContent>
         <Connector onClick={metamaskConnect}>

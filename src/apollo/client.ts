@@ -88,12 +88,8 @@ const cache = new InMemoryCache({
             return incoming;
           },
         },
-      },
-    },
-    Staker: {
-      fields: {
         lockPositions: {
-          keyArgs: false,
+          keyArgs: ["account"],
           merge(_, incoming) {
             return incoming;
           },

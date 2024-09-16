@@ -25,6 +25,7 @@ type UseStakingReturnType = {
   chainId: ChainId;
   action: ActionType | undefined;
   isLoading: boolean;
+  stakesLoading: boolean;
   isUnlockable: (remainingTime: number) => boolean;
   isMaxLockPositionExceeded: boolean;
   maxLockPositions: number;
