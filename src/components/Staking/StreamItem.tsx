@@ -14,8 +14,10 @@ import ClaimRewardsCoolDownDialog from "components/Staking/Dialog/ClaimRewardsCo
 import WithdrawDialog from "components/Staking/Dialog/WithdrawDialog";
 import { COUNT_PER_PAGE } from "utils/Constants";
 import { styled } from "@mui/material/styles";
-import useSharedContext from "context/shared";
 import StakingViewSkeleton from "components/Staking/StakingViewSkeleton";
+
+import useSharedContext from "context/shared";
+import useConnector from "context/connector";
 
 const StakingViewList = styled(Box)`
   display: flex;
@@ -49,6 +51,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
     handlePageChange,
     isLoading,
   } = useStakingContext();
+  const { account } = useConnector();
 
   const { isMobile } = useSharedContext();
 
@@ -80,7 +83,7 @@ const StreamItem: FC<StreamItemProps> = ({ token }) => {
             )}
           </>
         )}
-        {itemCount > COUNT_PER_PAGE && (
+        {account && itemCount > COUNT_PER_PAGE && (
           <PaginationWrapper>
             <Pagination
               count={Math.ceil(itemCount / COUNT_PER_PAGE)}

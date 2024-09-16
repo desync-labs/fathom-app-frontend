@@ -146,7 +146,7 @@ const StreamStats: FC = () => {
     processFlow,
     stakesLoading,
   } = useStreamStats();
-  const { chainId } = useConnector();
+  const { chainId, account } = useConnector();
   const { isMobile } = useSharedContext();
 
   const addresses = useMemo(() => {
@@ -386,7 +386,7 @@ const StreamStats: FC = () => {
 
       <BulkActionBtnWrapper>
         <BaseButtonPrimary
-          disabled={BigNumber(totalRewards).isLessThanOrEqualTo(0)}
+          disabled={BigNumber(totalRewards).isLessThanOrEqualTo(0) || !account}
           onClick={() => processFlow(FlowType.CLAIM)}
         >
           Claim all rewards
@@ -395,7 +395,8 @@ const StreamStats: FC = () => {
           disabled={
             !stake ||
             !BigNumber(Number(seconds)).isLessThanOrEqualTo(0) ||
-            !BigNumber(stake.claimedAmount).isGreaterThan(0)
+            !BigNumber(stake.claimedAmount).isGreaterThan(0) ||
+            !account
           }
           onClick={() => processFlow(FlowType.WITHDRAW)}
         >
