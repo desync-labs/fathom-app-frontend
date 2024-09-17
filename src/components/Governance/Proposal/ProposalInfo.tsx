@@ -34,20 +34,26 @@ export const ProposalTitle = styled(Typography)`
 
 const TimeslotInProgress = styled(Box, {
   shouldForwardProp: (prop) => prop !== "lessTimeLeft" && prop !== "isDone",
-})<{ lessTimeLeft?: boolean; isDone?: boolean }>(({ lessTimeLeft, isDone }) => {
-  const styles = {
-    color: "#3DA329",
-    fontSize: "14px",
-  };
+})<{ lessTimeLeft?: boolean; isDone?: boolean }>(
+  ({ lessTimeLeft, isDone, theme }) => {
+    const styles: any = {
+      color: "#3DA329",
+      fontSize: "14px",
+    };
 
-  if (lessTimeLeft) {
-    styles.color = "#C37022";
-  } else if (isDone) {
-    styles.color = "#fff";
+    styles[`${theme.breakpoints.down("sm")}`] = {
+      fontSize: "10px",
+    };
+
+    if (lessTimeLeft) {
+      styles.color = "#C37022";
+    } else if (isDone) {
+      styles.color = "#fff";
+    }
+
+    return styles;
   }
-
-  return styles;
-});
+);
 
 export const ProposalInfoList = styled(List)`
   list-style: none;
@@ -86,6 +92,9 @@ const TimeLabel = styled("div")`
   line-height: 16px;
   text-transform: uppercase;
   padding-bottom: 2px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 10px;
+  }
 `;
 
 const TimeValue = styled("div")`
@@ -93,12 +102,18 @@ const TimeValue = styled("div")`
   font-size: 14px;
   font-weight: 400;
   line-height: 16px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 10px;
+  }
 `;
 
 const TimeBlock = styled("div")`
   font-size: 14px;
   line-height: 20px;
   color: #9fadc6;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 11px;
+  }
 `;
 
 const ProposalInfo: FC = () => {
@@ -134,7 +149,11 @@ const ProposalInfo: FC = () => {
           <TimeLabel>Submit time</TimeLabel>
           <TimeValue>
             {isLoading ? (
-              <CustomSkeleton animation={"wave"} width={150} height={16} />
+              <CustomSkeleton
+                animation={"wave"}
+                width={isMobile ? "100%" : 150}
+                height={16}
+              />
             ) : (
               submitTime
             )}
@@ -144,7 +163,11 @@ const ProposalInfo: FC = () => {
         <Box width={isMobile ? "35%" : "25%"}>
           <TimeLabel>Exp. Voting starts:</TimeLabel>
           {isLoading ? (
-            <CustomSkeleton animation={"wave"} width={175} height={36} />
+            <CustomSkeleton
+              animation={"wave"}
+              width={isMobile ? "100%" : 175}
+              height={36}
+            />
           ) : (
             <>
               <TimeValue>{votingStartsTime}</TimeValue>
@@ -156,7 +179,11 @@ const ProposalInfo: FC = () => {
         <Box width={"30%"}>
           <TimeLabel>Exp. Voting ends:</TimeLabel>
           {isLoading ? (
-            <CustomSkeleton animation={"wave"} width={175} height={36} />
+            <CustomSkeleton
+              animation={"wave"}
+              width={isMobile ? "100%" : 175}
+              height={36}
+            />
           ) : (
             <>
               <TimeValue>
