@@ -6,12 +6,20 @@ export const findDraftProposal = (_proposalId: string) => {
   );
 };
 
-export const saveDraftProposal = (values: any) => {
+export enum SAVE_DRAFT_PROPOSAL_ACTION {
+  SAVE,
+  EDIT,
+}
+
+export const saveDraftProposal = (
+  values: any,
+  action = SAVE_DRAFT_PROPOSAL_ACTION.SAVE
+) => {
   const draftProposals = localStorage.getItem("draftProposals")
     ? JSON.parse(localStorage.getItem("draftProposals") as string)
     : [];
 
-  if (values.id) {
+  if (action === SAVE_DRAFT_PROPOSAL_ACTION.EDIT) {
     const updatedDraftProposals = draftProposals.map((proposal: any) =>
       proposal.id?.toLowerCase() === values.id?.toLowerCase()
         ? values
