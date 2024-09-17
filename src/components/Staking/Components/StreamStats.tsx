@@ -4,7 +4,7 @@ import { Box, Grid, ListItemText } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { XDC_ADDRESSES, APOTHEM_ADDRESSES } from "fathom-sdk";
 
-import { formatCompact, formatNumber, formatPercentage } from "utils/format";
+import { formatNumber, formatPercentage } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
 import useStreamStats from "hooks/Staking/useStreamStats";
 import { FlowType } from "hooks/Staking/useStakingView";
@@ -25,79 +25,7 @@ import {
 import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 import useConnector from "context/connector";
-import useSharedContext from "context/shared";
-
-import PercentSrc from "assets/svg/percent.svg";
-import LockedSrc from "assets/svg/locked.svg";
-import RewardsSrc from "assets/svg/rewards.svg";
-import PriceSrc from "assets/svg/price.svg";
-
-const StatsBlocks = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px 8px;
-  width: 100%;
-  padding: 12px 0;
-  border-bottom: 1px solid #1d2d49;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    gap: 12px;
-  }
-`;
-
-const StatsBlock = styled(Box)`
-  display: flex;
-  align-items: center;
-  width: calc(50% - 4px);
-  gap: 8px;
-  padding: 0;
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    width: calc(45% - 4px);
-    &:nth-child(2n) {
-        width: 52%;
-    },
-  }
-`;
-
-const StatsLabel = styled("span")`
-  display: inline-block;
-  color: #b7c8e5;
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  padding-bottom: 8px;
-`;
-
-const StatsValue = styled(Box)`
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  strong {
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 20px;
-    ${({ theme }) => theme.breakpoints.down("sm")} {
-      font-size: 16px;
-    }
-  }
-  span {
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 20px;
-    color: #9fadc6;
-  }
-
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    flex-direction: column;
-    align-items: start;
-    gap: 0;
-  }
-`;
+import ProtocolStats from "./ProtocolStats";
 
 const BulkActionBtnWrapper = styled(Grid)`
   display: flex;
@@ -127,15 +55,6 @@ const NoCooldownText = styled(Box)`
   text-transform: capitalize;
 `;
 
-const ValueLockedWrapper = styled(Box)`
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  ${({ theme }) => theme.breakpoints.down("sm")} {
-    display: block;
-  }
-`;
-
 const StreamStats: FC = () => {
   const {
     stake,
@@ -147,7 +66,6 @@ const StreamStats: FC = () => {
     stakesLoading,
   } = useStreamStats();
   const { chainId, account } = useConnector();
-  const { isMobile } = useSharedContext();
 
   const addresses = useMemo(() => {
     return chainId === 50 ? XDC_ADDRESSES : APOTHEM_ADDRESSES;
@@ -176,101 +94,10 @@ const StreamStats: FC = () => {
           Buy FTHM on DEX
         </BaseButtonPrimaryLink>
       </BaseFlexBox>
-      <StatsBlocks>
-        <StatsBlock>
-          <img src={PercentSrc} alt={"percent"} />
-          <Box>
-            <StatsLabel>APR</StatsLabel>
-            {protocolStatsInfo ? (
-              <StatsValue>
-                <strong>
-                  {formatNumber(protocolStatsInfo.stakingAPR / 10 ** 18)}%
-                </strong>
-              </StatsValue>
-            ) : (
-              <CustomSkeleton animation={"wave"} width={40} height={20} />
-            )}
-          </Box>
-        </StatsBlock>
-
-        <StatsBlock>
-          <img src={LockedSrc} alt={"locked"} />
-          <Box>
-            <StatsLabel>Total Value Locked</StatsLabel>
-            {protocolStatsInfo ? (
-              <StatsValue>
-                <ValueLockedWrapper>
-                  <strong>
-                    {formatNumber(protocolStatsInfo.totalStakeFTHM / 10 ** 18)}
-                  </strong>{" "}
-                  FTHM
-                </ValueLockedWrapper>
-                <span>
-                  $
-                  {formatCompact(
-                    (protocolStatsInfo.totalStakeFTHM / 10 ** 18) *
-                      fthmPriceFormatted
-                  )}
-                </span>
-              </StatsValue>
-            ) : (
-              <CustomSkeleton
-                animation={"wave"}
-                width={150}
-                height={isMobile ? 41 : 22}
-              />
-            )}
-          </Box>
-        </StatsBlock>
-        <StatsBlock>
-          <img src={RewardsSrc} alt={"rewards"} />
-          <Box>
-            <StatsLabel>Daily rewards</StatsLabel>
-            {protocolStatsInfo ? (
-              <StatsValue>
-                <Box>
-                  <strong>
-                    {formatNumber(protocolStatsInfo.oneDayRewards / 10 ** 18)}
-                  </strong>{" "}
-                  FTHM
-                </Box>
-                <span>
-                  $
-                  {formatCompact(
-                    (protocolStatsInfo.oneDayRewards / 10 ** 18) *
-                      fthmPriceFormatted
-                  )}
-                </span>
-              </StatsValue>
-            ) : (
-              <CustomSkeleton
-                animation={"wave"}
-                width={50}
-                height={isMobile ? 41 : 22}
-              />
-            )}
-          </Box>
-        </StatsBlock>
-        <StatsBlock>
-          <img src={PriceSrc} alt={"price"} />
-          <Box>
-            <StatsLabel>Price</StatsLabel>
-            {protocolStatsInfo ? (
-              <StatsValue>
-                <strong>
-                  $
-                  {fthmPriceFormatted
-                    ? formatPercentage(fthmPriceFormatted)
-                    : 0}
-                </strong>
-              </StatsValue>
-            ) : (
-              <CustomSkeleton animation={"wave"} width={93} height={20} />
-            )}
-          </Box>
-        </StatsBlock>
-      </StatsBlocks>
-
+      <ProtocolStats
+        protocolStatsInfo={protocolStatsInfo}
+        fthmPriceFormatted={fthmPriceFormatted}
+      />
       <StakingPaperTitle sx={{ paddingTop: "16px", paddingBottom: "10px" }}>
         My Stats
       </StakingPaperTitle>
