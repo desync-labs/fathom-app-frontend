@@ -8,11 +8,15 @@ import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 import { useNavigate, useParams } from "react-router-dom";
 import draftToHtml from "draftjs-to-html";
-import { convertToRaw, EditorState, ContentState } from "draft-js";
+import { ContentState, convertToRaw, EditorState } from "draft-js";
 import { v4 as uuidv4 } from "uuid";
 // @ts-ignore
 import DraftPasteProcessor from "draft-js/lib/DraftPasteProcessor";
-import { saveDraftProposal, findDraftProposal } from "utils/draftProposal";
+import {
+  findDraftProposal,
+  SAVE_DRAFT_PROPOSAL_ACTION,
+  saveDraftProposal,
+} from "utils/draftProposal";
 import { stripTags } from "utils/htmlToComponent";
 
 export type ActionType = {
@@ -247,10 +251,13 @@ const useCreateProposal = () => {
     if (_proposalId) {
       const proposal = findDraftProposal(_proposalId);
       formattedValues.id = _proposalId;
-      saveDraftProposal({
-        ...proposal,
-        ...formattedValues,
-      });
+      saveDraftProposal(
+        {
+          ...proposal,
+          ...formattedValues,
+        },
+        SAVE_DRAFT_PROPOSAL_ACTION.EDIT
+      );
       setShowSuccessAlertHandler(true, "Draft proposal edited successfully.");
     } else {
       saveDraftProposal(formattedValues);
