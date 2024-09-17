@@ -1,0 +1,195 @@
+{
+  "$id": "account-vault-positions",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "accountVaultPositions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "default": "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0x3c8e9896933b374e638f9a5c309535409129aaa2",
+                "examples": [
+                  "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0x3c8e9896933b374e638f9a5c309535409129aaa2"
+                ],
+                "pattern": "^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{40}$"
+              },
+              "balancePosition": {
+                "type": "string",
+                "default": "0",
+                "examples": [
+                  "0"
+                ]
+              },
+              "balanceProfit": {
+                "type": "string",
+                "default": "22976331623098063213",
+                "examples": [
+                  "22976331623098063213"
+                ]
+              },
+              "balanceShares": {
+                "type": "string",
+                "default": "0",
+                "examples": [
+                  "0"
+                ]
+              },
+              "balanceTokens": {
+                "type": "string",
+                "default": "3",
+                "examples": [
+                  "3"
+                ]
+              },
+              "vault": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "default": "0x3c8e9896933b374e638f9a5c309535409129aaa2",
+                    "examples": [
+                      "0x3c8e9896933b374e638f9a5c309535409129aaa2"
+                    ],
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "__typename": {
+                    "type": "string",
+                    "default": "Vault",
+                    "examples": [
+                      "Vault"
+                    ],
+                    "const": "Vault"
+                  }
+                },
+                "required": [
+                  "id",
+                  "__typename"
+                ],
+                "additionalProperties": false
+              },
+              "token": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "default": "0x49d3f7543335cf38fa10889ccff10207e22110b5",
+                    "examples": [
+                      "0x49d3f7543335cf38fa10889ccff10207e22110b5"
+                    ],
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "default": "FXD",
+                    "examples": [
+                      "FXD"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "default": "FXD",
+                    "examples": [
+                      "FXD"
+                    ]
+                  },
+                  "__typename": {
+                    "type": "string",
+                    "default": "Token",
+                    "examples": [
+                      "Token"
+                    ],
+                    "const": "Token"
+                  }
+                },
+                "required": [
+                  "id",
+                  "symbol",
+                  "name",
+                  "__typename"
+                ],
+                "additionalProperties": false
+              },
+              "shareToken": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "default": "0x3c8e9896933b374e638f9a5c309535409129aaa2",
+                    "examples": [
+                      "0x3c8e9896933b374e638f9a5c309535409129aaa2"
+                    ],
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "default": "fvFXDe1",
+                    "examples": [
+                      "fvFXDe1"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "default": "FXD-Vault-Educational-1",
+                    "examples": [
+                      "FXD-Vault-Educational-1"
+                    ]
+                  },
+                  "__typename": {
+                    "type": "string",
+                    "default": "Token",
+                    "examples": [
+                      "Token"
+                    ],
+                    "const": "Token"
+                  }
+                },
+                "required": [
+                  "id",
+                  "symbol",
+                  "name",
+                  "__typename"
+                ],
+                "additionalProperties": false
+              },
+              "__typename": {
+                "type": "string",
+                "default": "AccountVaultPosition",
+                "examples": [
+                  "AccountVaultPosition"
+                ],
+                "const": "AccountVaultPosition"
+              }
+            },
+            "required": [
+              "id",
+              "balancePosition",
+              "balanceProfit",
+              "balanceShares",
+              "balanceTokens",
+              "vault",
+              "token",
+              "shareToken",
+              "__typename"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "accountVaultPositions"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "data"
+  ],
+  "additionalProperties": false
+}

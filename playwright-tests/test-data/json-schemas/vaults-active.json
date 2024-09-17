@@ -1,0 +1,263 @@
+{
+  "$id": "vaults-active",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "vaults": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "default": "0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b",
+                "examples": [
+                  "0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b"
+                ],
+                "pattern": "^0x[a-fA-F0-9]{40}$"
+              },
+              "token": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "default": "0x49d3f7543335cf38fa10889ccff10207e22110b5",
+                    "examples": [
+                      "0x49d3f7543335cf38fa10889ccff10207e22110b5"
+                    ],
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "decimals": {
+                    "type": "integer",
+                    "default": 18,
+                    "examples": [
+                      18
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "default": "FXD",
+                    "examples": [
+                      "FXD"
+                    ]
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "default": "FXD",
+                    "examples": [
+                      "FXD"
+                    ]
+                  },
+                  "__typename": {
+                    "type": "string",
+                    "default": "Token",
+                    "examples": [
+                      "Token"
+                    ],
+                    "const": "Token"
+                  }
+                },
+                "required": [
+                  "id",
+                  "decimals",
+                  "name",
+                  "symbol",
+                  "__typename"
+                ],
+                "additionalProperties": false
+              },
+              "shareToken": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "default": "0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b",
+                    "examples": [
+                      "0x4dd9c4cd9a8f24a8e4d51e07ae36d6af4c4cb71b"
+                    ],
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "decimals": {
+                    "type": "integer",
+                    "default": 18,
+                    "examples": [
+                      18
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "default": "FXD-DeFi-1",
+                    "examples": [
+                      "FXD-DeFi-1"
+                    ]
+                  },
+                  "symbol": {
+                    "type": "string",
+                    "default": "fvFXDDefi1",
+                    "examples": [
+                      "fvFXDDefi1"
+                    ]
+                  },
+                  "__typename": {
+                    "type": "string",
+                    "default": "Token",
+                    "examples": [
+                      "Token"
+                    ],
+                    "const": "Token"
+                  }
+                },
+                "required": [
+                  "id",
+                  "decimals",
+                  "name",
+                  "symbol",
+                  "__typename"
+                ],
+                "additionalProperties": false
+              },
+              "sharesSupply": {
+                "type": "string",
+                "default": "2285046354874919227975",
+                "examples": [
+                  "2285046354874919227975"
+                ]
+              },
+              "balanceTokens": {
+                "type": "string",
+                "default": "2219970969200498335852",
+                "examples": [
+                  "2219970969200498335852"
+                ]
+              },
+              "balanceTokensIdle": {
+                "type": "string",
+                "default": "0",
+                "examples": [
+                  "0"
+                ]
+              },
+              "depositLimit": {
+                "type": "string",
+                "default": "1000000000000000000000000",
+                "examples": [
+                  "1000000000000000000000000"
+                ]
+              },
+              "apr": {
+                "type": "string",
+                "default": "0.1428340870372914344169048987251713",
+                "examples": [
+                  "0.1428340870372914344169048987251713"
+                ]
+              },
+              "shutdown": {
+                "type": "boolean",
+                "default": false,
+                "examples": [
+                  true,
+                  false
+                ],
+                "const": false
+              },
+              "strategies": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "default": "0xc0ac2e5181f90fda9e9264b5b1634b2c8bd88cdd",
+                      "examples": [
+                        "0xc0ac2e5181f90fda9e9264b5b1634b2c8bd88cdd"
+                      ],
+                      "pattern": "^0x[a-fA-F0-9]{40}$"
+                    },
+                    "delegatedAssets": {
+                      "type": "string",
+                      "default": "0",
+                      "examples": [
+                        "0"
+                      ]
+                    },
+                    "currentDebt": {
+                      "type": "string",
+                      "default": "2000000000000000000000",
+                      "examples": [
+                        "2000000000000000000000"
+                      ]
+                    },
+                    "maxDebt": {
+                      "type": "string",
+                      "default": "10000000000000000000000",
+                      "examples": [
+                        "10000000000000000000000"
+                      ]
+                    },
+                    "apr": {
+                      "type": "string",
+                      "default": "0.1584052886821540541272617335894718",
+                      "examples": [
+                        "0.1584052886821540541272617335894718"
+                      ]
+                    },
+                    "__typename": {
+                      "type": "string",
+                      "default": "Strategy",
+                      "examples": [
+                        "Strategy"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "delegatedAssets",
+                    "currentDebt",
+                    "maxDebt",
+                    "apr",
+                    "__typename"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "__typename": {
+                "type": "string",
+                "default": "Vault",
+                "examples": [
+                  "Vault"
+                ],
+                "const": "Vault"
+              }
+            },
+            "required": [
+              "id",
+              "token",
+              "shareToken",
+              "sharesSupply",
+              "balanceTokens",
+              "balanceTokensIdle",
+              "depositLimit",
+              "apr",
+              "shutdown",
+              "strategies",
+              "__typename"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "vaults"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "data"
+  ],
+  "additionalProperties": false
+}

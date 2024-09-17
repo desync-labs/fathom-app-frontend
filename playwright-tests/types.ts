@@ -27,6 +27,7 @@ export enum GraphOperationName {
   Vaults = "Vaults",
   Stakers = "Stakers",
   Vault = "Vault",
+  LockPositions = "LockPositions",
 }
 
 export interface PositionData {
