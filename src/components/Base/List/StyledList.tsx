@@ -64,6 +64,9 @@ export const BaseListStakingStats = styled(List)`
         text-transform: uppercase;
         letter-spacing: 1px;
         color: #b7c8e5;
+        ${({ theme }) => theme.breakpoints.down("sm")} {
+          font-size: 10px;
+        }
       }
     }
 
