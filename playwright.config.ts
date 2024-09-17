@@ -31,6 +31,7 @@ export default defineConfig({
     [
       "playwright-qase-reporter",
       {
+        captureLogs: true,
         testops: {
           api: {
             token: process.env.QASE_PW_API_TOKEN,

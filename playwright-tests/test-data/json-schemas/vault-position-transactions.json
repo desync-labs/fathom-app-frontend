@@ -1,0 +1,145 @@
+{
+  "$id": "vault-position-transactions",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "deposits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "default": "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0xe1415b34bcdba312568205b944bd143fe121f8fb98b44cf1ce330022a1254a74-25-12",
+                "examples": [
+                  "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0xe1415b34bcdba312568205b944bd143fe121f8fb98b44cf1ce330022a1254a74-25-12"
+                ],
+                "pattern": "^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$"
+              },
+              "timestamp": {
+                "type": "string",
+                "default": "1716285622000",
+                "examples": [
+                  "1716285622000"
+                ]
+              },
+              "sharesMinted": {
+                "type": "string",
+                "default": "1000000000000000000",
+                "examples": [
+                  "1000000000000000000"
+                ]
+              },
+              "tokenAmount": {
+                "type": "string",
+                "default": "1000000000000000000",
+                "examples": [
+                  "1000000000000000000"
+                ]
+              },
+              "blockNumber": {
+                "type": "string",
+                "default": "75020611",
+                "examples": [
+                  "75020611"
+                ]
+              },
+              "__typename": {
+                "type": "string",
+                "default": "Deposit",
+                "examples": [
+                  "Deposit"
+                ],
+                "const": "Deposit"
+              }
+            },
+            "required": [
+              "id",
+              "timestamp",
+              "sharesMinted",
+              "tokenAmount",
+              "blockNumber",
+              "__typename"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        },
+        "withdrawals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "default": "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0x0a59f7f36a36e1e7b462f1d0d9e3734d452db2cbec22c228641b93bac0a3529e-3-1",
+                "examples": [
+                  "0xcdaa46858dbea6cc1b6714ef7b5bf0677e8539e0-0x0a59f7f36a36e1e7b462f1d0d9e3734d452db2cbec22c228641b93bac0a3529e-3-1"
+                ],
+                "pattern": "^0x[a-fA-F0-9]{40}-0x[a-fA-F0-9]{64}-\\d+-\\d+$"
+              },
+              "timestamp": {
+                "type": "string",
+                "default": "1716285722000",
+                "examples": [
+                  "1716285722000"
+                ]
+              },
+              "sharesBurnt": {
+                "type": "string",
+                "default": "500000000000000000",
+                "examples": [
+                  "500000000000000000"
+                ]
+              },
+              "tokenAmount": {
+                "type": "string",
+                "default": "500000000000000000",
+                "examples": [
+                  "500000000000000000"
+                ]
+              },
+              "blockNumber": {
+                "type": "string",
+                "default": "75020653",
+                "examples": [
+                  "75020653"
+                ]
+              },
+              "__typename": {
+                "type": "string",
+                "default": "Withdrawal",
+                "examples": [
+                  "Withdrawal"
+                ],
+                "const": "Withdrawal"
+              }
+            },
+            "required": [
+              "id",
+              "timestamp",
+              "sharesBurnt",
+              "tokenAmount",
+              "blockNumber",
+              "__typename"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "deposits",
+        "withdrawals"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "data"
+  ],
+  "additionalProperties": false
+}

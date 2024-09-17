@@ -65,6 +65,10 @@ export const ProposalValue = styled(Box)`
   font-style: normal;
   font-weight: 600;
   line-height: 20px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+    line-height: 16px;
+  }
 `;
 
 export const ProposalItemProposalId = styled(Box)`
