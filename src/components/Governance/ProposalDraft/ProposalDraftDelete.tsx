@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import useSharedContext from "context/shared";
@@ -12,7 +12,7 @@ import {
   BaseButtonPrimary,
   BaseCancelButton,
 } from "components/Base/Buttons/StyledButtons";
-import { deleteDraftProposal } from "utils/draftProposal";
+import { deleteDraftProposal, getDraftProposals } from "utils/draftProposal";
 import { useNavigate } from "react-router-dom";
 import useAlertAndTransactionContext from "context/alertAndTransaction";
 import { CreateProposalType } from "hooks/Governance/useCreateProposal";
@@ -36,6 +36,18 @@ const ProposalDraftDelete: FC<ProposalDraftDeleteProps> = ({
   const navigate = useNavigate();
   const { setShowSuccessAlertHandler } = useAlertAndTransactionContext();
 
+  const onDelete = useCallback(() => {
+    deleteDraftProposal(proposalId);
+    const draftProposals = getDraftProposals();
+    setShowSuccessAlertHandler(
+      true,
+      `Draft proposal ${draftProposal.descriptionTitle} deleted successfully.`
+    );
+    navigate(
+      draftProposals.length ? "/dao/governance/drafts" : "/dao/governance"
+    );
+  }, []);
+
   return (
     <BaseDialogWrapperLight
       onClose={onClose}
@@ -56,18 +68,7 @@ const ProposalDraftDelete: FC<ProposalDraftDeleteProps> = ({
           {!isMobile && (
             <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
           )}
-          <ConfirmButton
-            onClick={() => {
-              deleteDraftProposal(proposalId);
-              setShowSuccessAlertHandler(
-                true,
-                `Draft proposal ${draftProposal.descriptionTitle} deleted successfully.`
-              );
-              navigate("/dao/governance/drafts");
-            }}
-          >
-            Delete
-          </ConfirmButton>
+          <ConfirmButton onClick={onDelete}>Delete</ConfirmButton>
           {isMobile && (
             <BaseCancelButton onClick={onClose}>Cancel</BaseCancelButton>
           )}

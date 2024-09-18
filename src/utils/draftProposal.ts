@@ -6,6 +6,11 @@ export const findDraftProposal = (_proposalId: string) => {
   );
 };
 
+export const getDraftProposals = () => {
+  const drafts = localStorage.getItem("draftProposals") || "[]";
+  return JSON.parse(drafts);
+};
+
 export enum SAVE_DRAFT_PROPOSAL_ACTION {
   SAVE,
   EDIT,
