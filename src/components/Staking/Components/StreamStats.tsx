@@ -6,6 +6,7 @@ import { XDC_ADDRESSES, APOTHEM_ADDRESSES } from "fathom-sdk";
 
 import { formatNumber, formatPercentage } from "utils/format";
 import { secondsToTime } from "utils/secondsToTime";
+
 import useStreamStats from "hooks/Staking/useStreamStats";
 import { FlowType } from "hooks/Staking/useStakingView";
 
@@ -25,6 +26,8 @@ import {
 import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
 
 import useConnector from "context/connector";
+import useSharedContext from "context/shared";
+
 import ProtocolStats from "./ProtocolStats";
 
 const BulkActionBtnWrapper = styled(Grid)`
@@ -44,6 +47,9 @@ const CooldownCountDown = styled(Box)`
   font-size: 14px;
   font-weight: 600;
   line-height: 20px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 12px;
+  }
 `;
 
 const NoCooldownText = styled(Box)`
@@ -53,6 +59,9 @@ const NoCooldownText = styled(Box)`
   line-height: 16px;
   letter-spacing: 0.5px;
   text-transform: capitalize;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 11px;
+  }
 `;
 
 const StreamStats: FC = () => {
@@ -66,6 +75,7 @@ const StreamStats: FC = () => {
     stakesLoading,
   } = useStreamStats();
   const { chainId, account } = useConnector();
+  const { isMobile } = useSharedContext();
 
   const addresses = useMemo(() => {
     return chainId === 50 ? XDC_ADDRESSES : APOTHEM_ADDRESSES;
@@ -106,7 +116,11 @@ const StreamStats: FC = () => {
           secondaryAction={
             <>
               {stakesLoading ? (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                <CustomSkeleton
+                  animation={"wave"}
+                  height={20}
+                  width={isMobile ? 125 : 175}
+                />
               ) : stake ? (
                 formatPercentage(stake.accruedVotes / 10 ** 18) + " vFTHM"
               ) : (
@@ -121,7 +135,11 @@ const StreamStats: FC = () => {
           secondaryAction={
             <>
               {stakesLoading ? (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                <CustomSkeleton
+                  animation={"wave"}
+                  height={20}
+                  width={isMobile ? 125 : 175}
+                />
               ) : stake ? (
                 <>
                   {formatPercentage(stake.totalStaked / 10 ** 18)} FTHM
@@ -144,7 +162,11 @@ const StreamStats: FC = () => {
           secondaryAction={
             <>
               {stakesLoading ? (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                <CustomSkeleton
+                  animation={"wave"}
+                  height={20}
+                  width={isMobile ? 125 : 175}
+                />
               ) : stake && BigNumber(totalRewards).isGreaterThan(0.0001) ? (
                 <>
                   {formatPercentage(
@@ -167,7 +189,11 @@ const StreamStats: FC = () => {
           secondaryAction={
             <>
               {stakesLoading ? (
-                <CustomSkeleton animation={"wave"} height={20} width={175} />
+                <CustomSkeleton
+                  animation={"wave"}
+                  height={20}
+                  width={isMobile ? 125 : 175}
+                />
               ) : stake && BigNumber(stake.claimedAmount).isGreaterThan(0) ? (
                 <>
                   {formatPercentage(Number(stake.claimedAmount) / 10 ** 18)}{" "}
@@ -182,7 +208,11 @@ const StreamStats: FC = () => {
           <ListItemText
             primary={
               stakesLoading ? (
-                <CustomSkeleton animation={"wave"} height={16} width={175} />
+                <CustomSkeleton
+                  animation={"wave"}
+                  height={16}
+                  width={isMobile ? 125 : 175}
+                />
               ) : BigNumber(Number(seconds)).isGreaterThan(0) ? (
                 "Cooldown Amount"
               ) : (
@@ -193,11 +223,15 @@ const StreamStats: FC = () => {
         </BaseListItem>
       </BaseListStakingStats>
 
-      <BaseFlexBox sx={{ paddingTop: "12px" }}>
+      <BaseFlexBox sx={{ paddingTop: isMobile ? "6px" : "12px" }}>
         {stakesLoading ? (
           <>
-            <CustomSkeleton animation={"wave"} height={16} width={175} />
-            <CustomSkeleton animation={"wave"} height={16} width={150} />
+            <CustomSkeleton
+              animation={"wave"}
+              height={16}
+              width={isMobile ? 125 : 175}
+            />
+            <CustomSkeleton animation={"wave"} height={20} width={150} />
           </>
         ) : BigNumber(Number(seconds)).isGreaterThan(0) ? (
           <>
