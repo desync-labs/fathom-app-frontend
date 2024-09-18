@@ -80,7 +80,8 @@ export const BaseListStakingStats = styled(List)`
       font-weight: 600;
       line-height: 20px;
       ${({ theme }) => theme.breakpoints.down("sm")} {
-        font-size: 11px;
+        font-size: 10px;
+        gap: 4px;
       }
 
       & span {

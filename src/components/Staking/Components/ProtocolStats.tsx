@@ -49,6 +49,10 @@ const StatsLabel = styled("span")`
   letter-spacing: 1px;
   text-transform: uppercase;
   padding-bottom: 8px;
+  ${({ theme }) => theme.breakpoints.down("sm")} {
+    font-size: 10px;
+    padding-bottom: 0;
+  }
 `;
 
 const StatsValue = styled(Box)`
@@ -60,7 +64,7 @@ const StatsValue = styled(Box)`
     font-size: 20px;
     line-height: 20px;
     ${({ theme }) => theme.breakpoints.down("sm")} {
-      font-size: 15px;
+      font-size: 12px;
     }
   }
   span {
