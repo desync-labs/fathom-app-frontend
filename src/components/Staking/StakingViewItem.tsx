@@ -20,7 +20,7 @@ export const StakingViewItemWrapper = styled(Box)`
   background: #132340;
   padding: 16px 24px;
   ${({ theme }) => theme.breakpoints.down("sm")} {
-    padding: 16px;
+    padding: 12px;
   }
 `;
 
