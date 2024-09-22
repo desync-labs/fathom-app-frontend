@@ -64,12 +64,13 @@ export const ButtonsWrapper = styled(Box)<{ singleBtn?: boolean }>`
     height: 48px;
     width: auto;
     padding: 8px 32px;
+    ${({ theme }) => theme.breakpoints.down("sm")} {
+      width: 100%;
+    }
 
     &:first-child {
       ${({ singleBtn }) =>
-        singleBtn
-          ? "width: 100%;"
-          : "flex-grow: 0; flex-shrink: 0; width: auto;"};
+        singleBtn ? "width: 100%;" : "flex-grow: 0; flex-shrink: 0;"};
     }
 
     &:last-child {

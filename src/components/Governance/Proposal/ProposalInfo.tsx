@@ -145,7 +145,7 @@ const ProposalInfo: FC = () => {
         </ProposalTitle>
       )}
       <BaseFlexBox sx={{ justifyContent: "flex-start", alignItems: "start" }}>
-        <Box width={isMobile ? "35%" : "25%"}>
+        <Box width={isMobile ? "30%" : "25%"}>
           <TimeLabel>Submit time</TimeLabel>
           <TimeValue>
             {isLoading ? (
@@ -176,7 +176,7 @@ const ProposalInfo: FC = () => {
           )}
         </Box>
 
-        <Box width={"30%"}>
+        <Box width={isMobile ? "35%" : "30%"}>
           <TimeLabel>Exp. Voting ends:</TimeLabel>
           {isLoading ? (
             <CustomSkeleton
