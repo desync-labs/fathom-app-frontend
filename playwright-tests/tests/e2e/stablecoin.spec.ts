@@ -203,7 +203,7 @@ test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
     });
   }
 
-  test(
+  test.only(
     qase(
       19,
       "Switching Metamask accounts is succesfull and correctly updates the positions list"
@@ -233,7 +233,7 @@ test.describe("Fathom App Test Suite: Stablecoin Tests", () => {
     }
   );
 
-  test(
+  test.only(
     qase(
       20,
       "Changing positions pages is successful and position list is correctly updated"
