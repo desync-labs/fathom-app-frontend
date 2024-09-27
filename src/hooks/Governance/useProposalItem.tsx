@@ -61,10 +61,7 @@ const useProposalItem = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setIsLoading(
-        votingEndTimeLoading ||
-          statusLoading ||
-          votingStartsTimeLoading ||
-          proposalLoading
+        votingEndTimeLoading || votingStartsTimeLoading || proposalLoading
       );
     }, 300);
 
