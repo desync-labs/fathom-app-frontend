@@ -47,6 +47,7 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.AXDC]: {},
   [ChainId.XDC]: {},
   [ChainId.SEPOLIA]: {},
+  [ChainId.LISK]: {},
 };
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -110,6 +111,7 @@ function combineMaps(
     [ChainId.XDC]: { ...map1[ChainId.XDC], ...map2[ChainId.XDC] },
     [ChainId.AXDC]: { ...map1[ChainId.AXDC], ...map2[ChainId.AXDC] },
     [ChainId.SEPOLIA]: { ...map1[ChainId.SEPOLIA], ...map2[ChainId.SEPOLIA] },
+    [ChainId.LISK]: { ...map1[ChainId.LISK], ...map2[ChainId.LISK] },
   };
 }
 

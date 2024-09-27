@@ -1,22 +1,22 @@
 import { styled } from "@mui/material/styles";
 import {
-  CssBaseline,
-  Drawer as MuiDrawer,
   Box,
-  Toolbar,
+  CssBaseline,
   Divider,
+  Drawer as MuiDrawer,
   IconButton,
+  Toolbar,
 } from "@mui/material";
 import {
-  ArrowForward,
   AccountBalanceWallet as AccountBalanceWalletIcon,
+  ArrowForward,
 } from "@mui/icons-material";
 import truncateEthAddress from "truncate-eth-address";
 import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import { AppGlobalStyles } from "components/AppComponents/AppGlobalStyles/AppGlobalStyles";
 import Copyright from "components/Footer/Footer";
-import AppBar from "components/AppComponents/AppBar/AppBar";
+import AppBar, { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import DashboardContent from "components/Dashboard/Dashboard";
 
 import StableSwap from "components/Stableswap/StableSwap";
@@ -47,8 +47,6 @@ import MobileConnector from "components/Dashboard/MobileConnector";
 import DesktopConnector from "components/Dashboard/DesktopConnector";
 import BottomLinks from "components/Dashboard/BottomLinks";
 import MobileMenu from "components/Dashboard/MobileMenu";
-
-import { drawerWidth } from "components/AppComponents/AppBar/AppBar";
 import TransactionErc20TokenModal from "components/Transaction/TransactionErc20TokenModal";
 import FthmInfoModal from "components/FthmInfo/FthmInfoModal";
 
@@ -63,8 +61,8 @@ import {
 import PoolFinder from "apps/dex/pages/PoolFinder";
 import Pool from "apps/dex/pages/Pool";
 import {
-  RedirectOldAddLiquidityPathStructure,
   RedirectDuplicateTokenIds,
+  RedirectOldAddLiquidityPathStructure,
 } from "apps/dex/pages/AddLiquidity/redirects";
 import AddLiquidity from "apps/dex/pages/AddLiquidity";
 import { RedirectOldRemoveLiquidityPathStructure } from "apps/dex/pages/RemoveLiquidity/redirects";
@@ -77,7 +75,6 @@ import { CardNoise } from "apps/dex/components/earn/styled";
 /**
  * Lending
  */
-
 import Home from "apps/lending/pages/index.page";
 import Markets from "apps/lending/pages/markets.page";
 import History from "apps/lending/pages/history.page";

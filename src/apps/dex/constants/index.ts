@@ -15,6 +15,7 @@ export const ROUTER_ADDRESSES: RouterAddressesList = {
   [ChainId.XDC]: "0x7e5b4c238A904329596c4094877D48868d739963",
   [ChainId.AXDC]: "0x546F62f88cECefF9a0035156d8D456AfeEEcDe8a",
   [ChainId.SEPOLIA]: "0x73934B8E6bF6845688Dd0703c14AB54caD4972a6",
+  [ChainId.LISK]: "0x447B8E40B0CdA8e55F405C86bC635D02d0540aB8",
 };
 
 // a list of tokens by chain
@@ -121,12 +122,14 @@ export const FTHM: { [chainId in ChainId]: Token } = {
   [ChainId.XDC]: FTHM_XDC,
   [ChainId.AXDC]: FTHM_AXDC,
   [ChainId.SEPOLIA]: FTHM_SEPOLIA,
+  [ChainId.LISK]: FTHM_SEPOLIA,
 };
 
 const WETH_ONLY: ChainTokenList = {
   [ChainId.XDC]: [WETH[ChainId.XDC]],
   [ChainId.AXDC]: [WETH[ChainId.AXDC]],
   [ChainId.SEPOLIA]: [WETH[ChainId.SEPOLIA]],
+  [ChainId.LISK]: [WETH[ChainId.LISK]],
 };
 
 // used to construct intermediary pairs for trading

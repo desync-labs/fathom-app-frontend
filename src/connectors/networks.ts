@@ -7,15 +7,18 @@ import { DEFAULT_CHAIN_ID } from "utils/Constants";
 export const APOTHEM_RPC = "https://earpc.apothem.network/";
 export const XDC_RPC = "https://rpc.ankr.com/xdc/";
 export const SEPOLIA_RPC = "https://eth-sepolia.public.blastapi.io/";
+export const LISK_RPC = "https://rpc.api.lisk.com/";
 
 export enum ChainId {
   XDC = 50,
+  LISK = 1135,
   AXDC = 51,
   SEPOLIA = 11155111,
 }
 
 const SUBGRAPH_URLS = {
   [ChainId.XDC]: "https://graph.xinfin.fathom.fi",
+  [ChainId.LISK]: "https://graph.xinfin.fathom.fi",
   [ChainId.AXDC]: "https://graph.apothem.fathom.fi",
   [ChainId.SEPOLIA]: "https://graph.sepolia.fathom.fi",
 };
@@ -26,6 +29,7 @@ const NATIVE_ASSETS = ["ETH", "XDC"];
 let DEFAULT_RPCS: any = {
   [ChainId.AXDC]: APOTHEM_RPC,
   [ChainId.XDC]: XDC_RPC,
+  [ChainId.LISK]: LISK_RPC,
   [ChainId.SEPOLIA]: SEPOLIA_RPC,
 };
 
@@ -47,10 +51,11 @@ let NETWORK_SETTINGS: { [n: number]: any } = {
 };
 
 if (process.env.REACT_APP_ENV === "prod") {
-  supportedChainIds = [ChainId.XDC];
+  supportedChainIds = [ChainId.XDC, ChainId.LISK];
 
   DEFAULT_RPCS = {
     [ChainId.XDC]: XDC_RPC,
+    [ChainId.LISK]: LISK_RPC,
   };
 
   NETWORK_SETTINGS = {
@@ -62,6 +67,14 @@ if (process.env.REACT_APP_ENV === "prod") {
       blockExplorerUrls: ["https://explorer.xinfin.network"],
       logoName: "WXDC",
     },
+    [ChainId.LISK]: {
+      chainName: "Lisk",
+      chainId: `0x${ChainId.LISK.toString(16)}`,
+      nativeCurrency: { name: "LiskETH", decimals: 18, symbol: "ETH" },
+      rpcUrls: [LISK_RPC],
+      blockExplorerUrls: ["https://blockscout.lisk.com"],
+      logoName: "LISK",
+    },
   };
 }
 
@@ -69,6 +82,7 @@ export type DefaultProvider = Web3Provider | JsonRpcProvider;
 
 export const EXPLORERS = {
   [ChainId.AXDC]: "https://explorer.apothem.network/",
+  [ChainId.LISK]: "https://blockscout.lisk.com/",
   [ChainId.XDC]: "https://xdc.blocksscan.io/",
   [ChainId.SEPOLIA]: "https://sepolia.etherscan.io/",
 };
@@ -101,7 +115,12 @@ export {
  */
 export const DISPLAY_FXD = [ChainId.XDC, ChainId.AXDC, ChainId.SEPOLIA];
 export const DISPLAY_STABLE_SWAP = [ChainId.XDC, ChainId.AXDC];
-export const DISPLAY_LENDING = [ChainId.XDC, ChainId.AXDC, ChainId.SEPOLIA];
+export const DISPLAY_LENDING = [
+  ChainId.XDC,
+  ChainId.AXDC,
+  ChainId.SEPOLIA,
+  ChainId.LISK,
+];
 export const DISPLAY_VAULTS = [ChainId.XDC, ChainId.AXDC, ChainId.SEPOLIA];
 export const DISPLAY_DEX = [ChainId.XDC, ChainId.AXDC];
 export const DISPLAY_CHARTS = [ChainId.XDC, ChainId.AXDC];

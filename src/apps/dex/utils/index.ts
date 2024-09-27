@@ -7,7 +7,6 @@ import { abi as IUniswapV2Router02ABI } from "into-the-fathom-swap-smart-contrac
 
 import { ROUTER_ADDRESSES } from "apps/dex/constants";
 import {
-  ChainId,
   Currency,
   CurrencyAmount,
   XDC,
@@ -17,6 +16,7 @@ import {
 } from "into-the-fathom-swap-sdk";
 import { TokenAddressMap } from "apps/dex/state/lists/hooks";
 import { toXdcAddress } from "apps/dex/utils/toXdcAddress";
+import { ChainId } from "connectors/networks";
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {
@@ -31,6 +31,7 @@ const BLOCKSCAN_DOMAIN: { [chainId in ChainId]: string } = {
   [ChainId.XDC]: "xdc.blocksscan.io",
   [ChainId.AXDC]: "apothem.blocksscan.io",
   [ChainId.SEPOLIA]: "sepolia.etherscan.io",
+  [ChainId.LISK]: "blockscout.lisk.com",
 };
 
 export function getBlockScanLink(

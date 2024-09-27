@@ -15,9 +15,14 @@ export const getTokenLogoURL = (address: string) => {
   let logo;
   let findToken;
   const addressLowerCase = address?.toLowerCase();
+  console.log("addressLowerCase", addressLowerCase);
 
   if (TOKEN_LIST_LOGOS.includes(addressLowerCase)) {
     return `/icons/tokens/${addressLowerCase}.svg`;
+  }
+
+  if (addressLowerCase === "lisk") {
+    return `/icons/networks/lisk.png`;
   }
 
   for (let i = 0; i < DEFAULT_TOKEN_LIST.tokens.length; i++) {
