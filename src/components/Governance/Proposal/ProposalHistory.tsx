@@ -17,6 +17,7 @@ import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
 import useProposalContext from "context/proposal";
 import { ProposalStatus } from "utils/Constants";
 import { CustomSkeleton } from "components/Base/Skeletons/StyledSkeleton";
+import BigNumber from "bignumber.js";
 
 const HistoryTitle = styled(Typography)`
   color: #fff;
@@ -129,7 +130,7 @@ const ProposalHistory: FC = () => {
       },
     ];
 
-    if (currentBlock > fetchedProposal.startBlock) {
+    if (BigNumber(currentBlock).isGreaterThan(fetchedProposal.startBlock)) {
       steps.push({
         label: "Active",
         date: isLoading ? (
@@ -152,7 +153,7 @@ const ProposalHistory: FC = () => {
     }
 
     if (
-      currentBlock > fetchedProposal.endBlock &&
+      BigNumber(currentBlock).isGreaterThan(fetchedProposal.endBlock) &&
       [ProposalStatus.Defeated, ProposalStatus.Expired].includes(status)
     ) {
       steps.push({
@@ -186,7 +187,6 @@ const ProposalHistory: FC = () => {
             ""
           ),
         });
-        setActiveStep(steps.length - 1);
       }
     }
 
