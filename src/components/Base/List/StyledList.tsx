@@ -65,7 +65,7 @@ export const BaseListStakingStats = styled(List)`
         letter-spacing: 1px;
         color: #b7c8e5;
         ${({ theme }) => theme.breakpoints.down("sm")} {
-          font-size: 10px;
+          font-size: 9px;
         }
       }
     }
@@ -79,9 +79,11 @@ export const BaseListStakingStats = styled(List)`
       font-size: 14px;
       font-weight: 600;
       line-height: 20px;
+      min-width: 65%;
       ${({ theme }) => theme.breakpoints.down("sm")} {
         font-size: 10px;
         gap: 4px;
+        min-width: 50%;
       }
 
       & span {
