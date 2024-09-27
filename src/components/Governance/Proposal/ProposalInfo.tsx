@@ -116,6 +116,14 @@ const TimeBlock = styled("div")`
   }
 `;
 
+const ProposalHtmlDescription = styled("div")`
+  & p,
+  & span {
+    color: #b7c8e5 !important;
+    background: transparent !important;
+  }
+`;
+
 const ProposalInfo: FC = () => {
   const {
     getTitleDescription,
@@ -213,7 +221,9 @@ const ProposalInfo: FC = () => {
             {isLoading ? (
               <CustomSkeleton animation={"wave"} height={75} width={"100%"} />
             ) : (
-              getTitleDescription(fetchedProposal.description, 1)
+              <ProposalHtmlDescription>
+                {getTitleDescription(fetchedProposal.description, 1)}
+              </ProposalHtmlDescription>
             )}
           </ListItemValue>
         </ListItem>

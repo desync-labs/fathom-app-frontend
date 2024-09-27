@@ -268,6 +268,13 @@ export default class FxdPage extends BasePage {
 
   async validatePositionsOnPageCount(countExpected: number): Promise<void> {
     await expect(this.tableYourPositions).toBeVisible();
+    await this.page.waitForTimeout(1000);
+    await expect(
+      this.page.locator(
+        '//h2[text()="Your Positions"]//parent::div//following-sibling::div/table/tbody/tr[1]/td[1]/span[contains(@class, "MuiSkeleton")]'
+      )
+    ).not.toBeVisible({ timeout: 15000 });
+    await this.page.waitForTimeout(1000);
     const allRowsOnPageLocators = await this.page
       .locator(
         '//h2[text()="Your Positions"]//parent::div//following-sibling::div/table/tbody/tr'
