@@ -270,7 +270,6 @@ const ProposalInfo: FC = () => {
                 {fetchedProposal.proposer}
               </a>
             )}
-            {!chainId && <span>{fetchedProposal.proposer}</span>}
           </ListItemValue>
         </ListItem>
       </ProposalInfoList>
