@@ -24,10 +24,13 @@ test.describe("Vault Subgraph API", () => {
       let factoryProtocolFeeExpected: number;
       let accountantIdExpected: string;
       let feeRecipientExpected: string;
+      let feeRecipientAccountantExpected: string;
       let accountantPerformanceFeeExpected: string;
       switch (apiPage.baseUrl) {
         case "https://graph.apothem.fathom.fi":
           feeRecipientExpected = "0x0eb7dee6e18cce8fe839e986502d95d47dc0ada3";
+          feeRecipientAccountantExpected =
+            "0x0eb7dee6e18cce8fe839e986502d95d47dc0ada3";
           factoryIdExpected = "0xe3e22410ea34661f2b7d5c13edf7b0c069bd4153";
           factoryProtocolFeeExpected = 2000;
           accountantIdExpected = "0xe732aad84ed3a55b02fbe7df10334c4d2a06afbf";
@@ -35,6 +38,8 @@ test.describe("Vault Subgraph API", () => {
           break;
         case "https://graph.sepolia.fathom.fi":
           feeRecipientExpected = "0x0db96eb1dc48554bb0f8203a6de449b2fccf51a6";
+          feeRecipientAccountantExpected =
+            "0x0db96eb1dc48554bb0f8203a6de449b2fccf51a6";
           factoryIdExpected = "0x8f323d2f3d533dd86432e1bf6b644cab84f38e8b";
           factoryProtocolFeeExpected = 2000;
           accountantIdExpected = "0x89cb2789cbd5aebb1189aa0711a544dc40586c8f";
@@ -42,6 +47,8 @@ test.describe("Vault Subgraph API", () => {
           break;
         case "https://graph.xinfin.fathom.fi":
           feeRecipientExpected = "0xaedb3806a395eddf45c2700ab0ab67f99c06faf4";
+          feeRecipientAccountantExpected =
+            "0xcb5894ed5050ff3c098944746655dbd8313b8ce5";
           factoryIdExpected = "0x0c6e3fd64d5f33eac0dccdd887a8c7512bcdb7d6";
           factoryProtocolFeeExpected = 0;
           accountantIdExpected = "0x427fd46b341c5a3e1ea19be11d36e5c526a885d4";
@@ -108,7 +115,7 @@ test.describe("Vault Subgraph API", () => {
           type: "string",
           parentObject: accountantOne,
           propertyName: "feeRecipient",
-          expectedValue: feeRecipientExpected,
+          expectedValue: feeRecipientAccountantExpected,
         });
         apiPage.assertPropertyOfTypeExistsAndValueEquals({
           type: "string",
