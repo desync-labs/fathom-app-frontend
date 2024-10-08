@@ -20,5 +20,5 @@ export const stripTags = (html: string) => {
   element.innerHTML = html;
   return (element.textContent || element.innerText || "")
     .trim()
-    .replace(/[^a-zA-Z ]/g, "");
+    .replace(/(<([^>]+)>)/gi, "");
 };
