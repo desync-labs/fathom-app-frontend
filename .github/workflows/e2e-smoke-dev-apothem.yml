@@ -9,7 +9,7 @@ concurrency:
 jobs:
   e2e-smoke-dev:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
         with:
