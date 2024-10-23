@@ -78,6 +78,7 @@ const useProposalItem = () => {
     if (chainId) {
       const vFathom = SmartContractFactory.vFathom(chainId);
       poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
+        console.log("totalSupply", totalSupply.toString());
         setFTHMTotalSupply(totalSupply.toString());
       });
     }

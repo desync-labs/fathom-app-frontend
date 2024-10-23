@@ -19,7 +19,6 @@ import { RowBetween } from "apps/dex/components/Row";
 import {
   Break,
   CardBGImage,
-  CardNoise,
   CardSection,
   DataCard,
 } from "apps/dex/components/earn/styled";
@@ -76,7 +75,6 @@ const FathomBalanceContent: FC<FathomBalanceContent> = ({
     <ContentWrapper gap="lg">
       <ModalUpper>
         <CardBGImage />
-        <CardNoise />
         <CardSection gap="md">
           <RowBetween>
             <TYPE.white>Your FTHM Breakdown</TYPE.white>

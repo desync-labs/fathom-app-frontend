@@ -43,7 +43,6 @@ const Modal: FC<ModalProps> = ({
     <AppDialogStyled
       onClose={onDismiss}
       aria-labelledby="customized-dialog-title"
-      maxWidth="xs"
       minHeight={minHeight}
       maxHeight={maxHeight}
       isFixedHeight={isFixedHeight}

@@ -72,7 +72,6 @@ import RemoveLiquidity from "apps/dex/pages/RemoveLiquidity";
 import FathomBalanceContent from "apps/dex/components/Header/FathomBalanceContent";
 import { TYPE } from "apps/dex/theme";
 import { CountUp } from "use-count-up";
-import { CardNoise } from "apps/dex/components/earn/styled";
 
 /**
  * Lending
@@ -420,7 +419,6 @@ const MainLayout = () => {
                       )}
                       FTHM
                     </FTHMAmount>
-                    <CardNoise />
                   </FTHMWrapper>
                 )}
               <AccountElement

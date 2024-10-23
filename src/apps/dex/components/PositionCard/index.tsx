@@ -10,7 +10,6 @@ import { StyledInternalLink, TYPE } from "apps/dex/theme";
 import { currencyId } from "apps/dex/utils/currencyId";
 import { unwrappedToken } from "apps/dex/utils/wrappedCurrency";
 import { ButtonSecondary, ButtonEmpty } from "apps/dex/components/Button";
-import { CardNoise } from "apps/dex/components/earn/styled";
 import { GreyCard, LightCard } from "apps/dex/components/Card";
 import { AutoColumn } from "apps/dex/components/Column";
 import CurrencyLogo from "apps/dex/components/CurrencyLogo";
@@ -235,7 +234,6 @@ const FullPositionCard: FC<PositionCardProps> = ({ pair, border }) => {
 
   return (
     <StyledPositionCard sx={{ border }} bgColor={backgroundColor}>
-      <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
           <AutoRow gap="8px">
