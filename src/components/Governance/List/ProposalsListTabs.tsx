@@ -45,10 +45,11 @@ const TabWrapper = styled(Box)`
   display: flex;
 `;
 
-export const AddProposalBtnComponent = () => {
+export const AddProposalBtnComponent: FC<{ sx?: any }> = ({ sx }) => {
   const navigate = useNavigate();
   return (
     <AddProposalButton
+      sx={sx}
       onClick={() => navigate("/dao/governance/proposal/create")}
     >
       <AddCircleIcon

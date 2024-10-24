@@ -35,11 +35,13 @@ const AllProposalsView = () => {
       <Box sx={{ display: "flex", gap: "10px", flexDirection: "column" }}>
         {draftProposals.length ? (
           <ProposalsListTabs tab={tab} />
-        ) : account ? (
+        ) : (
           <BaseFlexBox sx={{ justifyContent: "right" }}>
-            <AddProposalBtnComponent />
+            <AddProposalBtnComponent
+              sx={{ visibility: account ? "visible" : "hidden" }}
+            />
           </BaseFlexBox>
-        ) : null}
+        )}
         {tab === ProposalsTabs.PROPOSALS && (
           <ProposalsView
             isLoading={isLoading}

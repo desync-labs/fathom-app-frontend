@@ -247,6 +247,8 @@ const useProposalItem = () => {
       if (seconds % 10 < 1) {
         fetchStatus();
       }
+    } else {
+      fetchStatus();
     }
     return () => {
       timeout1 && clearTimeout(timeout1);
