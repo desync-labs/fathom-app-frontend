@@ -8,6 +8,7 @@ import { ProposalsTabs } from "hooks/Governance/useAllProposals";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ButtonPrimary } from "components/AppComponents/AppButton/AppButton";
 import { useNavigate } from "react-router-dom";
+import useConnector from "context/connector";
 
 const ViewAllProposalsTabsWrapper = styled(AppNavWrapper)`
   width: 100%;
@@ -66,6 +67,7 @@ const ProposalsListTabs: FC<{
   tab: ProposalsTabs;
 }> = ({ tab }) => {
   const navigate = useNavigate();
+  const { account } = useConnector();
 
   return (
     <ViewAllProposalsTabsWrapper>
@@ -83,7 +85,7 @@ const ProposalsListTabs: FC<{
           Drafts
         </ViewAllProposalsTabsItem>
       </TabWrapper>
-      {tab !== ProposalsTabs.DRAFTS && <AddProposalBtnComponent />}
+      {tab !== ProposalsTabs.DRAFTS && account && <AddProposalBtnComponent />}
     </ViewAllProposalsTabsWrapper>
   );
 };
