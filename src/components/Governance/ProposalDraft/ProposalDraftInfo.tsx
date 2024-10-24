@@ -26,6 +26,7 @@ import {
 import TrashIcon from "assets/svg/Trash.svg";
 import { useNavigate } from "react-router-dom";
 import ProposalDraftDelete from "./ProposalDraftDelete";
+import useConnector from "context/connector";
 
 const ProposalTitleDraft = styled(ProposalTitle)`
   justify-content: space-between;
@@ -67,6 +68,7 @@ const ProposalDraftInfo = () => {
     deleteProposal,
     setDeleteProposal,
   } = useProposalDraftItem();
+  const { account } = useConnector();
   const navigate = useNavigate();
 
   return (
@@ -74,16 +76,22 @@ const ProposalDraftInfo = () => {
       <ProposalTitleDraft variant={"h3"}>
         {draftProposal?.descriptionTitle}
         <ButtonsWrapper>
-          <SubmitProposalBtn onClick={onSubmit}>
-            {isLoading ? <CircularProgress size={20} /> : "Submit proposal"}
-          </SubmitProposalBtn>
-          <EditProposalBtn
-            onClick={() =>
-              navigate(`/dao/governance/proposal/create/${draftProposal?.id}`)
-            }
-          >
-            Edit
-          </EditProposalBtn>
+          {account && (
+            <>
+              <SubmitProposalBtn onClick={onSubmit}>
+                {isLoading ? <CircularProgress size={20} /> : "Submit proposal"}
+              </SubmitProposalBtn>
+              <EditProposalBtn
+                onClick={() =>
+                  navigate(
+                    `/dao/governance/proposal/create/${draftProposal?.id}`
+                  )
+                }
+              >
+                Edit
+              </EditProposalBtn>
+            </>
+          )}
           <IconButton
             sx={{ marginLeft: "-8px" }}
             onClick={() => setDeleteProposal(true)}

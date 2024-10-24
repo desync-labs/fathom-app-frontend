@@ -12,8 +12,10 @@ import BasePageContainer from "components/Base/PageContainer";
 import ProposalsView from "components/Governance/List/ProposalsView";
 import ProposalsDraftView from "components/Governance/List/ProposalsDraftView";
 import { BaseFlexBox } from "components/Base/Boxes/StyledBoxes";
+import useConnector from "context/connector";
 
 const AllProposalsView = () => {
+  const { account } = useConnector();
   const {
     tab,
     isLoading,
@@ -35,7 +37,9 @@ const AllProposalsView = () => {
           <ProposalsListTabs tab={tab} />
         ) : (
           <BaseFlexBox sx={{ justifyContent: "right" }}>
-            <AddProposalBtnComponent />
+            <AddProposalBtnComponent
+              sx={{ visibility: account ? "visible" : "hidden" }}
+            />
           </BaseFlexBox>
         )}
         {tab === ProposalsTabs.PROPOSALS && (

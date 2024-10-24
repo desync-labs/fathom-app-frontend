@@ -71,7 +71,7 @@ const ConfirmationPendingContent: FC<ConfirmationPendingContentProps> = ({
         <ConfirmedIcon>
           <CustomLightSpinner src={Circle} alt="loader" size={"90px"} />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={"center"}>
+        <AutoColumn gap="12px" justify={"center"} sx={{ padding: "0 40px" }}>
           <Typography
             fontWeight={500}
             fontSize={20}
@@ -135,7 +135,7 @@ function TransactionSubmittedContent({
             }}
           />
         </ConfirmedIcon>
-        <AutoColumn gap="12px" justify={"center"}>
+        <AutoColumn gap="12px" justify={"center"} sx={{ padding: "0 40px" }}>
           <Typography
             fontWeight={500}
             fontSize={20}

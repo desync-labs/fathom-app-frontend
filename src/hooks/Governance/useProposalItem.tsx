@@ -10,7 +10,11 @@ import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 
 import { htmlToComponent } from "utils/htmlToComponent";
-import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
+import {
+  DEFAULT_CHAIN_ID,
+  ProposalStatus,
+  XDC_BLOCK_TIME,
+} from "utils/Constants";
 
 const useProposalItem = () => {
   const { account, chainId, library } = useConnector();
@@ -36,7 +40,6 @@ const useProposalItem = () => {
     useState<boolean>(false);
   const [votingEndTimeLoading, setVotingEndTimeLoading] =
     useState<boolean>(false);
-  const [statusLoading, setStatusLoading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const { syncDao, prevSyncDao, setLastTransactionBlock } = useSyncContext();
@@ -68,19 +71,16 @@ const useProposalItem = () => {
     return () => clearTimeout(timeout);
   }, [
     votingEndTimeLoading,
-    statusLoading,
     votingStartsTimeLoading,
     proposalLoading,
     setIsLoading,
   ]);
 
   useEffect(() => {
-    if (chainId) {
-      const vFathom = SmartContractFactory.vFathom(chainId);
-      poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
-        setFTHMTotalSupply(totalSupply.toString());
-      });
-    }
+    const vFathom = SmartContractFactory.vFathom(chainId || DEFAULT_CHAIN_ID);
+    poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
+      setFTHMTotalSupply(totalSupply.toString());
+    });
   }, [chainId, poolService, setFTHMTotalSupply]);
 
   const fetchHasVoted = useCallback(async () => {
@@ -93,7 +93,6 @@ const useProposalItem = () => {
 
   const fetchStatus = useCallback(async () => {
     if (data?.proposal) {
-      setStatusLoading(true);
       const [status, currentBlock] = await Promise.all([
         proposalService.viewProposalState(data.proposal.proposalId),
         library.getBlockNumber(),
@@ -106,12 +105,12 @@ const useProposalItem = () => {
         [0, 1].includes(status)
       ) {
         setStatus((Object.values(ProposalStatus) as any)["6"]);
+        setSeconds(0);
       } else {
         setStatus((Object.values(ProposalStatus) as any)[status]);
       }
-      setStatusLoading(false);
     }
-  }, [proposalService, data, account, setStatus, setCurrentBlock]);
+  }, [proposalService, data, account, setStatus, setCurrentBlock, setSeconds]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data?.proposal) {
@@ -140,7 +139,7 @@ const useProposalItem = () => {
         new Date(timestamp.toNumber() * 1000).toLocaleString()
       );
     }
-  }, [data, library, setVotingStartsTime]);
+  }, [data?.proposal, library, setVotingStartsTime]);
 
   const getVotingEndTime = useCallback(async () => {
     if (data?.proposal) {
@@ -198,7 +197,7 @@ const useProposalItem = () => {
     }
   }, [
     proposalService,
-    data,
+    data?.proposal,
     chainId,
     account,
     library,
@@ -239,31 +238,22 @@ const useProposalItem = () => {
 
   useEffect(() => {
     let timeout1: ReturnType<typeof setTimeout>;
-    let timeout2: ReturnType<typeof setTimeout>;
 
     if (seconds > 0) {
       timeout1 = setTimeout(() => {
         setSeconds(seconds - 1);
       }, 1000);
 
-      if (seconds % 2 < 1) {
+      if (seconds % 10 < 1) {
         fetchStatus();
       }
     } else {
-      timeout1 = setTimeout(() => {
-        getVotingEndTime();
-      }, 1500);
-
-      timeout2 = setTimeout(() => {
-        fetchStatus();
-      }, 3000);
+      fetchStatus();
     }
-
     return () => {
       timeout1 && clearTimeout(timeout1);
-      timeout2 && clearTimeout(timeout2);
     };
-  }, [seconds, setSeconds, getVotingEndTime, fetchStatus]);
+  }, [seconds, setSeconds, fetchStatus]);
 
   useEffect(() => {
     if (data?.proposal && status && status === ProposalStatus.Defeated) {
@@ -332,7 +322,7 @@ const useProposalItem = () => {
   const forVotes = useMemo(() => {
     return proposalLoading
       ? 0
-      : BigNumber(data?.proposal.forVotes)
+      : BigNumber(data?.proposal?.forVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
           .toNumber() || 0;
@@ -341,7 +331,7 @@ const useProposalItem = () => {
   const againstVotes = useMemo(() => {
     return proposalLoading
       ? 0
-      : BigNumber(data?.proposal.againstVotes)
+      : BigNumber(data?.proposal?.againstVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
           .toNumber() || 0;
@@ -350,7 +340,7 @@ const useProposalItem = () => {
   const abstainVotes = useMemo(() => {
     return proposalLoading
       ? 0
-      : BigNumber(data?.proposal.abstainVotes)
+      : BigNumber(data?.proposal?.abstainVotes)
           .multipliedBy(100)
           .dividedBy(fetchedTotalVotes)
           .toNumber() || 0;

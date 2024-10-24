@@ -149,7 +149,7 @@ const ProposalInfo: FC = () => {
         />
       ) : (
         <ProposalTitle variant={"h3"}>
-          {getTitleDescription(fetchedProposal.description, 0)}
+          {getTitleDescription(fetchedProposal?.description, 0)}
         </ProposalTitle>
       )}
       <BaseFlexBox sx={{ justifyContent: "flex-start", alignItems: "start" }}>
@@ -179,7 +179,7 @@ const ProposalInfo: FC = () => {
           ) : (
             <>
               <TimeValue>{votingStartsTime}</TimeValue>
-              <TimeBlock>Start block: {fetchedProposal.startBlock}</TimeBlock>
+              <TimeBlock>Start block: {fetchedProposal?.startBlock}</TimeBlock>
             </>
           )}
         </Box>
@@ -208,7 +208,7 @@ const ProposalInfo: FC = () => {
                   )}
                 </TimeslotInProgress>
               </TimeValue>
-              <TimeBlock>End block: {fetchedProposal.endBlock}</TimeBlock>
+              <TimeBlock>End block: {fetchedProposal?.endBlock}</TimeBlock>
             </>
           )}
         </Box>
@@ -222,15 +222,15 @@ const ProposalInfo: FC = () => {
               <CustomSkeleton animation={"wave"} height={75} width={"100%"} />
             ) : (
               <ProposalHtmlDescription>
-                {getTitleDescription(fetchedProposal.description, 1)}
+                {getTitleDescription(fetchedProposal?.description, 1)}
               </ProposalHtmlDescription>
             )}
           </ListItemValue>
         </ListItem>
 
-        {fetchedProposal.targets &&
-          fetchedProposal.targets.length &&
-          fetchedProposal.targets[0] !== ZERO_ADDRESS && (
+        {fetchedProposal?.targets &&
+          fetchedProposal?.targets.length &&
+          fetchedProposal?.targets[0] !== ZERO_ADDRESS && (
             <>
               <ListItem>
                 <ListItemLabel>Targets: </ListItemLabel>
@@ -263,11 +263,11 @@ const ProposalInfo: FC = () => {
                 target="_blank"
                 rel="noreferrer"
                 href={getAccountUrl(
-                  fetchedProposal.proposer,
+                  fetchedProposal?.proposer,
                   chainId as ChainId
                 )}
               >
-                {fetchedProposal.proposer}
+                {fetchedProposal?.proposer}
               </a>
             )}
           </ListItemValue>

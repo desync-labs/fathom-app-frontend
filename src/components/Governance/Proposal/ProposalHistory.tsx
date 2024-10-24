@@ -124,13 +124,13 @@ const ProposalHistory: FC = () => {
           <CustomSkeleton animation={"wave"} height={20} width={"50%"} />
         ) : (
           new Date(
-            Number(fetchedProposal.blockTimestamp) * 1000
+            Number(fetchedProposal?.blockTimestamp) * 1000
           ).toLocaleString()
         ),
       },
     ];
 
-    if (BigNumber(currentBlock).isGreaterThan(fetchedProposal.startBlock)) {
+    if (BigNumber(currentBlock).isGreaterThan(fetchedProposal?.startBlock)) {
       steps.push({
         label: "Active",
         date: isLoading ? (
@@ -153,7 +153,7 @@ const ProposalHistory: FC = () => {
     }
 
     if (
-      BigNumber(currentBlock).isGreaterThan(fetchedProposal.endBlock) &&
+      BigNumber(currentBlock).isGreaterThan(fetchedProposal?.endBlock) &&
       [ProposalStatus.Defeated, ProposalStatus.Expired].includes(status)
     ) {
       steps.push({

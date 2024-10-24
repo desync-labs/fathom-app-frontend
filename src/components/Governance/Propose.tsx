@@ -1,4 +1,4 @@
-import { FC, useMemo } from "react";
+import { FC, useEffect, useMemo } from "react";
 import { Controller, FormProvider } from "react-hook-form";
 import {
   Box,
@@ -197,6 +197,12 @@ const Propose: FC = () => {
 
   const { isMobile } = useSharedContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!account) {
+      navigate("/dao/governance");
+    }
+  }, [navigate, account]);
 
   return (
     <BasePageContainer sx={{ gap: "25px" }}>

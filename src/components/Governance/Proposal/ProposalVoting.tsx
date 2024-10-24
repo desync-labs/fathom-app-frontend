@@ -297,15 +297,15 @@ const ProposalVoting: FC = () => {
         <VoteProgressItem>
           <BaseFlexBox>
             <VoteProgressItemLabel>Abstains</VoteProgressItemLabel>
-            {fetchedProposal.abstainVotes && fetchedTotalVotes ? (
+            {fetchedProposal?.abstainVotes && fetchedTotalVotes ? (
               <VotersCount>
                 {formatNumber(
-                  BigNumber(fetchedProposal.abstainVotes)
+                  BigNumber(fetchedProposal?.abstainVotes)
                     .dividedBy(10 ** 18)
                     .toNumber()
                 )}{" "}
                 (
-                {BigNumber(fetchedProposal.abstainVotes / fetchedTotalVotes)
+                {BigNumber(fetchedProposal?.abstainVotes / fetchedTotalVotes)
                   .multipliedBy(100)
                   .toFixed(2)}
                 %)

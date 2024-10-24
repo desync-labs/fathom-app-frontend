@@ -231,7 +231,7 @@ const StreamStats: FC = () => {
               height={16}
               width={isMobile ? 125 : 175}
             />
-            <CustomSkeleton animation={"wave"} height={20} width={150} />
+            <CustomSkeleton animation={"wave"} height={16} width={150} />
           </>
         ) : BigNumber(Number(seconds)).isGreaterThan(0) ? (
           <>

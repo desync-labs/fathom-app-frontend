@@ -18,7 +18,6 @@ import {
 } from "apps/dex/state/user/hooks";
 import {
   CardBGImage,
-  CardNoise,
   CardSection,
   DataCard,
 } from "apps/dex/components/earn/styled";
@@ -124,7 +123,6 @@ const Pool = () => {
         <SwapPoolTabs />
         <VoteCard>
           <CardBGImage />
-          <CardNoise />
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
@@ -140,7 +138,6 @@ const Pool = () => {
             </AutoColumn>
           </CardSection>
           <CardBGImage />
-          <CardNoise />
         </VoteCard>
 
         <AutoColumn gap="lg" justify="center">
