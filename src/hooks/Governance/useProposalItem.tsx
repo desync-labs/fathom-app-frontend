@@ -10,7 +10,11 @@ import useConnector from "context/connector";
 import BigNumber from "bignumber.js";
 
 import { htmlToComponent } from "utils/htmlToComponent";
-import { ProposalStatus, XDC_BLOCK_TIME } from "utils/Constants";
+import {
+  DEFAULT_CHAIN_ID,
+  ProposalStatus,
+  XDC_BLOCK_TIME,
+} from "utils/Constants";
 
 const useProposalItem = () => {
   const { account, chainId, library } = useConnector();
@@ -75,13 +79,11 @@ const useProposalItem = () => {
   ]);
 
   useEffect(() => {
-    if (chainId) {
-      const vFathom = SmartContractFactory.vFathom(chainId);
-      poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
-        console.log("totalSupply", totalSupply.toString());
-        setFTHMTotalSupply(totalSupply.toString());
-      });
-    }
+    const vFathom = SmartContractFactory.vFathom(chainId || DEFAULT_CHAIN_ID);
+    poolService.getTotalSupply(vFathom.address).then((totalSupply) => {
+      console.log("totalSupply", totalSupply.toString());
+      setFTHMTotalSupply(totalSupply.toString());
+    });
   }, [chainId, poolService, setFTHMTotalSupply]);
 
   const fetchHasVoted = useCallback(async () => {
