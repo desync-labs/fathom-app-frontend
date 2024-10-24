@@ -98,8 +98,6 @@ const useProposalItem = () => {
         library.getBlockNumber(),
       ]);
 
-      console.log("fetch status");
-
       setCurrentBlock(currentBlock);
 
       if (
@@ -107,11 +105,12 @@ const useProposalItem = () => {
         [0, 1].includes(status)
       ) {
         setStatus((Object.values(ProposalStatus) as any)["6"]);
+        setSeconds(0);
       } else {
         setStatus((Object.values(ProposalStatus) as any)[status]);
       }
     }
-  }, [proposalService, data, account, setStatus, setCurrentBlock]);
+  }, [proposalService, data, account, setStatus, setCurrentBlock, setSeconds]);
 
   const getVotingStartsTime = useCallback(async () => {
     if (data?.proposal) {
